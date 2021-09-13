@@ -1,5 +1,5 @@
 {
-  "dependencies": {
-    "electron": "^13.1.9"
+  "devDependencies": {
+    "vue-js-modal": "^2.0.1"
   }
 }
