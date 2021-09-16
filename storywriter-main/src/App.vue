@@ -11,6 +11,7 @@
     <EditFooter />
 
     <div id="modal-msgbox"></div>
+    <div id="modal-colorpicker"></div>
   </div>
 </template>
 

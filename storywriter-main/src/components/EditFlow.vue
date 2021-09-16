@@ -20,8 +20,11 @@
                 <hr>
 
                 <EditFlowSectionItem
-                    v-for="lore in getEditing.content.lores" :key="lore" v-bind:content="lore"
+                    v-for="lore in getEditing.content.lores" :key="lore"
+                    :content="lore"
+                    :parent="getEditing.content"
                     :remove="deleteSectionItem"
+                    :move="moveStoryPosition"
                 />
 
                 <div class="edit__main__add">
@@ -61,6 +64,12 @@ import EditFlowSectionItem from "./edit-flow-subcomponents/EditFlowSectionItem.v
         },
         deleteSectionItem: function(id: string) {
             this.getEditing.content.removeLore(id);
+        },
+        moveStoryPosition: function(arg: string) {
+            const param = arg.split(":");
+            const dir = param[0] === "up";
+            const id = param[1];
+            this.getEditing.content.moveLore(id, dir);
         }
     },
     computed: {
@@ -71,7 +80,7 @@ import EditFlowSectionItem from "./edit-flow-subcomponents/EditFlowSectionItem.v
         },
         hasEditing: function(): Boolean {
             return this.stories.some((x: Stories) => x.hasEditingChildren());
-        }
+        },
     }
 })
 

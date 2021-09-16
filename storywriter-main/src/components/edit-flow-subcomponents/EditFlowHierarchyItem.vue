@@ -4,12 +4,12 @@
             <div v-if="lore.isDirectory()">
                 <div class="container--caret" @click="toggleDir()">
                     <img src="../../assets/caret.png"
-                    v-bind:class="{hierarchy__unexpand__img: expanding}">
+                    :class="{hierarchy__unexpand__img: expanding}">
                     {{ lore.content.caption }}
                 </div>
                 <EditFlowHierarchyItem
-                    v-bind:stories="lore.children"
-                    v-bind:class="{hierarchy__unexpand: expanding}"
+                    :stories="lore.children"
+                    :class="{hierarchy__unexpand: expanding}"
                     :resetAllFlags="resetAllFlags"
                 />
             </div>

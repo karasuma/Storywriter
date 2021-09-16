@@ -9,7 +9,7 @@
                 <div class="modal__content__desc">
                     <img v-if="param.alert" src="../../assets/alert.png">
                     <img v-else src="../../assets/info.png">
-                    <p>{{ param.message }}</p>
+                    <p v-html="param.message"></p>
                 </div>
                 <div class="modal__content__buttons">
                     <span class="modal__content__buttons-close" @click="reject">no, thanks.</span>
@@ -135,7 +135,6 @@ export default class ModalMessageBox extends Vue {
 
             & * {
                 font-size: 14px;
-                border: solid 1px $Background-Color-Panel;
                 border-radius: 2px;
                 margin: 4px 8px;
                 width: 100px;
@@ -143,8 +142,18 @@ export default class ModalMessageBox extends Vue {
                 text-align: center;
                 background-color: $Modal-Button;
             }
-            & *:hover {
-                background-color: $Modal-Button-Focus;
+
+            &-close {
+                border: solid 1px #000060;
+            }
+            &-close:hover {
+                background-color: #afcccc;
+            }
+            &-ok {
+                border: solid 1px #600000;
+            }
+            &-ok:hover {
+                background-color: #ccafaf;
             }
         }
     }

@@ -1,16 +1,26 @@
 <template>
-    <div class="section">
+    <div class="section" :style="{ backgroundColor: content.color }">
         <ModalMessageBox
             v-bind:isVisible="showMsgbox"
             :param="messages"
             :result="getResult"
         />
+        <ModalColorPicker
+            :isVisible="showPickerbox"
+            :getColor="getColor"
+        />
         <div class="section__ctrlheader">
-            <p>︙</p>
             <img src="../../assets/dispose.png" @click="askDispose">
-            <img src="../../assets/calendar.png">
+            <img src="../../assets/paint.png" @click="chooseColor">
+            <img src="../../assets/arrow.png" class="section__ctrlheader-up"
+                @click="movePosition(true)" v-show="canUp">
+            <img src="../../assets/arrow.png" class="section__ctrlheader-down"
+                @click="movePosition(false)" v-show="canDown">
         </div>
-        <textarea v-model="content.title" rows="1" spellcheck="false" class="section__header"></textarea>
+        <textarea v-model="content.title"
+            rows="1" spellcheck="false" class="section__header"
+            placeholder="..."
+        ></textarea>
 
         <div v-for="story in content.stories" :key="story" class="section__content">
             <textarea v-model="story.text" spellcheck="false"></textarea>
@@ -25,23 +35,37 @@
 import { Options, Vue } from "vue-class-component";
 import { StoryItem } from "../models/story/story-item";
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
+import ModalColorPicker from "../util-subcomponents/ModalColorPicker.vue";
 import { Defs } from "../models/defs";
 import { MessageObject, IReceiveString } from "../models/utils";
 import { PropType } from "@vue/runtime-core";
+import { StoryData } from "../models/story/story-data";
 
 @Options({
     components: {
         ModalMessageBox,
+        ModalColorPicker
     },
     props: {
         content: StoryItem,
-        remove: Function as PropType<IReceiveString>
+        parent: StoryData,
+        remove: Function as PropType<IReceiveString>,
+        move: Function as PropType<IReceiveString>
     },
     methods: {
         addStory: function(c: StoryItem) {
             c.addStory();
         },
         askDispose: function() {
+            this.messages = MessageObject.createMessage(
+                "Warning",
+                    "Are you sure you want to erase<br>"
+                        + '<b style="padding: 0 3px; font-size: 16px;">'
+                        + "' " + this.content.title + " '"
+                        + "</b>"
+                    + " ?",
+                true
+            );
             this.showMsgbox = true;
         },
         getResult: function(result: number) {
@@ -49,16 +73,45 @@ import { PropType } from "@vue/runtime-core";
                 this.remove(this.content.id);
             }
             this.showMsgbox = false;
+        },
+        chooseColor: function() {
+            this.showPickerbox = true;
+        },
+        getColor: function(color: string) {
+            if (color.length > 0) {
+                this.content.color = color;
+            }
+            this.showPickerbox = false;
+        },
+        movePosition: function(up: boolean) {
+            const dir = up ? "up" : "down";
+            this.move(dir + ":" + this.content.id);
+        }
+    },
+    computed: {
+        canUp: function(): Boolean {
+            return this.getCurrentIndex() > 0;
+        },
+        canDown: function(): Boolean {
+            return this.getCurrentIndex() < this.parent.lores.length - 1;
         }
     }
 })
 
 export default class EditFlowSectionItem extends Vue {
     content!: StoryItem;
+    parent!: StoryData;
     remove!: IReceiveString;
+    move!: IReceiveString;
 
     showMsgbox: boolean = false;
     messages: MessageObject = MessageObject.createMessage("Information", "Sample message here.");
+
+    showPickerbox: boolean = false;
+
+    public getCurrentIndex(): number {
+        return this.parent.getLoreIndex(this.content);
+    }
 }
 </script>
 
@@ -102,6 +155,13 @@ export default class EditFlowSectionItem extends Vue {
         }
         & *:hover {
             filter: brightness($Focus-Brightness);
+        }
+
+        &-up {
+            transform: rotate(90deg);
+        }
+        &-down {
+            transform: rotate(-90deg);
         }
     }
 
