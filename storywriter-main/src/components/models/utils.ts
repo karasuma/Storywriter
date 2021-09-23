@@ -4,6 +4,15 @@ export class Utils {
         return new Date().getTime().toString(16) 
             + Math.floor(power * Math.random()).toString(16);
     }
+
+    static sortCondition(prev: number, curr: number, descending: boolean = false) {
+        if(prev > curr) {
+            return descending ? -1 : 1;
+        } else if(prev < curr) {
+            return descending ? 1 : -1;
+        }
+        return 0;
+    }
 }
 
 export class MessageObject {

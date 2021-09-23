@@ -1,8 +1,9 @@
 <template>
-    <teleport to="#modal-colorpicker">
-        <div v-if="isVisible" id="colorpicker" class="modal">
+    <teleport to="#modal-colorpicker" v-if="isVisible">
+        <div class="modal">
             <div class="modal__content">
                 <div class="modal__content__header">
+                    <p class="modal__content__header-caption">Choose color...</p>
                     <p class="modal__content__header-close" @click="disable">&times;</p>
                 </div>
                 <div class="modal__content__colors">
@@ -31,11 +32,15 @@ import { Defs } from "../models/defs";
             default: false,
             required: true
         },
+        darkmode: {
+            type: Boolean,
+            default: true
+        },
         getColor: Function as PropType<IReceiveString>
     },
     computed: {
         getColors: function(): Array<String> {
-            return Defs.definedColors;
+            return this.darkmode ? Defs.definedDarkColors : Defs.definedLightColors;
         }
     },
     methods: {
@@ -50,6 +55,7 @@ import { Defs } from "../models/defs";
 
 export default class ModalColorPicker extends Vue {
     isVisible!: boolean;
+    darkmode!: boolean;
     getColor!: IReceiveString;
 }
 </script>
@@ -78,7 +84,7 @@ export default class ModalColorPicker extends Vue {
 
     &__content {
         background-color: $Modal-Background;
-        margin: 30vh 30vw;
+        margin: 30vh 32vw;
         border: solid 1px $Hierarchy-Color-Line;
         border-radius: 6px;
         box-shadow: 0 0 10px gray;
@@ -87,7 +93,16 @@ export default class ModalColorPicker extends Vue {
             width: 100%;
             height: 32px;
             display: flex;
-            flex-direction: row-reverse;
+            justify-content: right;
+
+            &-caption {
+                width: 100%;
+                font-size: 14px;
+                margin: 3px 14px;
+                padding-top: 2px;
+                text-align: center;
+                @include hide-overflow-text();
+            }
             
             &-close {
                 width: 52px;

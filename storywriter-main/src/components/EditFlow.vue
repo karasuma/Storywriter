@@ -1,15 +1,37 @@
 <template>
     <div id="edit-flow">
+        <ModalMessageBox
+            :isVisible="showMsgBox"
+            :param="message"
+            :result="getResult"
+        />
+        <ModalCalendarEditBox
+            :isVisible="showCalendar"
+            :stories="stories"
+            :close="closeCalendar"
+        />
+        <ModalColorPicker
+            :isVisible="showPickerbox"
+            :getColor="getColor"
+            :darkmode="false"
+        />
+
         <div class="hierarchy">
             <EditFlowHierarchyItem
-                v-bind:stories="stories"
+                :stories="stories"
                 :resetAllFlags="resetAllEdits"
             />
         </div>
 
         <div class="edit">
             <div v-if="hasEditing" class="edit__main">
-                <input type="text" v-model="getEditing.content.caption" key="main-caption" placeholder="...">
+                <div class="edit__main__header"
+                    :style="getBorderColor(getEditing.content.color)">
+                    <input type="text" v-model="getEditing.content.caption" key="main-caption" placeholder="...">
+                    <img src="../assets/paint.png" @click="chooseColor">
+                    <img src="../assets/calendar.png" @click="changeCalendar">
+                    <img src="../assets/dispose.png" @click="askDispose">
+                </div>
                 <div class="edit__main__desc">
                     <textarea v-model="getEditing.content.description" spellcheck="false" maxlength="200"></textarea>
                     <div class="edit__main__desc__chars">
@@ -44,14 +66,25 @@ import { Stories } from "./models/story/stories";
 import { StoryData } from "./models/story/story-data";
 import EditFlowHierarchyItem from "./edit-flow-subcomponents/EditFlowHierarchyItem.vue";
 import EditFlowSectionItem from "./edit-flow-subcomponents/EditFlowSectionItem.vue";
+import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
+import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue";
+import ModalColorPicker from "./util-subcomponents/ModalColorPicker.vue";
+import { IReceiveString, MessageObject } from "./models/utils";
+import { Defs } from "./models/defs";
+import { PropType } from "@vue/runtime-core";
 
 @Options({
     components: {
         EditFlowHierarchyItem,
-        EditFlowSectionItem
+        EditFlowSectionItem,
+        ModalMessageBox,
+        ModalCalendarEditBox,
+        ModalColorPicker
     },
     props: {
-        stories: Array
+        stories: Array,
+        removeStory: Function as PropType<IReceiveString>,
+        addRootStory: Function
     },
     methods: {
         addLore: function(content: StoryData) {
@@ -70,22 +103,64 @@ import EditFlowSectionItem from "./edit-flow-subcomponents/EditFlowSectionItem.v
             const dir = param[0] === "up";
             const id = param[1];
             this.getEditing.content.moveLore(id, dir);
+        },
+        askDispose: function() {
+            this.message = MessageObject.createMessage(
+                "Warning",
+                    "Are you sure you want to remove<br>"
+                        + '<b style="padding: 0 3px; font-size: 16px;">'
+                        + "' " + this.getEditing.content.caption + " '"
+                        + "</b>"
+                    + " ?",
+                true
+            );
+            this.showMsgBox = true;
+        },
+        getResult: function(result: number) {
+            if(result == Defs.MessageType.Confirm) {
+                Stories.removeTargetStory(this.stories, this.getEditing.id);
+            }
+            this.showMsgBox = false;
+        },
+        changeCalendar: function() {
+            this.showCalendar = true;
+        },
+        closeCalendar: function() {
+            this.showCalendar = false;
+        },
+        chooseColor: function() {
+            this.showPickerbox = true;
+        },
+        getColor: function(color: string) {
+            if (color.length > 0) {
+                this.getEditing.content.color = color;
+            }
+            this.showPickerbox = false;
+        },
+        getBorderColor: function(color: string): string {
+            return "border-top: groove 8px " + color + ";";
         }
     },
     computed: {
-        getEditing: function(): Stories {
+        getEditing: function(): Stories | undefined {
             return this.stories
                 .map((x: Stories) => x.getEditingChildren())
                 .find((x: Stories | undefined) => typeof x !== 'undefined');
         },
         hasEditing: function(): Boolean {
-            return this.stories.some((x: Stories) => x.hasEditingChildren());
+            return typeof this.getEditing !== 'undefined';
         },
     }
 })
 
 export default class EditFlow extends Vue {
-    stories!: Array<Stories>
+    stories!: Array<Stories>;
+
+    showMsgBox: boolean = false;
+    message: MessageObject = MessageObject.createMessage("Warning", "");
+
+    showCalendar: boolean = false;
+    showPickerbox: boolean = false;
 }
 </script>
 
@@ -155,6 +230,25 @@ export default class EditFlow extends Vue {
                 text-align: center;
                 cursor: default;
                 user-select: none;
+            }
+
+            &__header {
+                width: 100%;
+                display: flex;
+                padding-bottom: 14px;
+
+                & input {
+                    width: 100%;
+                }
+                & img {
+                    margin: auto 7px;
+                    width: 28px;
+                    height: 28px;
+                    filter: brightness($Normal-Brightness);
+                }
+                & img:hover {
+                    filter: brightness($Focus-Brightness);
+                }
             }
             
             &__desc__chars {

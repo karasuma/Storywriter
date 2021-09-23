@@ -15,12 +15,14 @@
             </div>
             <div v-else>
                 <span v-if="lore.isEditing">
-                    <p class="hierarchy__selected">
+                    <p class="hierarchy__selected" :style="setBorderLine(lore)">
                         {{ lore.content.caption }}
                     </p>
                 </span>
                 <span v-else>
-                    <p @click="changeEditMode(lore)">{{ lore.content.caption }}</p>
+                    <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
+                        {{ lore.content.caption }}
+                    </p>
                 </span>
             </div>
         </li>
@@ -49,6 +51,13 @@ import { Stories } from "../models/story/stories";
         changeEditMode: function(story: Stories) {
             this.resetAllFlags();
             story.editing(true);
+        },
+        setBorderLine: function(story: Stories): string {
+            if(story.isDirectory()) {
+                return "";
+            }
+            const p = "padding-left: 7px;";
+            return p + "border-left: solid 4px " + story.content.color + ";";
         }
     }
 })

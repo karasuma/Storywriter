@@ -5,7 +5,7 @@ export class Defs {
         Reject: 2
     } as const;
 
-    public static readonly definedColors: string[] = [
+    public static readonly definedDarkColors: string[] = [
         "#434343", // Gray
         "#582020", // Red
         "#583b20", // Orange
@@ -18,5 +18,20 @@ export class Defs {
         "#3f2058", // Violet
         "#58204f", // Cherry blossom
         "#582039", // Crimson
+    ];
+
+    public static readonly definedLightColors: string[] = [
+        "#bababa", // Gray
+        "#bd4540", // Red
+        "#c78640", // Orange
+        "#ccc84b", // Yellow
+        "#81d14b", // Light Green
+        "#4bcc72", // Green
+        "#4acccc", // Skyblue
+        "#4b8dcf", // Waterblue
+        "#4c4acc", // Blue
+        "#9750c7", // Violet
+        "#d14db4", // Cherry blossom
+        "#d14b81", // Crimson
     ];
 }

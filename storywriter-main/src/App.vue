@@ -1,17 +1,19 @@
 <template>
   <div>
+    <!-- Teleport targets -->
+    <div id="modal-msgbox"></div>
+    <div id="modal-calendaredit"></div>
+    <div id="modal-colorpicker"></div>
+
+    <!-- Main contents -->
     <EditHeader />
 
     <div id="container">
       <Menu class="background" />
-
-      <EditFlow class="background" v-bind:stories="vms.hierarchy" />
+      <EditFlow class="background" :stories="vms.hierarchy"/>
     </div>
 
     <EditFooter />
-
-    <div id="modal-msgbox"></div>
-    <div id="modal-colorpicker"></div>
   </div>
 </template>
 
@@ -31,20 +33,20 @@ class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
   constructor() {
     super();
     // Sample story
-    const sample = new Stories(false);
-    sample.content.caption = "サンプル";
-    sample.isEditing = true;
-    const dir1 = new Stories(true);
-    dir1.content.caption = "グループ１";
-    const child1 = new Stories(false);
-    child1.content.caption = "New awesome story 01 but this is not my product";
-    const child2 = new Stories(false);
-    child2.content.caption = "たいとる";
+    const root = new Stories(true);
+    const storiesLen = () => {
+      return Stories.flatStories(root.children)
+        .filter((x: Stories) => !x.isDirectory())
+        .length;
+    }
+    const editing = root.appendNewStory(false, "サンプル", storiesLen());
+    editing.isEditing = true;
+    const dir = root.appendNewStory(true, "グループ1");
+    dir.appendNewStory(false, "New awesome story 01 but this is not my product", storiesLen());
+    dir.appendNewStory(false, "たいとる", storiesLen());
+    root.appendNewStory(false, "邪知暴虐のゲネイオス", storiesLen());
 
-    dir1.appendStory(child1);
-    dir1.appendStory(child2);
-    this.hierarchy.push(sample);
-    this.hierarchy.push(dir1);
+    root.children.forEach((x: Stories) => this.hierarchy.push(x));
   }
 }
 

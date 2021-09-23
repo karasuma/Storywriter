@@ -83,3 +83,8 @@ p {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+@mixin unselectable() {
+    user-select: none;
+    cursor: default;
+}

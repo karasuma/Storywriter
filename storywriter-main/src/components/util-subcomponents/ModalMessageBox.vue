@@ -1,6 +1,6 @@
 <template>
-    <teleport to="#modal-msgbox">
-        <div v-if="isVisible" id="msgbox" class="modal">
+    <teleport to="#modal-msgbox" v-if="isVisible">
+        <div class="modal">
             <div class="modal__content">
                 <div class="modal__content__header">
                     <p class="modal__content__header-caption">{{ param.caption }}</p>

@@ -1,9 +1,12 @@
+import { Calendar } from '../calendar/calendar';
 import { StoryItem } from './story-item';
 
 export class StoryData {
     public caption: string = "";
     public description: string = "";
+    public color: string = "#333333";
     public lores: StoryItem[] = new Array<StoryItem>();
+    public time: number = 0;
 
     public addLore() {
         this.lores.push(new StoryItem());
@@ -30,8 +33,10 @@ export class StoryData {
 
         if(isUp && targetIdx > 0) {
             this.swapLore(targetIdx, targetIdx - 1);
+            this.time--;
         } else if(targetIdx < this.lores.length - 1) {
             this.swapLore(targetIdx, targetIdx + 1);
+            this.time++;
         }
     }
 
