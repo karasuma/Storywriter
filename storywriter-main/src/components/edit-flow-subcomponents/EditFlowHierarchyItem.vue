@@ -25,7 +25,7 @@
                     </div>
                     <EditFlowHierarchyItem
                         :root="lore"
-                        :class="{hierarchy__unexpand: lore.isExpanding}"
+                        :class="{hierarchy__unexpand: lore.isExpanding, child__hierarchy: true}"
                     />
                 </div>
                 <div v-else>
@@ -199,6 +199,8 @@ export default class EditFlowHierarchyItem extends Vue {
         }
 
         & p {
+            margin: 3px;
+            padding: 0;
             width: 100%;
         }
 
@@ -212,11 +214,6 @@ export default class EditFlowHierarchyItem extends Vue {
             }
         }
 
-        & + ul > li {
-            border-left: solid 1px $Hierarchy-Color-Line;
-            padding-left: 4px;
-        }
-
         &:hover {
             color: $Font-Selected-Color;
         }
@@ -224,6 +221,12 @@ export default class EditFlowHierarchyItem extends Vue {
 
     & .hierarchy__selected {
         color: $Selected-Item-Color;
+    }
+
+    & .child__hierarchy {
+        border-left: solid 1px $Hierarchy-Color-Line;
+        margin-left: 8.5px;
+        padding-left: 2px;
     }
 
     & .hierarchy__unexpand {
