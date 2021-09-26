@@ -24,6 +24,13 @@
 
         <div v-for="story in content.stories" :key="story" class="section__content">
             <textarea v-model="story.text" spellcheck="false"></textarea>
+            <div class="section__content__controls">
+                <img src="../../assets/arrow.png" class="section__content__controls-up"
+                    @click="moveStoryPosition(story.id, true)" v-show="canStoryUp(story.id)">
+                <img src="../../assets/arrow.png" class="section__content__controls-down"
+                    @click="moveStoryPosition(story.id, false)" v-show="canStoryDown(story.id)">
+            </div>
+            <img src="../../assets/dispose.png" @click="disposeStory(story.id)">
         </div>
         <div class="section__control">
             <img src="../../assets/add.png" @click="addStory(content)">
@@ -33,7 +40,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryItem } from "../models/story/story-item";
+import { StoryItem, StoryContent } from "../models/story/story-item";
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalColorPicker from "../util-subcomponents/ModalColorPicker.vue";
 import { Defs } from "../models/defs";
@@ -86,6 +93,24 @@ import { StoryData } from "../models/story/story-data";
         movePosition: function(up: boolean) {
             const dir = up ? "up" : "down";
             this.move(dir + ":" + this.content.id);
+        },
+        moveStoryPosition: function(id: string, up: boolean) {
+            const currentIdx = this.getStoryIndex(id);
+            const neighborIdx = up ? currentIdx - 1 : currentIdx + 1;
+
+            // Swap both of story
+            const temp = this.content.stories[currentIdx];
+            this.content.stories[currentIdx] = this.content.stories[neighborIdx];
+            this.content.stories[neighborIdx] = temp;
+        },
+        disposeStory: function(id: string) {
+            this.content.removeStory(this.getStoryIndex(id));
+        },
+        canStoryUp: function(id: string): boolean {
+            return this.getStoryIndex(id) > 0;
+        },
+        canStoryDown: function(id: string): boolean {
+            return this.getStoryIndex(id) < this.content.stories.length - 1;
         }
     },
     computed: {
@@ -111,6 +136,10 @@ export default class EditFlowSectionItem extends Vue {
 
     public getCurrentIndex(): number {
         return this.parent.getLoreIndex(this.content);
+    }
+
+    public getStoryIndex(id: string): number {
+        return this.content.stories.findIndex((x: StoryContent) => x.id == id);
     }
 }
 </script>
@@ -175,13 +204,53 @@ export default class EditFlowSectionItem extends Vue {
         margin-left: 15px;
         border-left: solid 1px $Button-Normal;
         padding-left: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
 
         & textarea {
             border-radius: 2;
             border: dashed 1px $Hierarchy-Color-Line;
             border-bottom: solid 1px $Button-Normal;
             padding-left: 14px;
-            width: calc(100% - 23px);
+            width: 100%;
+        }
+
+        &__controls {
+            width: 32px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+
+            & * {
+                width: 18px;
+                height: 18px;
+                margin: 3px 0;
+            }
+            &-up {
+                transform: rotate(90deg);
+                filter: brightness($Normal-Brightness);
+                &:hover {
+                    filter: brightness($Focus-Brightness);
+                }
+            }
+            &-down {
+                transform: rotate(-90deg);
+                filter: brightness($Normal-Brightness);
+                &:hover {
+                    filter: brightness($Focus-Brightness);
+                }
+            }
+        }
+
+        & img {
+            width: 21px;
+            height: 21px;
+            margin: 6px;
+            filter: brightness($Normal-Brightness);
+            &:hover {
+                filter: brightness($Focus-Brightness);
+            }
         }
     }
 

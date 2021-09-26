@@ -18,8 +18,7 @@
 
         <div class="hierarchy">
             <EditFlowHierarchyItem
-                :stories="stories"
-                :resetAllFlags="resetAllEdits"
+                :root="root"
             />
         </div>
 
@@ -53,8 +52,7 @@
                     <img src="../assets/add.png" @click="addLore(getEditing.content)">
                 </div>
             </div>
-            <div v-else class="edit__main">
-                <p>there is no editing contents...</p>
+            <div v-else class="edit__main edit__main__bg">
             </div>
         </div>
     </div>
@@ -69,9 +67,8 @@ import EditFlowSectionItem from "./edit-flow-subcomponents/EditFlowSectionItem.v
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue";
 import ModalColorPicker from "./util-subcomponents/ModalColorPicker.vue";
-import { IReceiveString, MessageObject } from "./models/utils";
+import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
-import { PropType } from "@vue/runtime-core";
 
 @Options({
     components: {
@@ -82,18 +79,11 @@ import { PropType } from "@vue/runtime-core";
         ModalColorPicker
     },
     props: {
-        stories: Array,
-        removeStory: Function as PropType<IReceiveString>,
-        addRootStory: Function
+        root: Stories,
     },
     methods: {
         addLore: function(content: StoryData) {
             content.addLore();
-        },
-        resetAllEdits: function() {
-            for(const story of this.stories) {
-                story.disableEditingChildren(true);
-            }
         },
         deleteSectionItem: function(id: string) {
             this.getEditing.content.removeLore(id);
@@ -142,19 +132,20 @@ import { PropType } from "@vue/runtime-core";
         }
     },
     computed: {
+        stories: function():Array<Stories> {
+            return this.root.children;
+        },
         getEditing: function(): Stories | undefined {
-            return this.stories
-                .map((x: Stories) => x.getEditingChildren())
-                .find((x: Stories | undefined) => typeof x !== 'undefined');
+            return this.root.getEditingChildren();
         },
         hasEditing: function(): Boolean {
-            return typeof this.getEditing !== 'undefined';
+            return this.getEditing !== undefined;
         },
     }
 })
 
 export default class EditFlow extends Vue {
-    stories!: Array<Stories>;
+    root!: Stories;
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");
@@ -203,6 +194,7 @@ export default class EditFlow extends Vue {
 
         &__main {
             width: 100%;
+            height: calc(100vh - $Control-Height);
 
             & input {
                 border: none;
@@ -270,6 +262,14 @@ export default class EditFlow extends Vue {
                 & img:hover {
                     filter: brightness($Focus-Brightness);
                 }
+            }
+
+            &__bg {
+                background-image: url("../assets/edit.png");
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center center;
+                filter: brightness(0.4);
             }
         }
     }

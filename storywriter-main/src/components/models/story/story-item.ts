@@ -15,6 +15,7 @@ export class StoryItem implements IUniqueObject {
     }
 }
 
-class StoryContent {
+export class StoryContent implements IUniqueObject {
+    public readonly id: string = Utils.getUniqueId();
     public text: string = "";
 }

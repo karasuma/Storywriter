@@ -4,13 +4,14 @@
     <div id="modal-msgbox"></div>
     <div id="modal-calendaredit"></div>
     <div id="modal-colorpicker"></div>
+    <div id="modal-inputbox"></div>
 
     <!-- Main contents -->
     <EditHeader />
 
     <div id="container">
       <Menu class="background" />
-      <EditFlow class="background" :stories="vms.hierarchy"/>
+      <EditFlow class="background" :root="vms.hierarchy"/>
     </div>
 
     <EditFooter />
@@ -27,26 +28,21 @@ import EditFlow from './components/EditFlow.vue';
 // ViewModel
 import { Stories } from './components/models/story/stories';
 class StoryWrtiterViewModel {
-  public hierarchy: Array<Stories> = new Array<Stories>();
+  public hierarchy: Stories = new Stories(false);
 }
 class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
   constructor() {
     super();
     // Sample story
     const root = new Stories(true);
-    const storiesLen = () => {
-      return Stories.flatStories(root.children)
-        .filter((x: Stories) => !x.isDirectory())
-        .length;
-    }
-    const editing = root.appendNewStory(false, "サンプル", storiesLen());
+    const editing = root.appendNewStory(false, "サンプル");
     editing.isEditing = true;
     const dir = root.appendNewStory(true, "グループ1");
-    dir.appendNewStory(false, "New awesome story 01 but this is not my product", storiesLen());
-    dir.appendNewStory(false, "たいとる", storiesLen());
-    root.appendNewStory(false, "邪知暴虐のゲネイオス", storiesLen());
+    dir.appendNewStory(false, "New awesome story 01 but this is not my product");
+    dir.appendNewStory(false, "たいとる");
+    root.appendNewStory(false, "邪知暴虐のゲネイオス");
 
-    root.children.forEach((x: Stories) => this.hierarchy.push(x));
+    this.hierarchy = root;
   }
 }
 

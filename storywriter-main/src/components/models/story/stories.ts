@@ -6,13 +6,27 @@ export class Stories implements IUniqueObject {
     public content: StoryData = new StoryData();
     public children: Stories[] = new Array<Stories>();
     public isEditing: boolean = false;
+    public isExpanding: boolean = false;
+    public parent: Stories | null = null;
+    public readonly root: Stories;
     
     private currentDepth: number = 0;
     private dirMode: boolean = false;
 
-    constructor(createAsDir: boolean, depth: number = 0){
+    constructor(
+        createAsDir: boolean,
+        caption: string = "x",
+        depth: number = 0,
+        root: Stories | null = null) {
         this.dirMode = createAsDir;
+        this.content.caption = caption;
         this.currentDepth = depth;
+        if(depth > 0 && root === null) {
+            let msg = "[constructor("+this.content.caption+") in Stories] ";
+            msg += "Argument Error: Non-root story received null.";
+            throw Error(msg);
+        }
+        this.root = (depth > 0 ? root as Stories : this);
     }
 
     static flatStories(stories: Array<Stories>): Array<Stories> {
@@ -46,20 +60,21 @@ export class Stories implements IUniqueObject {
     }
 
     getLastChildTimelineIndex(): number {
-        const flatten = Stories.flatStories(this.children);
-        if(flatten.length == 0) return -1;
-        return flatten[flatten.length - 1].content.time;
+        if(this.root.children.length == 0) return 0;
+        return Stories.flatStories(this.root.children)
+            .map((x: Stories) => x.content.time)
+            .reduce((acc: number, curr: number) => acc > curr ? acc : curr);
     }
 
-    appendNewStory(createAsDir: boolean, caption: string = "New story", tlIndex: number = 0): Stories {
-        const newDepth = createAsDir ? this.currentDepth + 1 : this.currentDepth;
-        const newStory = new Stories(createAsDir, newDepth);
-        newStory.content.caption = caption;
-        newStory.content.time = createAsDir ? -1 : tlIndex;
+    appendNewStory(createAsDir: boolean, caption: string = "New story"): Stories {
+        const newDepth = this.currentDepth + 1;
+        const newStory = new Stories(createAsDir, caption, newDepth, this.root);
+        newStory.content.time = createAsDir ? -1 : this.getLastChildTimelineIndex() + 1;
         return this.appendStory(newStory);
     }
 
     appendStory(story: Stories): Stories {
+        story.parent = this;
         this.children.push(story);
         return story;
     }
@@ -69,30 +84,18 @@ export class Stories implements IUniqueObject {
     }
 
     editing(mode: boolean) {
+        if(mode) {
+            Stories.flatStories(this.root.children).forEach((x: Stories) => x.isEditing = false);
+        }
         this.isEditing = mode;
     }
 
-    disableEditingChildren(disableSelf: boolean = false) {
-        for(const child of this.children) {
-            child.editing(false);
-            child.disableEditingChildren(true);
-        }
-        if(disableSelf) {
-            this.editing(false);
-        }
-    }
-
     getEditingChildren(): Stories | undefined {
-        if(this.isEditing) {
-            return this;
-        }
-        return this.children.find((x: Stories) => typeof x.getEditingChildren() !== 'undefined');
+        return Stories.flatStories(this.root.children)
+            .find((x: Stories) => x.isEditing);
     }
 
     hasEditingChildren(): boolean {
-        if(this.isEditing) {
-            return true;
-        }
-        return this.children.some((x: Stories) => x.hasEditingChildren());
+        return this.getEditingChildren() !== undefined;
     }
 }

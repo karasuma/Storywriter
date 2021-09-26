@@ -1,55 +1,79 @@
 <template>
-    <ul class="container">
-        <li v-for="lore in stories" :key="lore">
-            <div v-if="lore.isDirectory()">
-                <div class="container--caret" @click="toggleDir()">
-                    <img src="../../assets/caret.png"
-                    :class="{hierarchy__unexpand__img: expanding}">
-                    {{ lore.content.caption }}
+    <div>
+        <ModalMessageBox
+            :isVisible="showMsgBox"
+            :param="message"
+            :result="getResult"
+        />
+        <ModalSimpleInputBox
+            :isVisible="showInputBox"
+            :result="getResultInput"
+            :caption="inputCaption"
+            :defaultText="defaultText"
+        />
+        <ul class="container">
+            <li v-for="lore in stories" :key="lore">
+                <div v-if="lore.isDirectory()">
+                    <div class="container__caret">
+                        <img src="../../assets/caret.png" @click="toggleDir(lore)"
+                        :class="{hierarchy__unexpand__img: lore.isExpanding, container__caret__arrow: true}">
+                        <p @click="toggleDir(lore)">{{ lore.content.caption }}</p>
+                        <img src="../../assets/edit.png" @click="askEditCaption(lore)"
+                        class="container__caret__button">
+                        <img src="../../assets/dispose.png" @click="askDispose(lore)"
+                        class="container__caret__button">
+                    </div>
+                    <EditFlowHierarchyItem
+                        :root="lore"
+                        :class="{hierarchy__unexpand: lore.isExpanding}"
+                    />
                 </div>
-                <EditFlowHierarchyItem
-                    :stories="lore.children"
-                    :class="{hierarchy__unexpand: expanding}"
-                    :resetAllFlags="resetAllFlags"
-                />
-            </div>
-            <div v-else>
-                <span v-if="lore.isEditing">
-                    <p class="hierarchy__selected" :style="setBorderLine(lore)">
-                        {{ lore.content.caption }}
-                    </p>
-                </span>
-                <span v-else>
-                    <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
-                        {{ lore.content.caption }}
-                    </p>
-                </span>
-            </div>
-        </li>
-    </ul>
+                <div v-else>
+                    <span v-if="lore.isEditing">
+                        <p class="hierarchy__selected" :style="setBorderLine(lore)">
+                            {{ lore.content.caption }}
+                        </p>
+                    </span>
+                    <span v-else>
+                        <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
+                            {{ lore.content.caption }}
+                        </p>
+                    </span>
+                </div>
+            </li>
+        </ul>
+        <div class="container-add">
+            <img src="../../assets/add-file.png" @click="askNewStory(false)">
+            <img src="../../assets/add-folder.png" @click="askNewStory(true)">
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { Defs } from "../models/defs";
 import { Stories } from "../models/story/stories";
+import { MessageObject } from "../models/utils";
 
+import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
+import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
 
 
 @Options({
     name: "EditFlowHierarchyItem",
     components: {
-        EditFlowHierarchyItem
+        EditFlowHierarchyItem,
+        ModalMessageBox,
+        ModalSimpleInputBox
     },
     props: {
-        stories: Array,
-        resetAllFlags: Function
+        root: Stories,
     },
     methods: {
-        toggleDir: function() {
-            this.expanding = !this.expanding;
+        toggleDir: function(story: Stories) {
+            story.isExpanding = !story.isExpanding;
         },
         changeEditMode: function(story: Stories) {
-            this.resetAllFlags();
             story.editing(true);
         },
         setBorderLine: function(story: Stories): string {
@@ -58,15 +82,78 @@ import { Stories } from "../models/story/stories";
             }
             const p = "padding-left: 7px;";
             return p + "border-left: solid 4px " + story.content.color + ";";
+        },
+        askDispose: function(lore: Stories) {
+            this.selectingId = lore.id;
+            let msg = "Are you sure you want to delete<br>";
+            msg += '<b style="padding: 0 3px; font-size: 16px;">';
+            msg += lore.content.caption + "</b> ?<br>";
+            msg += "(All of sub stories delete when it has children)";
+            this.message = MessageObject.createMessage(
+                "Warning",
+                msg,
+                true
+            );
+            this.showMsgBox = true;
+        },
+        getResult: function(result: number) {
+            if(result == Defs.MessageType.Confirm) {
+                Stories.removeTargetStory(this.stories, this.selectingId);
+            }
+            this.showMsgBox = false;
+        },
+        getResultInput: function(result: string) {
+            this.showInputBox = false;
+            this.inputContent = result;
+            this.defaultText = "";
+            if(this.inputContent.length > 0) {
+                if(this.isEditCaption) {
+                    this.selectingLore.content.caption = result;
+                } else {
+                    this.root.appendNewStory(this.createAsDir, this.inputContent);
+                }
+            }
+        },
+        askNewStory: function(isdir: boolean) {
+            this.createAsDir = isdir;
+            this.isEditCaption = false;
+            this.showInputBox = true;
+        },
+        askEditCaption: function(lore: Stories) {
+            this.selectingLore = lore;
+            this.isEditCaption = true;
+            this.defaultText = lore.content.caption;
+            this.showInputBox = true;
+        }
+    },
+    computed: {
+        stories: function(): Array<Stories> {
+            return this.root.children;
+        },
+        inputCaption: function(): string {
+            if(this.isEditCaption) return "名前の変更";
+            const genre = this.createAsDir ? "グループ" : "お話";
+            return "新しい" + genre + "の作成";
         }
     }
 })
 
 export default class EditFlowHierarchyItem extends Vue {
-    public stories!: Array<Stories>;
-    public resetAllFlags!: Function;
+    public root!: Stories;
     
     public expanding: Boolean = false;
+
+    public showMsgBox: boolean = false;
+    public message: MessageObject = MessageObject.createMessage("", "");
+
+    public showInputBox: boolean = false;
+    public inputContent: string = "";
+    public createAsDir: boolean = false;
+    public defaultText: string = "";
+    public isEditCaption: boolean = false;
+
+    public selectingId: string = "";
+    public selectingLore: Stories = new Stories(false);
 }
 </script>
 
@@ -85,7 +172,7 @@ export default class EditFlowHierarchyItem extends Vue {
 
     & p {
         text-align: left;
-        margin-left: 20px;
+        margin-left: 10px;
         line-height: 1.2em;
         padding: 4px 0;
 
@@ -98,23 +185,41 @@ export default class EditFlowHierarchyItem extends Vue {
         color: $Font-Selected-Color;
     }
 
-    &--caret {
+    &__caret {
         font-weight: bold;
         user-select: none;
+        display: flex;
+        justify-content: center;
 
-        & img {
+        &__arrow {
             width: 12px;
-            margin: 0 6px;
-            transform:rotate(90deg);
+            height: 12px;
+            margin: auto 3px;
+            transform: rotate(90deg);
+        }
+
+        & p {
+            width: 100%;
+        }
+
+        &__button {
+            width: 17px;
+            height: 17px;
+            margin-right: 6px;
+            filter: brightness($Normal-Brightness);
+            &:hover {
+                filter: brightness($Focus-Brightness);
+            }
         }
 
         & + ul > li {
             border-left: solid 1px $Hierarchy-Color-Line;
-            padding-left: 2px;
+            padding-left: 4px;
         }
-    }
-    &--caret:hover {
-        color: $Font-Selected-Color;
+
+        &:hover {
+            color: $Font-Selected-Color;
+        }
     }
 
     & .hierarchy__selected {
@@ -125,7 +230,27 @@ export default class EditFlowHierarchyItem extends Vue {
         display: none;
     }
     & .hierarchy__unexpand__img {
-        transform:rotate(0deg);
+        transform: rotate(0deg);
+    }
+}
+
+.container-add {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 30px;
+    padding: 2px 0;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: center;
+    & img {
+        width: 20px;
+        height: 20px;
+        margin: 0 4px;
+        filter: brightness($Normal-Brightness);
+        &:hover {
+            filter: brightness($Focus-Brightness);
+        }
     }
 }
 </style>
