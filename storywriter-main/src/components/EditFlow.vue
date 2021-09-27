@@ -187,7 +187,8 @@ export default class EditFlow extends Vue {
         bottom: 0;
         left: $Control-Width;
         width: calc( 100vw - #{$Control-Width} - 40px );
-        margin: $Header-Height 0;
+        margin-top: $Header-Height;
+        margin-bottom: $Footer-Height;
         padding: 0 20px;
         overflow-y: scroll;
         background-color: $Background-Color;
