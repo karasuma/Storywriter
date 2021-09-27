@@ -10,8 +10,10 @@
     <EditHeader />
 
     <div id="container">
-      <Menu class="background" />
-      <EditFlow class="background" :root="vms.hierarchy"/>
+      <Menu class="background" :changeMenu="changeMenu" />
+      <EditFlow class="background" :style="getVisible(0)" :root="vms.hierarchy"/>
+      <EditTimeline class="background" :style="getVisible(1)" 
+        :select="editSelectedMenu" :root="vms.hierarchy"/>
     </div>
 
     <EditFooter />
@@ -24,6 +26,7 @@ import EditHeader from './components/EditHeader.vue';
 import EditFooter from './components/EditFooter.vue';
 import Menu from './components/Menu.vue';
 import EditFlow from './components/EditFlow.vue';
+import EditTimeline from './components/EditTimeline.vue';
 
 // ViewModel
 import { Stories } from './components/models/story/stories';
@@ -52,13 +55,27 @@ class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
     EditHeader,
     EditFooter,
     Menu,
-    EditFlow
+    EditFlow,
+    EditTimeline
+  },
+  methods: {
+    changeMenu: function(index: string) {
+      this.currentIndex = parseInt(index);
+    },
+    getVisible: function(index: number): string {
+      return this.currentIndex == index ? "" : "display: none;";
+    },
+    editSelectedMenu: function() {
+      this.changeMenu(0);
+    }
   }
 })
 
 export default class App extends Vue {
   vm!: StoryWrtiterViewModel;
   vms: StoryWrtiterViewModelSample = new StoryWrtiterViewModelSample();
+
+  currentIndex: number = 0;
 }
 </script>
 

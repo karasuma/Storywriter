@@ -13,6 +13,25 @@ export class Utils {
         }
         return 0;
     }
+
+    static hex2rgb(hex: string): [number, number, number] {
+        // Validate
+        const hexes = hex.substr(1).toUpperCase();
+        if(hexes.length != 6 || hexes.match(/[^0-9A-F]/)) return [-1, -1, -1];
+
+        // Convert
+        let dec = 0;
+        const nums = [0,0,0];
+        for(let i = 0; i < hexes.length; i++) {
+            dec += "0123456789ABCDEF".indexOf(hexes[i]) * Math.pow(16, 1 - (i % 2));
+            if(i % 2 != 0) {
+                nums[Math.floor(i / 2)] = dec;
+                dec = 0;
+            }
+        }
+        return [nums[0], nums[1], nums[2]];
+
+    }
 }
 
 export class MessageObject {

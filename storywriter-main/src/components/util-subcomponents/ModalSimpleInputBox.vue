@@ -7,7 +7,7 @@
                     <p class="modal__content__header-close" @click="disable">&times;</p>
                 </div>
                 <div class="modal__content__input">
-                    <input v-model="content" placeholder="..." @keyup.enter="confirm">
+                    <input v-model="content" placeholder="..." spellcheck="false" @keyup.enter="confirm">
                 </div>
                 <div class="modal__content__buttons">
                     <span v-if="confirmable" class="modal__content__buttons-ok" @click="confirm">Confirm</span>

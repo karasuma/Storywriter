@@ -1,38 +1,50 @@
 <template>
     <div class="menu">
         <div class="menu__item item-selected">
-            <img id="flow-button" src="../assets/edit.png">
+            <img id="flow-button" src="../assets/edit.png" @click="sendMenu(0)">
         </div>
         <div class="menu__item">
-            <img id="hist-button" src="../assets/calendar.png">
+            <img id="hist-button" src="../assets/calendar.png" @click="sendMenu(1)">
         </div>
         <div class="menu__item">
-            <img id="dict-button" src="../assets/dict.png">
+            <img id="dict-button" src="../assets/dict.png" @click="sendMenu(2)">
         </div>
         <div class="menu__item">
-            <img id="person-button" src="../assets/person.png">
+            <img id="person-button" src="../assets/person.png" @click="sendMenu(3)">
         </div>
         <div class="menu__item">
-            <img id="wold-button" src="../assets/world.png">
+            <img id="wold-button" src="../assets/world.png" @click="sendMenu(4)">
         </div>
         <div class="menu__item">
-            <img id="memo-button" src="../assets/memo.png">
+            <img id="memo-button" src="../assets/memo.png" @click="sendMenu(5)">
         </div>
         <div class="menu__item--config">
-            <img id="config-button" src="../assets/config.png">
+            <img id="config-button" src="../assets/config.png" @click="sendMenu(6)">
         </div>
     </div>    
 </template>
 
 <script lang="ts">
+import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
+import { IReceiveString } from "./models/utils";
 
 @Options({
-
+    props: {
+        changeMenu: {
+            type: Function as PropType<IReceiveString>,
+            required: true
+        }
+    },
+    methods: {
+        sendMenu: function(index: number) {
+            this.changeMenu(index);
+        }
+    }
 })
 
 export default class Menu extends Vue {
-    
+    changeMenu!: IReceiveString;
 }
 </script>
 

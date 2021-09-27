@@ -60,7 +60,7 @@ export class Stories implements IUniqueObject {
     }
 
     getLastChildTimelineIndex(): number {
-        if(this.root.children.length == 0) return 0;
+        if(this.root.children.length == 0) return -1;
         return Stories.flatStories(this.root.children)
             .map((x: Stories) => x.content.time)
             .reduce((acc: number, curr: number) => acc > curr ? acc : curr);
