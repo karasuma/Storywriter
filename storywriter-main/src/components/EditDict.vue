@@ -203,13 +203,7 @@ export default class EditDict extends Vue {
     & * { color: $Font-Color; }
 
     & .vocabs {
-        margin: 2px 0;
-        margin-right: 14px;
-        width: $Hierarchy-Width;
-        height: 100vh;
-        background-color: $Background-Color-Hierarchy;
-        overflow-y: visible;
-        overflow-x: hidden;
+        @include hierarchy-base($Background-Color-Hierarchy);
 
         &__add {
             margin-top: 15px;
@@ -231,16 +225,7 @@ export default class EditDict extends Vue {
     }
 
     & .edit {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: $Control-Width;
-        width: calc( 100vw - #{$Control-Width} - 40px );
-        margin-top: $Header-Height;
-        margin-bottom: $Footer-Height;
-        padding: 0 20px;
-        overflow-y: visible;
-        background-color: $Background-Color;
+        @include edit-base($Background-Color);
 
         &__content {
             margin: 32px;

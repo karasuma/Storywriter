@@ -88,3 +88,31 @@ p {
     user-select: none;
     cursor: default;
 }
+
+@mixin hierarchy-base($background) {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: $Menu-Width;
+    width: calc( #{$Hierarchy-Width} - 6px );
+    margin-top: $Header-Height;
+    margin-bottom: $Footer-Height;
+    padding: 6px 0;
+    padding-right: 8px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: $background;
+}
+
+@mixin edit-base($background) {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: $Control-Width;
+    width: calc( 100vw - #{$Control-Width} - 40px );
+    margin-top: $Header-Height;
+    margin-bottom: $Footer-Height;
+    padding: 0 20px;
+    overflow-y: scroll;
+    background-color: $background;
+}

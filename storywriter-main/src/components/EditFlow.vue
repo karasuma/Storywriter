@@ -171,28 +171,11 @@ export default class EditFlow extends Vue {
     }
 
     & .hierarchy {
-        margin: 2px 0;
-        margin-right: 14px;
-        width: $Hierarchy-Width;
-        height: 100vh;
-        background-color: $Background-Color-Hierarchy;
-        padding: 6px 0;
-        padding-right: 8px;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        @include hierarchy-base($Background-Color-Hierarchy);
     }
 
     & .edit {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: $Control-Width;
-        width: calc( 100vw - #{$Control-Width} - 40px );
-        margin-top: $Header-Height;
-        margin-bottom: $Footer-Height;
-        padding: 0 20px;
-        overflow-y: scroll;
-        background-color: $Background-Color;
+        @include edit-base($Background-Color);
 
         &__main {
             width: 100%;
