@@ -30,7 +30,19 @@ export class Utils {
             }
         }
         return [nums[0], nums[1], nums[2]];
+    }
 
+    static isNullOrUndefined(value: any | unknown): boolean {
+        return value === null || value === undefined;
+    }
+
+    static isObject(value: any | unknown): boolean {
+        const isObj = typeof value === 'object' || typeof value === 'function';
+        return !this.isNullOrUndefined(value) && isObj;
+    }
+
+    static clamp(value: number, min: number, max: number): number {
+        return min <= value ? value <= max ? value : max : min;
     }
 }
 

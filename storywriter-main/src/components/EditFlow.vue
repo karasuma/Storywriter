@@ -164,6 +164,7 @@ export default class EditFlow extends Vue {
     top: $Header-Height;
     bottom: $Footer-Height;
     left: calc( #{$Menu-Width} + 1px );
+    border-left: solid 1px $Hierarchy-Color-Line;
 
     & * {
         color: $Font-Color;

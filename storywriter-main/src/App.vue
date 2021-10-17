@@ -5,15 +5,16 @@
     <div id="modal-calendaredit"></div>
     <div id="modal-colorpicker"></div>
     <div id="modal-inputbox"></div>
+    <div id="modal-imgviewer"></div>
 
     <!-- Main contents -->
     <EditHeader />
 
     <div id="container">
-      <Menu class="background" :changeMenu="changeMenu" />
-      <EditFlow class="background" :style="getVisible(0)" :root="vms.hierarchy"/>
-      <EditTimeline class="background" :style="getVisible(1)" 
-        :select="editSelectedMenu" :root="vms.hierarchy"/>
+      <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
+      <EditFlow class="bk" :style="getVisible(0)" :root="vms.hierarchy" />
+      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :root="vms.hierarchy" />
+      <EditDict class="bk" :style="getVisible(2)" :vm="vms" />
     </div>
 
     <EditFooter />
@@ -27,27 +28,9 @@ import EditFooter from './components/EditFooter.vue';
 import Menu from './components/Menu.vue';
 import EditFlow from './components/EditFlow.vue';
 import EditTimeline from './components/EditTimeline.vue';
+import EditDict from './components/EditDict.vue';
 
-// ViewModel
-import { Stories } from './components/models/story/stories';
-class StoryWrtiterViewModel {
-  public hierarchy: Stories = new Stories(false);
-}
-class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
-  constructor() {
-    super();
-    // Sample story
-    const root = new Stories(true);
-    const editing = root.appendNewStory(false, "サンプル");
-    editing.isEditing = true;
-    const dir = root.appendNewStory(true, "グループ1");
-    dir.appendNewStory(false, "New awesome story 01 but this is not my product");
-    dir.appendNewStory(false, "たいとる");
-    root.appendNewStory(false, "邪知暴虐のゲネイオス");
-
-    this.hierarchy = root;
-  }
-}
+import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
 
 // Options
 @Options({
@@ -56,7 +39,8 @@ class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
     EditFooter,
     Menu,
     EditFlow,
-    EditTimeline
+    EditTimeline,
+    EditDict,
   },
   methods: {
     changeMenu: function(index: string) {
@@ -85,9 +69,8 @@ export default class App extends Vue {
 
 #container {
   z-index: $Normal-ZIndex;
-}
-
-.background {
-  background-color: $Background-Color;
+  & .bk {
+    background-color: $Background-Color;
+  }
 }
 </style>

@@ -34,4 +34,12 @@ export class Defs {
         "#d14db4", // Cherry blossom
         "#d14b81", // Crimson
     ];
+
+    public static getTempDirectory(): string {
+        const user = require('os').homedir();
+        if(user.length != 0) {
+            return user + "\\AppData\\Roaming\\StoryWriter";
+        }
+        return "\\";
+    }
 }

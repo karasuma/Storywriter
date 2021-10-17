@@ -4,7 +4,7 @@
             <img src="../assets/search.png">
             <div class="search__input">
                 <input type="text" v-model="searchText" spellcheck="false" placeholder="search...">
-                <p v-show="showCounter">{{ matchCount }} item{{ matchCount > 1 ? 's' : '' }} found.</p>
+                <p v-show="showCounter">{{ matchCount }} stor{{ matchCount > 1 ? 'ies' : 'y' }} found.</p>
             </div>
         </div>
 
@@ -97,6 +97,7 @@ export default class EditTimeline extends Vue {
     bottom: $Footer-Height;
     left: calc( #{$Menu-Width} + 1px );
     width: calc( 100vw - #{$Menu-Width} );
+    border-left: solid 1px $Hierarchy-Color-Line;
 
     & * { color: $Font-Color; }
 
