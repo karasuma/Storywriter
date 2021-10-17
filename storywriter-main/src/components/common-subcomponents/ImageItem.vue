@@ -1,5 +1,5 @@
 <template>
-    <div class="reswrapper">
+    <div class="reswrapper" :style="boxSizeCss">
         <ModalMessageBox
             :isVisible="showMsgBox"
             :param="message"
@@ -38,6 +38,10 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
         dispose: {
             Type: Function as PropType<IReceiveString>,
             required: true
+        },
+        size: {
+            Type: Number,
+            default: 96
         }
     },
     methods: {
@@ -58,17 +62,24 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
         closeViewer: function() {
             this.showImgViewer = false;
         }
+    },
+    computed: {
+        boxSizeCss: function(): string {
+            const size = this.size < 1 ? 96 : this.size;
+            return `width:${size}px; height:${size}px;`;
+        }
     }
 })
 
 export default class DictResourceItem extends Vue {
     file!: ImageResource;
     dispose!: IReceiveString;
+    size!: number;
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage(
                 "消すよ？",
-                "この画像を削除しますか？",
+                "この画像をリストから削除しますか？",
                 true
             );
     deleteTargetId: string = "";
@@ -85,8 +96,8 @@ $Close-Size: 28px;
 
 .reswrapper {
     position: relative;
-    width: 96px;
-    height: 96px;
+    //width: 96px;
+    //height: 96px;
     margin: 3px 5px;
 
     & * {

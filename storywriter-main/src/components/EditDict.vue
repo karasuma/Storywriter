@@ -66,9 +66,9 @@
 import { Options, Vue } from "vue-class-component";
 import { Word } from "./models/dictionary/word";
 import DictVocabItem from "./edit-dict-subcomponents/DictVocabItem.vue";
-import DictResourceItem from "./edit-dict-subcomponents/DictResourceItem.vue";
+import DictResourceItem from "./common-subcomponents/ImageItem.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
-import { MessageObject, Utils } from "./models/utils";
+import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
 import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 
