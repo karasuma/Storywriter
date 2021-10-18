@@ -39,6 +39,10 @@
                         :expandRatio="vm.setting.maxImageExpandRatio"
                         :expandPower="vm.setting.imageExpandPower"
                     />
+                    <ImageDropArea
+                        :imageSrc="addImageSource"
+                    />
+                    <!--
                     <div class="edit__content__images-add"
                         :style="fileHoverCss"
                         @click="addFile(getEditingWord)"
@@ -56,6 +60,7 @@
                         <img src="../assets/add2.png">
                         <p>D&D here...</p>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -71,12 +76,14 @@ import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
 import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 
 @Options({
     components: {
         DictVocabItem,
         ModalMessageBox,
         DictResourceItem,
+        ImageDropArea
     },
     props: {
         vm: {
@@ -111,55 +118,8 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
             this.deleteTargetId = "";
             this.showMsgBox = false;
         },
-        addFile: function(word: Word) {
-            this.selectedWord = word;
-            this.$refs.inputFile.click();
-        },
-        getFileAsBase64: function(filepath: File) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    if(e.target !== null)
-                        resolve(e.target.result);
-                };
-                reader.onerror = err => reject(err);
-                reader.readAsBinaryString(filepath);
-            });
-        },
-        selectedFile: function() {
-            const e = this.$refs.inputFile as HTMLInputElement;
-            if(e.files === null) return;
-            const receivedFile = e.files[0];
-            if(!receivedFile || this.selectedWord === null) return;
-            if(e instanceof Event) {
-                (e as Event).preventDefault();
-            }
-            
-            this.addResource(receivedFile);
-        },
-        deleteResource: function(id: string) {
-            this.getEditingWord.removeResource(id);
-        },
-        dropFile: function(event: DragEvent) {
-            this.hoverFileDropElem(false);
-            const files = event.dataTransfer?.files;
-            if(files === undefined) return;
-            for (let index = 0; index < files.length; index++) {
-                this.addResource(files[index]);
-            }
-        },
-        hoverFileDropElem: function(hover: boolean) {
-            this.hoveringDropArea = hover;
-        },
-
-        // Utils
-        addResource: function(filepath: File) {
-            this.getFileAsBase64(filepath)
-                .then((bstr: string) => {
-                    const b64str = btoa(bstr);
-                    const src = `data:${filepath.type};base64,${b64str}`;
-                    this.getEditingWord.addResource(src);
-                })
+        addImageSource: function(src: string): void {
+            this.getEditingWord.addResource(src);
         }
     },
     computed: {

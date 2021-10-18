@@ -19,6 +19,7 @@
         <div class="hierarchy">
             <EditFlowHierarchyItem
                 :root="root"
+                style="padding-right: 6px;"
             />
         </div>
 
