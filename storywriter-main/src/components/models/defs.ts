@@ -35,6 +35,8 @@ export class Defs {
         "#d14b81", // Crimson
     ];
 
+    public static readonly imageAccepts: string = "image/jpeg,image/jpg,image/png,image/gif";
+
     public static getTempDirectory(): string {
         const user = require('os').homedir();
         if(user.length != 0) {

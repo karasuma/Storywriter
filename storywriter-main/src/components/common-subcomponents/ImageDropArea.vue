@@ -10,7 +10,7 @@
             style="display: none"
             ref="inputFile"
             type="file"
-            accept="image/jpeg,image/jpg,image/png,image/gif"
+            :accept="accepts"
             @change="selectedFile"
         >
         <img src="../../assets/add2.png">
@@ -23,6 +23,7 @@ import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
 import { Word } from "../models/dictionary/word";
 import { IReceiveString, Position, Utils } from "../models/utils";
+import { Defs } from "../models/defs";
 
 @Options({
     props: {
@@ -96,6 +97,9 @@ import { IReceiveString, Position, Utils } from "../models/utils";
         fileHoverCss: function(): string {
             const css = "border: dashed 3px #aaa;color:#aaa;";
             return this.hoveringDropArea ? css : "";
+        },
+        accepts: function(): string {
+            return Defs.imageAccepts;
         }
     }
 })

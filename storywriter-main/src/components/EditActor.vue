@@ -40,7 +40,7 @@
                         style="display: none"
                         ref="inputFile"
                         type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/gif"
+                        :accept="accepts"
                         @change="selectedFile"
                     >
                     <img src="../assets/change.png"
@@ -189,6 +189,9 @@ import { Defs } from "./models/defs";
         },
         isEditing: function(): boolean {
             return this.getEditingActor !== undefined;
+        },
+        accepts: function(): string {
+            return Defs.imageAccepts;
         }
     }
 })
