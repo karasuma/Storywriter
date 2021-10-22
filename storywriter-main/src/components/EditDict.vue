@@ -33,7 +33,7 @@
 
                 <h2>Resources</h2>
                 <div class="edit__content__images">
-                    <DictResourceItem v-for="img in getEditingWord.resources"
+                    <ImageItem v-for="img in getEditingWord.resources"
                         :key="img" :file="img"
                         :dispose="deleteResource"
                         :expandRatio="vm.setting.maxImageExpandRatio"
@@ -42,25 +42,6 @@
                     <ImageDropArea
                         :imageSrc="addImageSource"
                     />
-                    <!--
-                    <div class="edit__content__images-add"
-                        :style="fileHoverCss"
-                        @click="addFile(getEditingWord)"
-                        @dragover.prevent="hoverFileDropElem(true)"
-                        @dragleave.prevent="hoverFileDropElem(false)"
-                        @drop.prevent="dropFile($event)"
-                    >
-                        <input
-                            style="display: none"
-                            ref="inputFile"
-                            type="file"
-                            accept="image/jpeg, image/jpg, image/png"
-                            @change="selectedFile"
-                        >
-                        <img src="../assets/add2.png">
-                        <p>D&D here...</p>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -71,7 +52,7 @@
 import { Options, Vue } from "vue-class-component";
 import { Word } from "./models/dictionary/word";
 import DictVocabItem from "./edit-dict-subcomponents/DictVocabItem.vue";
-import DictResourceItem from "./common-subcomponents/ImageItem.vue";
+import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
@@ -82,7 +63,7 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
     components: {
         DictVocabItem,
         ModalMessageBox,
-        DictResourceItem,
+        ImageItem,
         ImageDropArea
     },
     props: {
@@ -117,6 +98,9 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
             }
             this.deleteTargetId = "";
             this.showMsgBox = false;
+        },
+        deleteResource: function(id: string) {
+            this.getEditingWord.removeResource(id);
         },
         addImageSource: function(src: string): void {
             this.getEditingWord.addResource(src);

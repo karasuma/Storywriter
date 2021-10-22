@@ -115,3 +115,11 @@ p {
     overflow-y: scroll;
     background-color: $background;
 }
+
+@mixin edit-parent-base($hierarchy-line) {
+    position: fixed;
+    top: $Header-Height;
+    bottom: $Footer-Height;
+    left: calc( #{$Menu-Width} + 1px );
+    border-left: solid 1px $hierarchy-line;
+}

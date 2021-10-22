@@ -62,6 +62,33 @@ export class MessageObject {
     }
 }
 
+export class ImageResource implements IUniqueObject {
+    public readonly id: string = Utils.getUniqueId();
+    public content: string = "";
+
+    constructor(content: string) {
+        this.content = content;
+    }
+}
+
+export class Position {
+    public x: number = 0;
+    public y: number = 0;
+
+    constructor(x: number = 0, y: number = 0) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public squaringLength(): number {
+        return this.x * this.x + this.y * this.y;
+    }
+
+    public length(): number {
+        return Math.sqrt(this.squaringLength());
+    }
+}
+
 // Interface definitions ----
 export interface IReceiveString {
     (n: string): void

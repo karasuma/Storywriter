@@ -19,8 +19,7 @@
 import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
 import { Defs } from "../models/defs";
-import { IReceiveString, MessageObject } from "../models/utils";
-import { ImageResource } from "../models/dictionary/word";
+import { IReceiveString, MessageObject, ImageResource, Utils, Position } from "../models/utils";
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ImageViewer from "../util-subcomponents/ImageViewer.vue";
 
@@ -42,7 +41,8 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
         size: {
             Type: Number,
             default: 96
-        }
+        },
+        unfixedSize: Position
     },
     methods: {
         askDispose: function(id: string) {
@@ -57,7 +57,9 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
             this.showMsgBox = false;
         },
         showViewer: function() {
-            this.showImgViewer = true;
+            if(this.file.content.length > 0) {
+                this.showImgViewer = true;
+            }
         },
         closeViewer: function() {
             this.showImgViewer = false;
@@ -65,21 +67,25 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
     },
     computed: {
         boxSizeCss: function(): string {
-            const size = this.size < 1 ? 96 : this.size;
-            return `width:${size}px; height:${size}px;`;
+            if(Utils.isNullOrUndefined(this.unfixedSize)) {
+                const size = this.size < 1 ? 96 : this.size;
+                return `width:${size}px; height:${size}px;`;
+            }
+            return `width:${this.unfixedSize.x}px; height:${this.unfixedSize.y}px;`;
         }
     }
 })
 
-export default class DictResourceItem extends Vue {
+export default class ImageItem extends Vue {
     file!: ImageResource;
     dispose!: IReceiveString;
     size!: number;
+    unfixedSize!: Position;
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage(
                 "消すよ？",
-                "この画像をリストから削除しますか？",
+                "この画像を除きますか？",
                 true
             );
     deleteTargetId: string = "";

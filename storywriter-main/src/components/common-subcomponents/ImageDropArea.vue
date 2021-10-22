@@ -10,7 +10,7 @@
             style="display: none"
             ref="inputFile"
             type="file"
-            accept="image/jpeg, image/jpg, image/png"
+            accept="image/jpeg,image/jpg,image/png,image/gif"
             @change="selectedFile"
         >
         <img src="../../assets/add2.png">
@@ -22,7 +22,7 @@
 import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
 import { Word } from "../models/dictionary/word";
-import { IReceiveString } from "../models/utils";
+import { IReceiveString, Position, Utils } from "../models/utils";
 
 @Options({
     props: {
@@ -33,7 +33,8 @@ import { IReceiveString } from "../models/utils";
         imageSrc: {
             type: Function as PropType<IReceiveString>,
             required: true
-        }
+        },
+        unfixedSize: Position
     },
     methods: {
         addFile: function(word: Word) {
@@ -86,8 +87,11 @@ import { IReceiveString } from "../models/utils";
     },
     computed: {
         boxSizeCss: function(): string {
-            const size = this.size < 1 ? 96 : this.size;
-            return `width:${size}px; height:${size}px;`;
+            if(Utils.isNullOrUndefined(this.unfixedSize)) {
+                const size = this.size < 1 ? 96 : this.size;
+                return `width:${size}px; height:${size}px;`;
+            }
+            return `width:${this.unfixedSize.x}px; height:${this.unfixedSize.y}px;`;
         },
         fileHoverCss: function(): string {
             const css = "border: dashed 3px #aaa;color:#aaa;";
@@ -99,6 +103,7 @@ import { IReceiveString } from "../models/utils";
 export default class ImageDropArea extends Vue {
     size!: number;
     imageSrc!: IReceiveString;
+    unfixedSize!: Position;
 
     selectedWord: Word | null = null;
     hoveringDropArea: boolean = false;
@@ -127,18 +132,22 @@ export default class ImageDropArea extends Vue {
         pointer-events: none;
     }
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     & img {
-        width: 40px;
-        height: 40px;
-        position: relative;
-        top: 15px;
-        left: 25px;
+        width: 50%;
+        margin: 0 25%;
+        display: block;
+        &::before {
+            padding-top: 50%;
+        }
     }
     & p {
-        text-align: center;
+        display: grid;
+        place-items: center;
+        margin-top: 0.5em;
         line-height: 1.1em;
-        margin: 1em 0;
-        height: 3em;
         font-family: 'Raleway';
     }
 }

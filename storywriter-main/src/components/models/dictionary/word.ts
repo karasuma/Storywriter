@@ -1,13 +1,4 @@
-import { IUniqueObject, Utils } from "../utils";
-
-export class ImageResource implements IUniqueObject {
-    public readonly id: string = Utils.getUniqueId();
-    public content: string = "";
-
-    constructor(content: string) {
-        this.content = content;
-    }
-}
+import { ImageResource, IUniqueObject, Utils } from "../utils";
 
 export class Word implements IUniqueObject {
     public readonly id: string = Utils.getUniqueId();

@@ -1,10 +1,12 @@
 import { StoryPreference } from './models/story-preference';
 import { Stories } from './models/story/stories';
 import { Dictionary } from './models/dictionary/dictionary';
+import { Actors } from './models/actor/actors';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(false);
     public dictionary: Dictionary = new Dictionary();
+    public actors: Actors = new Actors();
     public setting: StoryPreference;
     constructor(path: string) {
         this.setting = new StoryPreference(path);
@@ -22,7 +24,7 @@ export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
         const dir = root.appendNewStory(true, "グループ1");
         dir.appendNewStory(false, "New awesome story 01 but this is not my product");
         dir.appendNewStory(false, "たいとる");
-        root.appendNewStory(false, "邪知暴虐のゲネイオス");
+        root.appendNewStory(false, "邪知暴虐のゲネイオン");
         this.hierarchy = root;
         
         // Sample dictionary
@@ -30,5 +32,11 @@ export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
         this.dictionary.appendNewWord("Other word");
         this.dictionary.words[1].editing = true;
         this.dictionary.appendNewWord("用語 No.X");
+
+        // Sample actors
+        this.actors.createNewActor("キャラ１");
+        this.actors.createNewActor("Toooooooooooooooo looooooong naaaaaaaaaaame");
+        this.actors.actors[1].editing = true;
+        this.actors.createNewActor("顎");
     }
 }
