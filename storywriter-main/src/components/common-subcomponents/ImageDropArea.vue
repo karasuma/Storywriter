@@ -13,8 +13,8 @@
             :accept="accepts"
             @change="selectedFile"
         >
-        <img src="../../assets/add2.png">
-        <p>D&D here...</p>
+        <img src="../../assets/add2.png" :style="imageSize">
+        <p :style="textHeight">D&D here...</p>
     </div>    
 </template>
 
@@ -100,6 +100,28 @@ import { Defs } from "../models/defs";
         },
         accepts: function(): string {
             return Defs.imageAccepts;
+        },
+        imageSize: function(): string {
+            const size = this.getImageSize() - this.imagePadding;
+            const sizeCss = `width:${size}px; height:${size}px;`;
+
+            const fixed = Utils.isNullOrUndefined(this.unfixedSize);
+            const w = fixed ? this.size : this.unfixedSize.x;
+            const left = Math.max(0, (w - size) * 0.5);
+            const leftCss = `position:relative;left:${left}px;`;
+
+            const h = fixed ? this.size : this.unfixedSize.y;
+            const vertMargin = Math.min(24, h * 0.5);
+            const marginCss = `margin-top:${vertMargin}px;`;
+
+            return sizeCss + leftCss + marginCss;
+        },
+        textHeight: function(): string {
+            const fixed = Utils.isNullOrUndefined(this.unfixedSize);
+            const h = fixed ? this.size : this.unfixedSize.y;
+            const vertMargin = Math.min(24, h * 0.5);
+            const txtsize = this.getImageSize() + this.imagePadding;
+            return `height:${txtsize - vertMargin}px;`;
         }
     }
 })
@@ -111,6 +133,15 @@ export default class ImageDropArea extends Vue {
 
     selectedWord: Word | null = null;
     hoveringDropArea: boolean = false;
+    imagePadding: number = 8;
+
+    public getImageSize(): number {
+        const fixed = Utils.isNullOrUndefined(this.unfixedSize);
+        const w = fixed ? this.size : this.unfixedSize.x;
+        const h = fixed ? this.size : this.unfixedSize.y;
+        const realSize = fixed ? this.size : (w < h ? w : h);
+        return realSize * 0.5;
+    }
 }
 </script>
 
@@ -140,17 +171,11 @@ export default class ImageDropArea extends Vue {
     flex-direction: column;
     justify-content: center;
     & img {
-        width: 50%;
-        margin: 0 25%;
         display: block;
-        &::before {
-            padding-top: 50%;
-        }
     }
     & p {
         display: grid;
         place-items: center;
-        margin-top: 0.5em;
         line-height: 1.1em;
         font-family: 'Raleway';
     }

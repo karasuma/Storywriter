@@ -12,10 +12,11 @@
 
     <div id="container">
       <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
-      <EditFlow class="bk" :style="getVisible(0)" :root="vms.hierarchy" />
-      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :root="vms.hierarchy" />
-      <EditDict class="bk" :style="getVisible(2)" :vm="vms" />
-      <EditActor class="bk" :style="getVisible(3)" :vm="vms" />
+      <EditFlow class="bk" :style="getVisible(0)" :root="vm.hierarchy" />
+      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :root="vm.hierarchy" />
+      <EditDict class="bk" :style="getVisible(2)" :vm="vm" />
+      <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
+      <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />
     </div>
 
     <EditFooter />
@@ -31,6 +32,7 @@ import EditFlow from './components/EditFlow.vue';
 import EditTimeline from './components/EditTimeline.vue';
 import EditDict from './components/EditDict.vue';
 import EditActor from './components/EditActor.vue';
+import EditWorld from './components/EditWorld.vue';
 
 import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
 
@@ -44,6 +46,7 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
     EditTimeline,
     EditDict,
     EditActor,
+    EditWorld,
   },
   methods: {
     changeMenu: function(index: string) {
@@ -59,8 +62,7 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
 })
 
 export default class App extends Vue {
-  vm!: StoryWrtiterViewModel;
-  vms: StoryWrtiterViewModelSample = new StoryWrtiterViewModelSample();
+  vm: StoryWrtiterViewModel = new StoryWrtiterViewModelSample();
 
   currentIndex: number = 0;
 }

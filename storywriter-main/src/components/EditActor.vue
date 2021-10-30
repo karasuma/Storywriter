@@ -36,17 +36,6 @@
                         :expandPower="vm.setting.imageExpandPower"
                         class="edit__title__image"
                     />
-                    <input
-                        style="display: none"
-                        ref="inputFile"
-                        type="file"
-                        :accept="accepts"
-                        @change="selectedFile"
-                    >
-                    <img src="../assets/change.png"
-                        class="edit__title__changeface"
-                        @click="addFile"
-                        v-show="!isEmpty(getEditingActor.face.content)">
                     <input type="text" spellcheck="false" v-model="getEditingActor.name">
                 </div>
 
@@ -149,39 +138,6 @@ import { Defs } from "./models/defs";
             this.deleteTargetId = "";
             this.showMsgBox = false;
         },
-
-        // File input methods
-        addFile: function(): void {
-            this.$refs.inputFile.click();
-        },
-        selectedFile: function(): void {
-            const e = this.$refs.inputFile as HTMLInputElement;
-            if(e.files === null) return;
-            const receivedFile = e.files[0];
-            if(!receivedFile || !(receivedFile instanceof File)) return;
-            if(e instanceof Event) {
-                (e as Event).preventDefault();
-            }
-            this.addResource(receivedFile);
-        },
-        addResource: function(filepath: File): void {
-            new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    if(e.target !== null)
-                        resolve(e.target.result);
-                };
-                reader.onerror = err => reject(err);
-                reader.readAsBinaryString(filepath);
-            })
-            .then((bstr: string | unknown) => {
-                    if(typeof bstr == 'string') {
-                        const b64str = btoa(bstr);
-                        const src = `data:${filepath.type};base64,${b64str}`;
-                        this.getEditingActor.face.content = src;
-                    }
-            });
-        }
     },
     computed: {
         getEditingActor: function(): ActorItem | undefined {
@@ -190,9 +146,6 @@ import { Defs } from "./models/defs";
         isEditing: function(): boolean {
             return this.getEditingActor !== undefined;
         },
-        accepts: function(): string {
-            return Defs.imageAccepts;
-        }
     }
 })
 
@@ -266,19 +219,6 @@ export default class EditActor extends Vue {
                 height: 160px;
                 margin: auto 48px;
                 border-radius: 16px;
-            }
-
-            &__changeface {
-                width: 26px;
-                height: 26px;
-                position: relative;
-                left: -56px;
-                top: 6px;
-                cursor: pointer;
-                filter: brightness($Normal-Brightness);
-                &:hover {
-                    filter: brightness($Focus-Brightness);
-                }
             }
 
             & input {

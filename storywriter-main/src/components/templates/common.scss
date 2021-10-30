@@ -6,6 +6,7 @@ $Control-Height: calc( #{$Header-Height} + #{$Footer-Height} );
 $Menu-Width: 45px;
 $Hierarchy-Width: 260px;
 $Control-Width: calc( #{$Menu-Width} + #{$Hierarchy-Width} );
+$Edit-Base-Width: calc( 100vw - #{$Control-Width} - 40px );
 $Separator-Color: #444444;
 $Front-ZIndex: 10;
 $Normal-ZIndex: 5;
@@ -108,7 +109,7 @@ p {
     top: 0;
     bottom: 0;
     left: $Control-Width;
-    width: calc( 100vw - #{$Control-Width} - 40px );
+    width: $Edit-Base-Width;
     margin-top: $Header-Height;
     margin-bottom: $Footer-Height;
     padding: 0 20px;

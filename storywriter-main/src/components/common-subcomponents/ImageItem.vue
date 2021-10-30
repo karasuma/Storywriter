@@ -10,8 +10,18 @@
             :src64="file.content"
             :close="closeViewer"
         />
+        <input
+            style="display: none"
+            ref="inputFile"
+            type="file"
+            :accept="accepts"
+            @change="selectedFile"
+        >
         <p @click="askDispose(file.id)">&times;</p>
-        <img @click="showViewer" :src="file.content">
+        <div class="reswrapper__reload" @click="addFile">
+            <img src="../../assets/change.png">
+        </div>
+        <img class="reswrapper__image" @click="showViewer" :src="file.content">
     </div>
 </template>
 
@@ -63,6 +73,39 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
         },
         closeViewer: function() {
             this.showImgViewer = false;
+        },
+
+        // File input methods
+        addFile: function(): void {
+            this.$refs.inputFile.click();
+        },
+        selectedFile: function(): void {
+            const e = this.$refs.inputFile as HTMLInputElement;
+            if(e.files === null) return;
+            const receivedFile = e.files[0];
+            if(!receivedFile || !(receivedFile instanceof File)) return;
+            if(e instanceof Event) {
+                (e as Event).preventDefault();
+            }
+            this.addResource(receivedFile);
+        },
+        addResource: function(filepath: File): void {
+            new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    if(e.target !== null)
+                        resolve(e.target.result);
+                };
+                reader.onerror = err => reject(err);
+                reader.readAsBinaryString(filepath);
+            })
+            .then((bstr: string | unknown) => {
+                    if(typeof bstr == 'string') {
+                        const b64str = btoa(bstr);
+                        const src = `data:${filepath.type};base64,${b64str}`;
+                        this.file.content = src;
+                    }
+            });
         }
     },
     computed: {
@@ -72,6 +115,9 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
                 return `width:${size}px; height:${size}px;`;
             }
             return `width:${this.unfixedSize.x}px; height:${this.unfixedSize.y}px;`;
+        },
+        accepts: function(): string {
+            return Defs.imageAccepts;
         }
     }
 })
@@ -123,9 +169,35 @@ $Close-Size: 28px;
         text-align: center;
         line-height: 0.8em;
         z-index: calc($Normal-ZIndex + 3);
+        
+        filter: brightness($Normal-Brightness);
+        &:hover {
+            filter: brightness($Focus-Brightness);
+        }
     }
 
-    & img {
+    &__reload {
+        position: absolute;
+        right: 4px;
+        top: 34px;
+        width: $Close-Size;
+        height: $Close-Size;
+        border-radius: 14px;
+        background-color: $Background-Color;
+        z-index: calc($Normal-ZIndex + 2);
+        & img {
+            width: calc( #{$Close-Size} - 8px );
+            height: calc( #{$Close-Size} - 8px );
+            margin: 4px;
+        }
+        
+        filter: brightness($Normal-Brightness);
+        &:hover {
+            filter: brightness($Focus-Brightness);
+        }
+    }
+
+    &__image {
         width: 100%;
         height: 100%;
         border-radius: 8px;
