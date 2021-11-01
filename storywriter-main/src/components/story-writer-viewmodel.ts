@@ -3,12 +3,14 @@ import { Stories } from './models/story/stories';
 import { Dictionary } from './models/dictionary/dictionary';
 import { Actors } from './models/actor/actors';
 import { Worlds } from './models/world/worlds';
+import { Memos } from './models/memo/memos';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(false);
     public dictionary: Dictionary = new Dictionary();
     public actors: Actors = new Actors();
     public worlds: Worlds = new Worlds();
+    public memos: Memos = new Memos();
     public setting: StoryPreference;
     constructor(path: string) {
         this.setting = new StoryPreference(path);
@@ -49,5 +51,11 @@ export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
         this.worlds.worldGroups[0].countries[1].editing = true;
         this.worlds.addWorld("人間の里");
         this.worlds.addWorld("マヨヒガ");
+
+        // Sample memos
+        this.memos.addMemo("アイデア１");
+        this.memos.memoList[0].text = "I thought what I'd do was,\nI'd pretend I was one of those deaf-mutes."
+        this.memos.addMemo("世界観");
+        this.memos.addMemo("Toooooooooooooooo looooooong naaaaaaaaaaame aaaaaa");
     }
 }
