@@ -59,7 +59,7 @@ import { Defs } from "../models/defs";
             if(result == Defs.MessageType.Confirm) {
                 this.memo.deleteMe();
             }
-            this.showMsgBox = false;
+            this.showMsgbox = false;
         },
         pickColor: function(): void {
             this.showPickerbox = true;
