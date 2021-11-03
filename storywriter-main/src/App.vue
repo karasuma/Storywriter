@@ -13,7 +13,7 @@
     <div id="container">
       <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
       <EditFlow class="bk" :style="getVisible(0)" :root="vm.hierarchy" />
-      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :root="vm.hierarchy" />
+      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :vm="vm" />
       <EditDict class="bk" :style="getVisible(2)" :vm="vm" />
       <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
       <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />

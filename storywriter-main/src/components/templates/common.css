@@ -66,3 +66,7 @@ input:focus {
 p {
   font-family: 'Raleway';
 }
+
+img {
+  -webkit-user-drag: none;
+}

@@ -78,6 +78,10 @@ p {
     font-family: 'Raleway';
 }
 
+img {
+    -webkit-user-drag: none;
+}
+
 // Mixins
 @mixin hide-overflow-text() {
     white-space: nowrap;
