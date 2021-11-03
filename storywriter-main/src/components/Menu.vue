@@ -18,7 +18,7 @@
         <div class="menu__item" :class="{ item__selected: isSelected(5) }">
             <img id="memo-button" src="../assets/memo.png" @click="sendMenu(5)">
         </div>
-        <div class="menu__item--config">
+        <div class="menu__item--config" :class="{ item__selected: isSelected(6) }">
             <img id="config-button" src="../assets/config.png" @click="sendMenu(6)">
         </div>
     </div>    
@@ -92,8 +92,8 @@ export default class Menu extends Vue {
         padding: 4px;
 
         &--config {
-            margin-top: auto;
-            margin-bottom: 8px;
+            position: absolute;
+            bottom: calc(#{$Menu-Width} + #{$Footer-Height} + 10px );
         }
     }
 }

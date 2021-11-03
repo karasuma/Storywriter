@@ -18,6 +18,7 @@
       <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
       <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />
       <EditMemo class="bk" :style="getVisible(5)" :vm="vm" />
+      <EditConfig class="bk" :style="getVisible(6)" :setting="vm.setting" />
     </div>
 
     <EditFooter />
@@ -35,6 +36,7 @@ import EditDict from './components/EditDict.vue';
 import EditActor from './components/EditActor.vue';
 import EditWorld from './components/EditWorld.vue';
 import EditMemo from './components/EditMemo.vue';
+import EditConfig from './components/EditConfig.vue';
 
 import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
 
@@ -49,7 +51,8 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
     EditDict,
     EditActor,
     EditWorld,
-    EditMemo
+    EditMemo,
+    EditConfig
   },
   methods: {
     changeMenu: function(index: string) {

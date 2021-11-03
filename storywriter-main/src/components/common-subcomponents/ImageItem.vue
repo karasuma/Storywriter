@@ -9,6 +9,8 @@
             :isVisible="showImgViewer"
             :src64="file.content"
             :close="closeViewer"
+            :expandRatio="expandRatio"
+            :expandPower="expandPower"
         />
         <input
             style="display: none"
@@ -51,6 +53,14 @@ import ImageViewer from "../util-subcomponents/ImageViewer.vue";
         size: {
             Type: Number,
             default: 96
+        },
+        expandRatio: {
+            Type: Number,
+            default: 5
+        },
+        expandPower: {
+            Type: Number,
+            default: 3
         },
         unfixedSize: Position
     },
@@ -127,6 +137,8 @@ export default class ImageItem extends Vue {
     dispose!: IReceiveString;
     size!: number;
     unfixedSize!: Position;
+    expandRatio!: Number;
+    expandPower!: Number;
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage(
