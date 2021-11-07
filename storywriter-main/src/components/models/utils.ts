@@ -63,7 +63,7 @@ export class MessageObject {
 }
 
 export class ImageResource implements IUniqueObject {
-    public readonly id: string = Utils.getUniqueId();
+    public id: string = Utils.getUniqueId();
     public content: string = "";
 
     constructor(content: string) {

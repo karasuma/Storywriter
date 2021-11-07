@@ -8,6 +8,10 @@ export class Worlds {
         this.worldGroups.push(new World(name, this));
     }
 
+    public appendWorld(world: World): void {
+        this.worldGroups.push(world);
+    }
+
     public removeWorld(id: string): void {
         const idx = this.worldGroups.findIndex(x => x.id == id);
         if(idx >= 0) {

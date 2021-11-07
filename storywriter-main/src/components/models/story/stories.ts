@@ -2,7 +2,7 @@ import { IUniqueObject, Utils } from "../utils";
 import { StoryData } from "./story-data";
 
 export class Stories implements IUniqueObject {
-    public readonly id: string = Utils.getUniqueId();
+    public id: string = Utils.getUniqueId();
     public content: StoryData = new StoryData();
     public children: Stories[] = new Array<Stories>();
     public isEditing: boolean = false;

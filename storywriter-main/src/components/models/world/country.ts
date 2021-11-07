@@ -8,7 +8,7 @@ export class Country implements IUniqueObject {
     public samples: ImageResource[] = new Array<ImageResource>();
     public description: string = "";
     public editing: boolean = false;
-    private parent: World;
+    public parent: World;
 
     constructor(name: string = "", parent: World) {
         if(name.length != 0) {

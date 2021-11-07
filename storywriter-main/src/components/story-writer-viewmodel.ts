@@ -6,7 +6,7 @@ import { Worlds } from './models/world/worlds';
 import { Memos } from './models/memo/memos';
 
 export class StoryWrtiterViewModel {
-    public hierarchy: Stories = new Stories(false);
+    public hierarchy: Stories = new Stories(true);
     public dictionary: Dictionary = new Dictionary();
     public actors: Actors = new Actors();
     public worlds: Worlds = new Worlds();
@@ -22,14 +22,12 @@ export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
         super("J:\\Temp\\sw");
         
         // Sample story
-        const root = new Stories(true);
-        const editing = root.appendNewStory(false, "サンプル");
+        const editing = this.hierarchy.appendNewStory(false, "サンプル");
         editing.isEditing = true;
-        const dir = root.appendNewStory(true, "グループ1");
+        const dir = this.hierarchy.appendNewStory(true, "グループ1");
         dir.appendNewStory(false, "New awesome story 01 but this is not my product");
         dir.appendNewStory(false, "たいとる");
-        root.appendNewStory(false, "邪知暴虐のゲネイオン");
-        this.hierarchy = root;
+        this.hierarchy.appendNewStory(false, "邪知暴虐のゲネイオン");
         
         // Sample dictionary
         this.dictionary.appendNewWord("用語１");

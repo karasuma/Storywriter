@@ -1,7 +1,7 @@
 import { ImageResource, IUniqueObject, Utils } from "../utils";
 
 export class Word implements IUniqueObject {
-    public readonly id: string = Utils.getUniqueId();
+    public id: string = Utils.getUniqueId();
     public editing: boolean = false;
     public caption: string = "";
     public description: string = "";
