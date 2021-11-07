@@ -19,7 +19,7 @@ export class StoryWrtiterViewModel {
 
 export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
     constructor() {
-        super("J:\\Temp\\sw");
+        super("J:\\Temporary\\savedata.swd");
         
         // Sample story
         const editing = this.hierarchy.appendNewStory(false, "サンプル");

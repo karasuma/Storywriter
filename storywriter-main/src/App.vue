@@ -8,7 +8,7 @@
     <div id="modal-imgviewer"></div>
 
     <!-- Main contents -->
-    <EditHeader />
+    <EditHeader :vm="vm" />
 
     <div id="container">
       <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />

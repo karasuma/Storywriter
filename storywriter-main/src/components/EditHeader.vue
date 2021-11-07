@@ -1,6 +1,6 @@
 <template>
     <header>
-        <img src="../assets/save.png">
+        <img src="../assets/save.png" @click="save">
         <div class="title">{{ title }}</div>
         <div class="controls">
             <span class="controls__minimum" @click="minimize">－</span>
@@ -13,12 +13,15 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { ipcRenderer } from 'electron';
+import { StoryWrtiterViewModel } from './story-writer-viewmodel';
+import { JsonConverter } from './models/savedata/json-converter';
+import { FileAccessor } from './models/savedata/file-accessor';
 
 @Options({
     props: {
-        title: {
-            type: String,
-            default: "Story Writer Beta"
+        vm: {
+            type: StoryWrtiterViewModel,
+            required: true
         }
     },
     methods: {
@@ -30,12 +33,25 @@ import { ipcRenderer } from 'electron';
         },
         maximize: function() {
             ipcRenderer.send('maximize', true)
+        },
+        save: function() {
+            const vmJson = JsonConverter.toJsonString(this.vm);
+            FileAccessor.Save(this.vm.setting.path, vmJson);
+        }
+    },
+    computed: {
+        title: function(): string {
+            const result = /([^/|^\\]*)+$/g.exec(this.vm.setting.path);
+            if(result !== null) {
+                return result[0];
+            }
+            return "-";
         }
     }
 })
 
 export default class EditHeader extends Vue {
-    title!: String
+    vm!: StoryWrtiterViewModel;
 }
 </script>
 
