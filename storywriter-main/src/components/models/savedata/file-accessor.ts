@@ -5,7 +5,7 @@ export class FileAccessor {
         const result = new FileAccessStatus();
         try {
             await fs.writeFile(path, content);
-            result.done(`Write successfully completed to: ${path}!`);
+            result.successed(`Write successfully completed to: "${path}" !!!`);
         } catch(err) {
             result.failed(err as string);
         }
@@ -15,7 +15,7 @@ export class FileAccessor {
     static async Load(path: string): Promise<FileAccessStatus> {
         const result = new FileAccessStatus();
         try {
-            result.done(await fs.readFile(path, "utf-8"));
+            result.successed(await fs.readFile(path, "utf-8"));
         } catch(err) {
             result.failed(err as string);
         }

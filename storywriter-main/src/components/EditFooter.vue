@@ -1,42 +1,35 @@
 <template>
-    <footer>
-        <div class="footer__sample" v-bind:style="{ backgroundColor: background }">{{ message }}</div>
+    <footer :style="backgroundCss">
+        <div class="footer__sample">{{ text }}</div>
     </footer>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-
-const NotifyColors = {
-    Info: "#6495ED",
-    Warn: "#DAA520",
-    Fatal: "#B22222"
-} as const
+import { SystemMessage } from './models/system-message';
 
 @Options({
     props: {
         message: {
-            type: String,
-            default: "Ready."
-        },
-        background: {
-            type: String,
-            default: NotifyColors.Info
+            type: SystemMessage,
+            required: true
         }
     },
-    methods: {
-        changeStatus: function(msg: String, color: String) {
-            if(msg.length > 0) {
-                this.message = msg;
+    computed: {
+        backgroundCss: function(): string {
+            return `background-color: ${this.message.status};`;
+        },
+        text: function(): string {
+            if(this.message.message.length == 0) {
+                return "You are now floating on the sea of imagine..."
             }
-            this.background = color;
+            return this.message.message;
         }
     }
 })
 
 export default class EditFooter extends Vue {
-    message!: String;
-    background!: String;
+    message!: SystemMessage;
 }
 </script>
 
@@ -45,6 +38,7 @@ export default class EditFooter extends Vue {
 @import './templates/common.scss';
 
 footer {
+    @include unselectable();
     position: fixed;
     bottom: -1px;
     left: 0;

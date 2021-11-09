@@ -21,7 +21,7 @@
       <EditConfig class="bk" :style="getVisible(6)" :setting="vm.setting" />
     </div>
 
-    <EditFooter />
+    <EditFooter :message="vm.message" />
   </div>
 </template>
 

@@ -12,10 +12,12 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { StoryWrtiterViewModel } from './story-writer-viewmodel';
 import { JsonConverter } from './models/savedata/json-converter';
 import { FileAccessor } from './models/savedata/file-accessor';
+import { SystemMessage } from './models/system-message';
+import { Utils } from './models/utils';
 
 @Options({
     props: {
@@ -29,29 +31,67 @@ import { FileAccessor } from './models/savedata/file-accessor';
             window.close();
         },
         minimize: function() {
-            ipcRenderer.send('minimize', true)
+            ipcRenderer.send('minimize', true);
         },
         maximize: function() {
-            ipcRenderer.send('maximize', true)
+            ipcRenderer.send('maximize', true);
         },
         save: function() {
-            const vmJson = JsonConverter.toJsonString(this.vm);
-            FileAccessor.Save(this.vm.setting.path, vmJson);
-        }
+            if(this.vm.setting.path.length == 0) {
+                this.openSaveWindow();
+                return;
+            }
+            this.saveStory();
+        },
     },
     computed: {
         title: function(): string {
-            const result = /([^/|^\\]*)+$/g.exec(this.vm.setting.path);
-            if(result !== null) {
-                return result[0];
+            const result = this.getNameFromPath(this.vm.setting.path);
+            let name = "Untitled";
+            if(result.length != 0) {
+                name = result;
             }
-            return "-";
+            return `${name} - Storywriter`;
         }
     }
 })
 
 export default class EditHeader extends Vue {
     vm!: StoryWrtiterViewModel;
+
+    public getNameFromPath(path: string): string {
+        const result = /([^/|^\\]*)+$/g.exec(path);
+        if(result !== null) {
+            return result[0];
+        }
+        return "";
+    }
+
+    public saveStory(): void {
+        const vmJson = JsonConverter.toJsonString(this.vm);
+        this.vm.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);
+        FileAccessor.Save(this.vm.setting.path, vmJson)
+            .then(result => {
+                if(result.isSuccess) {
+                    this.vm.message.changeMessage(`${result.content}`);
+                    return;
+                }
+                this.vm.message.changeMessage(`Save failed... (${result.content})`, SystemMessage.MessageType.Alert);
+            });
+    }
+
+    public openSaveWindow(): void {
+        remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+            filters: [
+                { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]}
+            ]}
+        ).then(result => {
+            if(!Utils.isNullOrUndefined(result.filePath) && result.filePath!.length > 0) {
+                this.vm.setting.path = result.filePath!;
+                this.saveStory();
+            }
+        });
+    }
 }
 </script>
 

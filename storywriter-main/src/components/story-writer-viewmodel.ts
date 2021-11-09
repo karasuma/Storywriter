@@ -4,6 +4,7 @@ import { Dictionary } from './models/dictionary/dictionary';
 import { Actors } from './models/actor/actors';
 import { Worlds } from './models/world/worlds';
 import { Memos } from './models/memo/memos';
+import { SystemMessage } from './models/system-message';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(true);
@@ -12,6 +13,7 @@ export class StoryWrtiterViewModel {
     public worlds: Worlds = new Worlds();
     public memos: Memos = new Memos();
     public setting: StoryPreference;
+    public message: SystemMessage = new SystemMessage();
     constructor(path: string) {
         this.setting = new StoryPreference(path);
     }
@@ -19,7 +21,8 @@ export class StoryWrtiterViewModel {
 
 export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
     constructor() {
-        super("J:\\Temporary\\savedata.swd");
+        //super("J:\\Temporary\\savedata.swd");
+        super("");
         
         // Sample story
         const editing = this.hierarchy.appendNewStory(false, "サンプル");
