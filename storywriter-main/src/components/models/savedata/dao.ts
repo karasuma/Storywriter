@@ -99,7 +99,8 @@ export class DAOConverter {
         };
         
         const depth = parent !== null ? parent.currentDepth : -1;
-        const stories = new Stories(dao.isdir, "", depth + 1, parent?.root);
+        const root = parent !== null ? parent.root : null;
+        const stories = new Stories(dao.isdir, "", depth + 1, root);
         stories.id = dao.id;
         stories.isEditing = dao.editing;
         stories.content = fromStoryDataDAO(dao.content);

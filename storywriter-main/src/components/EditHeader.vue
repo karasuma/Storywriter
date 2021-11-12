@@ -54,6 +54,9 @@ import { Utils } from './models/utils';
     },
     computed: {
         title: function(): string {
+            if(!this.vm.editing) {
+                return "Storywriter";
+            }
             const result = this.getNameFromPath(this.vm.setting.path);
             let name = "Untitled";
             if(result.length != 0) {
