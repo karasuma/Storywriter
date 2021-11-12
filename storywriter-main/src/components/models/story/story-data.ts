@@ -12,6 +12,10 @@ export class StoryData {
         this.lores.push(new StoryItem());
     }
 
+    public appendLore(item: StoryItem) {
+        this.lores.push(item);
+    }
+
     public removeLore(id: string) {
         this.lores = this.lores.filter((x: StoryItem) => x.id !== id);
     }

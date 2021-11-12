@@ -8,10 +8,10 @@ export class Stories implements IUniqueObject {
     public isEditing: boolean = false;
     public isExpanding: boolean = false;
     public parent: Stories | null = null;
+    public dirMode: boolean = false;
     public readonly root: Stories;
     
-    private currentDepth: number = 0;
-    private dirMode: boolean = false;
+    public currentDepth: number = 0;
 
     constructor(
         createAsDir: boolean,

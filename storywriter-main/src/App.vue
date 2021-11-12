@@ -11,14 +11,19 @@
     <EditHeader :vm="vm" />
 
     <div id="container">
-      <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
-      <EditFlow class="bk" :style="getVisible(0)" :root="vm.hierarchy" />
-      <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :vm="vm" />
-      <EditDict class="bk" :style="getVisible(2)" :vm="vm" />
-      <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
-      <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />
-      <EditMemo class="bk" :style="getVisible(5)" :vm="vm" />
-      <EditConfig class="bk" :style="getVisible(6)" :setting="vm.setting" />
+      <div v-if="vm.editing">
+        <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
+        <EditFlow class="bk" :style="getVisible(0)" :root="vm.hierarchy" />
+        <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :vm="vm" />
+        <EditDict class="bk" :style="getVisible(2)" :vm="vm" />
+        <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
+        <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />
+        <EditMemo class="bk" :style="getVisible(5)" :vm="vm" />
+        <EditConfig class="bk" :style="getVisible(6)" :setting="vm.setting" />
+      </div>
+      <div v-else>
+        <Entrance :vm="vm" />
+      </div>
     </div>
 
     <EditFooter :message="vm.message" />
@@ -37,6 +42,7 @@ import EditActor from './components/EditActor.vue';
 import EditWorld from './components/EditWorld.vue';
 import EditMemo from './components/EditMemo.vue';
 import EditConfig from './components/EditConfig.vue';
+import Entrance from './components/Entrance.vue';
 
 import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
 
@@ -52,7 +58,8 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
     EditActor,
     EditWorld,
     EditMemo,
-    EditConfig
+    EditConfig,
+    Entrance
   },
   methods: {
     changeMenu: function(index: string) {

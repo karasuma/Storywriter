@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "@/components/story-writer-viewmodel";
+import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
 import { ActorItem } from "../actor/actor-item";
 import { Actors } from "../actor/actors";
 import { Dictionary } from "../dictionary/dictionary";
@@ -32,14 +32,12 @@ export class DAOConverter {
         return dao;
     }
 
-    static fromDAO(dao: StoryWriterDAO): StoryWrtiterViewModel {
-        const vm = new StoryWrtiterViewModel("");
-        vm.hierarchy = this.fromHierarchyDAO(dao.hierarchy);
-        vm.dictionary = this.fromDictionaryDAO(dao.dictionary);
-        vm.actors = this.fromActorsDAO(dao.actors);
-        vm.worlds = this.fromWorldsDAO(dao.worlds);
-        vm.memos = this.fromMemoDAO(dao.memos);
-        return vm;
+    static fromDAO(dao: StoryWriterDAO, targetvm: StoryWrtiterViewModel): void {
+        targetvm.hierarchy = this.fromHierarchyDAO(dao.hierarchy);
+        targetvm.dictionary = this.fromDictionaryDAO(dao.dictionary);
+        targetvm.actors = this.fromActorsDAO(dao.actors);
+        targetvm.worlds = this.fromWorldsDAO(dao.worlds);
+        targetvm.memos = this.fromMemoDAO(dao.memos);
     }
 
     private static toHierarchyDAO(viewmodel: Stories): StoriesDAO {
@@ -61,6 +59,7 @@ export class DAOConverter {
             dao.caption = vm.caption;
             dao.description = vm.description;
             dao.color = vm.color;
+            dao.time = vm.time;
             vm.lores.forEach(x => dao.lores.push(toStoryItemDAO(x)));
             return dao;
         };
@@ -68,12 +67,13 @@ export class DAOConverter {
         const dao = new StoriesDAO();
         dao.id = viewmodel.id;
         dao.editing = viewmodel.isEditing;
+        dao.isdir = viewmodel.dirMode;
         dao.content = toStoryDataDAO(viewmodel.content);
         viewmodel.children.forEach(x => dao.children.push(DAOConverter.toHierarchyDAO(x)));
         dao.parentID = viewmodel.parent !== null ? viewmodel.parent.id : "";
         return dao;
     }
-    private static fromHierarchyDAO(dao: StoriesDAO): Stories {
+    private static fromHierarchyDAO(dao: StoriesDAO, parent: Stories | null = null): Stories {
         const fromStoryItemDAO = (dao: StoryItemDAO): StoryItem => {
             const item = new StoryItem();
             item.id = dao.id;
@@ -93,17 +93,19 @@ export class DAOConverter {
             item.caption = dao.caption;
             item.description = dao.description;
             item.color = dao.color;
+            item.time = dao.time;
             dao.lores.forEach(x => item.lores.push(fromStoryItemDAO(x)));
             return item;
         };
         
-        const stories = new Stories(true);
+        const depth = parent !== null ? parent.currentDepth : -1;
+        const stories = new Stories(dao.isdir, "", depth + 1, parent?.root);
         stories.id = dao.id;
         stories.isEditing = dao.editing;
         stories.content = fromStoryDataDAO(dao.content);
-        dao.children.forEach(x => stories.children.push(DAOConverter.fromHierarchyDAO(x)));
-        if(dao.children.findIndex(x => x.id == dao.parentID) >= 0) {
-            stories.parent = DAOConverter.fromHierarchyDAO(dao.children.find(x => x.id == dao.parentID)!);
+        dao.children.forEach(x => stories.children.push(DAOConverter.fromHierarchyDAO(x, stories)));
+        if(parent !== null) {
+            stories.parent = parent;
         }
         return stories;
     }
@@ -207,7 +209,6 @@ export class DAOConverter {
                 pair.content = x.content;
                 dao.samples.push(pair);
             });
-            dao.parentWorldID = vm.parent.id;
             return dao;
         };
         const toWorldDAO = (vm: World): WorldDAO => {
@@ -219,7 +220,7 @@ export class DAOConverter {
         };
         
         const dao = new WorldsDAO();
-        viewmodel.worldGroups.forEach(x => toWorldDAO(x));
+        viewmodel.worldGroups.forEach(x => dao.worldGroups.push(toWorldDAO(x)));
         return dao;
     }
     private static fromWorldsDAO(dao: WorldsDAO): Worlds {
@@ -293,12 +294,14 @@ class StoriesDAO {
     public editing: boolean = false;
     public content: StoryDataDAO = new StoryDataDAO();
     public children: StoriesDAO[] = new Array<StoriesDAO>();
+    public isdir: boolean = false;
     public parentID: string = "";
 }
 class StoryDataDAO {
     public caption: string = "";
     public description: string = "";
     public color: string = "#333333";
+    public time: number = 0;
     public lores: StoryItemDAO[] = new Array<StoryItemDAO>();
 }
 class StoryItemDAO {
@@ -345,7 +348,6 @@ class CountryDAO {
     public description: string = "";
     public image: TextWithID = new TextWithID();
     public samples: TextWithID[] = new Array<TextWithID>();
-    public parentWorldID: string = "";
 }
 
 class MemoDAO {

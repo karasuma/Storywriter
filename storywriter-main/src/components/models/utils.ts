@@ -1,3 +1,5 @@
+import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+
 export class Utils {
     static getUniqueId(seed: number = 0): string {
         const power = seed <= 0 ? (2007 * Math.random()) : seed;
@@ -96,4 +98,8 @@ export interface IReceiveString {
 
 export interface IUniqueObject {
     id: string;
+}
+
+export interface IReceiveViewmodel {
+    (vm: StoryWrtiterViewModel): void
 }

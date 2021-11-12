@@ -1,6 +1,9 @@
 <template>
     <header>
-        <img src="../assets/save.png" @click="save">
+        <div class="actions">
+            <img src="../assets/save.png" @click="save">
+            <img src="../assets/home.png" @click="home">
+        </div>
         <div class="title">{{ title }}</div>
         <div class="controls">
             <span class="controls__minimum" @click="minimize">－</span>
@@ -37,12 +40,17 @@ import { Utils } from './models/utils';
             ipcRenderer.send('maximize', true);
         },
         save: function() {
+            if(!this.vm.editing) return;
             if(this.vm.setting.path.length == 0) {
                 this.openSaveWindow();
                 return;
             }
             this.saveStory();
         },
+        home: function() {
+            if(!this.vm.editing) return;
+            this.vm.editing = false;
+        }
     },
     computed: {
         title: function(): string {
@@ -83,7 +91,8 @@ export default class EditHeader extends Vue {
     public openSaveWindow(): void {
         remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
             filters: [
-                { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]}
+                { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]},
+                { name: "All Files", extensions: ["*"]}
             ]}
         ).then(result => {
             if(!Utils.isNullOrUndefined(result.filePath) && result.filePath!.length > 0) {
@@ -117,11 +126,16 @@ header {
 
     & img {
         padding: 4px;
-        margin: 4px;
+        margin: 1px 4px;
         filter: brightness($Normal-Brightness);
     }
     & img:hover {
         filter: brightness($Focus-Brightness);
+    }
+
+    & .actions {
+        display: flex;
+        height: $Header-Height;
     }
 
     & .title {

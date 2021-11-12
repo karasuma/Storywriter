@@ -12,8 +12,11 @@ export class StoryWrtiterViewModel {
     public actors: Actors = new Actors();
     public worlds: Worlds = new Worlds();
     public memos: Memos = new Memos();
+
     public setting: StoryPreference;
     public message: SystemMessage = new SystemMessage();
+    public editing: boolean = false;
+
     constructor(path: string) {
         this.setting = new StoryPreference(path);
     }

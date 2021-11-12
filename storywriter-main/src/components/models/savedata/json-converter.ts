@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "@/components/story-writer-viewmodel";
+import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
 import { DAOConverter, StoryWriterDAO } from "./dao";
 
 export class JsonConverter {
@@ -7,10 +7,10 @@ export class JsonConverter {
         return JSON.stringify(dao);
     }
 
-    static fromJsonString(path: string, json: string): StoryWrtiterViewModel {
+    static fromJsonString(json: string): StoryWrtiterViewModel {
         const dao = JSON.parse(json) as StoryWriterDAO;
-        const vm = DAOConverter.fromDAO(dao);
-        vm.setting.path = path;
+        const vm = new StoryWrtiterViewModel("");
+        DAOConverter.fromDAO(dao, vm)
         return vm;
     }
 }

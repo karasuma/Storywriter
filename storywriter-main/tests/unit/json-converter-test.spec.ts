@@ -11,7 +11,7 @@ describe("Json Converter", () => {
 
                 // Act
                 const json = JsonConverter.toJsonString(vm);
-                const after = JsonConverter.fromJsonString(vm.setting.path, json);
+                const after = JsonConverter.fromJsonString(json);
 
                 // Assert
                 const beforeID = vm.memos.memoList[0].id;
