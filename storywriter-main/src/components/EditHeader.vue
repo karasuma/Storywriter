@@ -15,12 +15,12 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { StoryWrtiterViewModel } from './story-writer-viewmodel';
 import { JsonConverter } from './models/savedata/json-converter';
 import { FileAccessor } from './models/savedata/file-accessor';
 import { SystemMessage } from './models/system-message';
-import { Utils } from './models/utils';
+import { Dialogs } from './models/savedata/dialogs';
 
 @Options({
     props: {
@@ -42,7 +42,7 @@ import { Utils } from './models/utils';
         save: function() {
             if(!this.vm.editing) return;
             if(this.vm.setting.path.length == 0) {
-                this.openSaveWindow();
+                Dialogs.openSaveWindow(this.vm, () => this.saveStory());
                 return;
             }
             this.saveStory();
@@ -89,20 +89,6 @@ export default class EditHeader extends Vue {
                 }
                 this.vm.message.changeMessage(`Save failed... (${result.content})`, SystemMessage.MessageType.Alert);
             });
-    }
-
-    public openSaveWindow(): void {
-        remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
-            filters: [
-                { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]},
-                { name: "All Files", extensions: ["*"]}
-            ]}
-        ).then(result => {
-            if(!Utils.isNullOrUndefined(result.filePath) && result.filePath!.length > 0) {
-                this.vm.setting.path = result.filePath!;
-                this.saveStory();
-            }
-        });
     }
 }
 </script>
