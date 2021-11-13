@@ -45,7 +45,14 @@ import { Dialogs } from './models/savedata/dialogs';
                 Dialogs.openSaveWindow(this.vm, () => this.saveStory());
                 return;
             }
-            this.saveStory();
+
+            const title = this.getNameFromPath(this.vm.setting.path);
+            Dialogs.messageBox(
+                "確認",
+                `${ title } に上書き保存します、よろしいですか？`,
+                false, true,
+                () => this.saveStory()
+            );
         },
         home: function() {
             if(!this.vm.editing) return;
@@ -62,7 +69,7 @@ import { Dialogs } from './models/savedata/dialogs';
             if(result.length != 0) {
                 name = result;
             }
-            return `${name} - Storywriter`;
+            return `${name.substr(0, name.lastIndexOf("."))} - Storywriter`;
         }
     }
 })
