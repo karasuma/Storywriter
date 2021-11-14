@@ -8,7 +8,7 @@
     <div id="modal-imgviewer"></div>
 
     <!-- Main contents -->
-    <EditHeader :vm="vm" />
+    <EditHeader :vm="vm" :settingClicked="setSettingMenu" />
 
     <div id="container">
       <div v-if="vm.editing">
@@ -19,11 +19,11 @@
         <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
         <EditWorld class="bk" :style="getVisible(4)" :vm="vm" />
         <EditMemo class="bk" :style="getVisible(5)" :vm="vm" />
-        <EditConfig class="bk" :style="getVisible(6)" :setting="vm.setting" />
       </div>
       <div v-else>
         <Entrance :vm="vm" />
       </div>
+      <EditConfig class="bk" :style="showSettingMenu" :setting="vm.setting" />
     </div>
 
     <EditFooter :message="vm.message" />
@@ -64,12 +64,21 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
   methods: {
     changeMenu: function(index: string) {
       this.currentIndex = parseInt(index);
+      this.vm.setting.showing = false;
     },
     getVisible: function(index: number): string {
       return this.currentIndex == index ? "" : "display: none;";
     },
     editSelectedMenu: function() {
       this.changeMenu(0);
+    },
+    setSettingMenu: function() {
+      this.vm.setting.showing = true;
+    }
+  },
+  computed: {
+    showSettingMenu: function(): string {
+      return this.vm.setting.showing ? "" : "display: none;";
     }
   }
 })

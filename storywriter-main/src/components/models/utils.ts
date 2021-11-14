@@ -1,3 +1,4 @@
+import path from "path";
 import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 
 export class Utils {
@@ -45,6 +46,19 @@ export class Utils {
 
     static clamp(value: number, min: number, max: number): number {
         return min <= value ? value <= max ? value : max : min;
+    }
+
+    static getUserDataPath(): string {
+        if(process.env.APPDATA === undefined && process.env.HOME === undefined) {
+            // Developping in local
+            return process.cwd();
+        }
+
+        return process.env.APPDATA || 
+            (process.platform == 'darwin'
+                ? process.env.HOME + '/Library/Preferences'
+                : process.env.HOME + '/.local/share'
+            );
     }
 }
 

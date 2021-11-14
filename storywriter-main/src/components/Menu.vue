@@ -18,9 +18,6 @@
         <div class="menu__item" :class="{ item__selected: isSelected(5) }">
             <img id="memo-button" src="../assets/memo.png" @click="sendMenu(5)">
         </div>
-        <div class="menu__item--config" :class="{ item__selected: isSelected(6) }">
-            <img id="config-button" src="../assets/config.png" @click="sendMenu(6)">
-        </div>
     </div>    
 </template>
 

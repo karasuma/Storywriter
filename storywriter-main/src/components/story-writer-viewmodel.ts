@@ -19,6 +19,7 @@ export class StoryWrtiterViewModel {
 
     constructor(path: string) {
         this.setting = new StoryPreference(path);
+        this.setting.load();
     }
 }
 

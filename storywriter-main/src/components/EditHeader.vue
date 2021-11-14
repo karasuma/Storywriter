@@ -3,6 +3,7 @@
         <div class="actions">
             <img src="../assets/save.png" @click="save">
             <img src="../assets/home.png" @click="home">
+            <img src="../assets/config.png" @click="settingClicked">
         </div>
         <div class="title">{{ title }}</div>
         <div class="controls">
@@ -26,6 +27,10 @@ import { Dialogs } from './models/savedata/dialogs';
     props: {
         vm: {
             type: StoryWrtiterViewModel,
+            required: true
+        },
+        settingClicked: {
+            type: Function,
             required: true
         }
     },
@@ -55,6 +60,7 @@ import { Dialogs } from './models/savedata/dialogs';
             );
         },
         home: function() {
+            this.vm.setting.showing = false;
             if(!this.vm.editing) return;
             this.vm.editing = false;
         }
@@ -76,6 +82,7 @@ import { Dialogs } from './models/savedata/dialogs';
 
 export default class EditHeader extends Vue {
     vm!: StoryWrtiterViewModel;
+    settingClicked!: Function;
 
     public getNameFromPath(path: string): string {
         const result = /([^/|^\\]*)+$/g.exec(path);

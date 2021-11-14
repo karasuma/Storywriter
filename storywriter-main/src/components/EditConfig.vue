@@ -6,23 +6,8 @@
                 <input disabled class="checkbox" type="checkbox" v-model="setting.darkmode">
             </div>
             <div class="configs__config-row">
-                <p>保存先</p>
-                <img src="../assets/folder.png" @click="selectDirectory">
-                <input
-                    style="display: none"
-                    ref="selectDir"
-                    type="file"
-                    @change="selectedFile"
-                    webkitdirectory directory
-                >
-                <input class="text" type="text" spellcheck="false"
-                    v-model="setting.path"
-                    :style="stringEmptyCss(setting.path)"
-                >
-            </div>
-            <div class="configs__config-row">
                 <p>画像の最大拡大率</p>
-                <input class="text" type="range" name="expandratio"
+                <input class="range" type="range" name="expandratio"
                     v-model="setting.maxImageExpandRatio"
                     min="1" max="9"
                 >
@@ -30,11 +15,19 @@
             </div>
             <div class="configs__config-row">
                 <p>画像の拡大倍率</p>
-                <input class="text" type="range" name="expandpower"
+                <input class="range" type="range" name="expandpower"
                     v-model="setting.imageExpandPower"
                     min="1" max="20"
                 >
                 <label for="expandpower">{{ setting.imageExpandPower }} / 20</label>
+            </div>
+
+            <div class="configs__save">
+                <div class="configs__save__button"
+                    :class="{selectable: checkSetting}"
+                    @click="saveSetting">
+                    <p>更新</p>
+                </div>
             </div>
         </div>
     </div>
@@ -71,12 +64,33 @@ import { StoryPreference } from "./models/story-preference";
                 return "border: solid 1px crimson;"
             }
             return "";
+        },
+        saveSetting: function(): void {
+            if(!this.checkSetting) return;
+            this.setting.save();
+            this.updateSetting();
         }
     },
+    computed: {
+        checkSetting: function(): boolean {
+            const changes = new Array<boolean>();
+            changes.push(this.prevSetting.maxImageExpandRatio == this.setting.maxImageExpandRatio);
+            changes.push(this.prevSetting.imageExpandPower == this.setting.imageExpandPower);
+            changes.push(this.prevSetting.darkmode == this.setting.darkmode);
+            return changes.filter(x => !x).length != 0;
+        }
+    }
 })
 
 export default class EditConfig extends Vue {
     setting!: StoryPreference;
+
+    prevSetting: StoryPreference = new StoryPreference("");
+    public updateSetting(): void {
+        this.prevSetting.maxImageExpandRatio = this.setting.maxImageExpandRatio;
+        this.prevSetting.imageExpandPower = this.setting.imageExpandPower;
+        this.prevSetting.darkmode = this.setting.darkmode;
+    }
 }
 </script>
 
@@ -122,6 +136,10 @@ export default class EditConfig extends Vue {
             & input {
                 margin: auto 18px;
                 width: 100%;
+                cursor: pointer;
+            }
+            & .range {
+                cursor: pointer;
             }
             & .text {
                 height: 2em;
@@ -137,6 +155,43 @@ export default class EditConfig extends Vue {
             & label {
                 min-width: 60px;
                 margin-top: 0.6em;
+            }
+        }
+
+        &__save {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            $Save-Height: 62px;
+            height: calc( #{$Footer-Height} + #{$Save-Height} );
+
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+
+            &__button {
+                margin: 4px;
+                padding: 2px;
+                width: 70px;
+                border: solid 1px $Button-Hover;
+                & p {
+                    margin-top: 0.1em;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                filter: brightness($Normal-Brightness);
+            }
+
+            & .selectable {
+                background-color: $Button-Hover;
+                & p {
+                    color: $Font-Reverse-Color;
+                }
+                &:hover {
+                    filter: brightness($Focus-Brightness);
+                }
             }
         }
     }
