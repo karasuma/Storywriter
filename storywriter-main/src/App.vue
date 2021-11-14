@@ -23,7 +23,7 @@
       <div v-else>
         <Entrance :vm="vm" />
       </div>
-      <EditConfig class="bk" :style="showSettingMenu" :setting="vm.setting" />
+      <EditConfig class="bk" :style="showSettingMenu" :vm="vm" />
     </div>
 
     <EditFooter :message="vm.message" />

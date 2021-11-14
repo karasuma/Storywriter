@@ -3,28 +3,27 @@
         <div class="configs">
             <div class="configs__config-row">
                 <p>ダークモード</p>
-                <input disabled class="checkbox" type="checkbox" v-model="setting.darkmode">
+                <input disabled class="checkbox" type="checkbox" v-model="vm.setting.darkmode">
             </div>
             <div class="configs__config-row">
                 <p>画像の最大拡大率</p>
                 <input class="range" type="range" name="expandratio"
-                    v-model="setting.maxImageExpandRatio"
+                    v-model="vm.setting.maxImageExpandRatio"
                     min="1" max="9"
                 >
-                <label for="expandratio">{{ setting.maxImageExpandRatio }} / 9</label>
+                <label for="expandratio">{{ vm.setting.maxImageExpandRatio }} / 9</label>
             </div>
             <div class="configs__config-row">
                 <p>画像の拡大倍率</p>
                 <input class="range" type="range" name="expandpower"
-                    v-model="setting.imageExpandPower"
+                    v-model="vm.setting.imageExpandPower"
                     min="1" max="20"
                 >
-                <label for="expandpower">{{ setting.imageExpandPower }} / 20</label>
+                <label for="expandpower">{{ vm.setting.imageExpandPower }} / 20</label>
             </div>
 
             <div class="configs__save">
                 <div class="configs__save__button"
-                    :class="{selectable: checkSetting}"
                     @click="saveSetting">
                     <p>更新</p>
                 </div>
@@ -35,12 +34,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryPreference } from "./models/story-preference";
+import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 
 @Options({
     props: {
-        setting: {
-            type: StoryPreference,
+        vm: {
+            type: StoryWrtiterViewModel,
             required: true
         }
     },
@@ -57,7 +56,7 @@ import { StoryPreference } from "./models/story-preference";
                 (e as Event).preventDefault();
             }
             
-            this.setting.path = receivedFile.path.replace(receivedFile.name, "");
+            this.vm.setting.path = receivedFile.path.replace(receivedFile.name, "");
         },
         stringEmptyCss: function(str: string): string {
             if(str.length == 0) {
@@ -66,31 +65,13 @@ import { StoryPreference } from "./models/story-preference";
             return "";
         },
         saveSetting: function(): void {
-            if(!this.checkSetting) return;
-            this.setting.save();
-            this.updateSetting();
-        }
-    },
-    computed: {
-        checkSetting: function(): boolean {
-            const changes = new Array<boolean>();
-            changes.push(this.prevSetting.maxImageExpandRatio == this.setting.maxImageExpandRatio);
-            changes.push(this.prevSetting.imageExpandPower == this.setting.imageExpandPower);
-            changes.push(this.prevSetting.darkmode == this.setting.darkmode);
-            return changes.filter(x => !x).length != 0;
+            this.vm.setting.save(this.vm.message);
         }
     }
 })
 
 export default class EditConfig extends Vue {
-    setting!: StoryPreference;
-
-    prevSetting: StoryPreference = new StoryPreference("");
-    public updateSetting(): void {
-        this.prevSetting.maxImageExpandRatio = this.setting.maxImageExpandRatio;
-        this.prevSetting.imageExpandPower = this.setting.imageExpandPower;
-        this.prevSetting.darkmode = this.setting.darkmode;
-    }
+    vm!: StoryWrtiterViewModel;
 }
 </script>
 
@@ -171,27 +152,22 @@ export default class EditConfig extends Vue {
             align-items: flex-start;
 
             &__button {
-                margin: 4px;
+                margin: 4px 18px;
                 padding: 2px;
                 width: 70px;
                 border: solid 1px $Button-Hover;
+                border-radius: 12px;
+                background-color: $Button-Hover;
                 & p {
                     margin-top: 0.1em;
                     width: 100%;
                     text-align: center;
-                }
-
-                filter: brightness($Normal-Brightness);
-            }
-
-            & .selectable {
-                background-color: $Button-Hover;
-                & p {
                     color: $Font-Reverse-Color;
                 }
                 &:hover {
                     filter: brightness($Focus-Brightness);
                 }
+                filter: brightness($Normal-Brightness);
             }
         }
     }

@@ -1,4 +1,5 @@
 import { FileAccessor } from "./savedata/file-accessor";
+import { SystemMessage } from "./system-message";
 import { Utils } from "./utils";
 
 export class StoryPreference {
@@ -14,7 +15,7 @@ export class StoryPreference {
         this.path = path;
     }
 
-    public save(): void {
+    public save(message: SystemMessage): void {
         const json = JSON.stringify([
             this.maxImageExpandRatio,
             this.imageExpandPower,
@@ -23,7 +24,15 @@ export class StoryPreference {
         console.log(json);
         FileAccessor.Save(this.settingPath, json)
             .then(result => {
-                console.log(result);
+                message.message = result.content;
+                message.changeMessage(
+                    result.isSuccess
+                        ? "Setting file save completed!"
+                        : result.content ,
+                    result.isSuccess 
+                        ? SystemMessage.MessageType.Normal
+                        : SystemMessage.MessageType.Alert
+                );
             })
     }
 
@@ -31,7 +40,6 @@ export class StoryPreference {
         FileAccessor.Load(this.settingPath)
             .then(result => {
                 if(result.isSuccess) {
-                    console.log(result.content);
                     const setting = JSON.parse(result.content) as Array<number | boolean>;
                     this.maxImageExpandRatio = setting[0] as number;
                     this.imageExpandPower = setting[1] as number;
