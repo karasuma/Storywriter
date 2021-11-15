@@ -10,8 +10,8 @@
                     <input v-model="content" placeholder="..." spellcheck="false" @keyup.enter="confirm">
                 </div>
                 <div class="modal__content__buttons">
-                    <span v-if="confirmable" class="modal__content__buttons-ok" @click="confirm">Confirm</span>
-                    <span v-else class="modal__content__buttons-disable">Confirm</span>
+                    <span v-if="confirmable" class="modal__content__buttons-ok" @click="confirm">決定！</span>
+                    <span v-else class="modal__content__buttons-disable">決定</span>
                 </div>
             </div>
         </div>

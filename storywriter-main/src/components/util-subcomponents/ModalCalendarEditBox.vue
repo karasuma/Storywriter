@@ -3,7 +3,7 @@
         <div class="modal" id="modal-calendar">
             <div class="modal__content">
                 <div class="modal__content__header">
-                    <p class="modal__content__header-caption">Change history...</p>
+                    <p class="modal__content__header-caption">時系列の変更</p>
                     <p class="modal__content__header-close" @click="disable">&times;</p>
                 </div>
                 <ul class="modal__content__stories">

@@ -85,12 +85,12 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
         },
         askDispose: function(lore: Stories) {
             this.selectingId = lore.id;
-            let msg = "Are you sure you want to delete<br>";
+            let msg = "このストーリーを削除しますか？<br>";
             msg += '<b style="padding: 0 3px; font-size: 16px;">';
-            msg += lore.content.caption + "</b> ?<br>";
-            msg += "(All of sub stories delete when it has children)";
+            msg += lore.content.caption + "</b><br>";
+            msg += "(ストーリー内の小話も削除されます。)";
             this.message = MessageObject.createMessage(
-                "Warning",
+                "警告",
                 msg,
                 true
             );

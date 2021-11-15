@@ -65,12 +65,11 @@ import { StoryData } from "../models/story/story-data";
         },
         askDispose: function() {
             this.messages = MessageObject.createMessage(
-                "Warning",
-                    "Are you sure you want to erase<br>"
-                        + '<b style="padding: 0 3px; font-size: 16px;">'
-                        + "' " + this.content.title + " '"
-                        + "</b>"
-                    + " ?",
+                "注意",
+                "この小話を削除しますか？<br>"
+                    + '<b style="padding: 0 3px; font-size: 16px;">'
+                    + "' " + this.content.title + " '"
+                    + "</b>",
                 true
             );
             this.showMsgbox = true;

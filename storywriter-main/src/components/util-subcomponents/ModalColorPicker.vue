@@ -3,7 +3,7 @@
         <div class="modal">
             <div class="modal__content">
                 <div class="modal__content__header">
-                    <p class="modal__content__header-caption">Choose color...</p>
+                    <p class="modal__content__header-caption">色の選択</p>
                     <p class="modal__content__header-close" @click="disable">&times;</p>
                 </div>
                 <div class="modal__content__colors">

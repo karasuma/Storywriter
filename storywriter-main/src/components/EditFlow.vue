@@ -97,12 +97,11 @@ import { Defs } from "./models/defs";
         },
         askDispose: function() {
             this.message = MessageObject.createMessage(
-                "Warning",
-                    "Are you sure you want to remove<br>"
-                        + '<b style="padding: 0 3px; font-size: 16px;">'
-                        + "' " + this.getEditing.content.caption + " '"
-                        + "</b>"
-                    + " ?",
+                "警告",
+                "このお話を削除しますか？<br>"
+                    + '<b style="padding: 0 3px; font-size: 16px;">'
+                    + "' " + this.getEditing.content.caption + " '"
+                    + "</b>",
                 true
             );
             this.showMsgBox = true;

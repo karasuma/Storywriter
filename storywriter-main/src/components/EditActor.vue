@@ -53,11 +53,11 @@
                     </div>
 
                     <div class="edit__contents__details">
-                        <h2>Introduce</h2>
+                        <h2>紹介</h2>
                         <textarea
                             v-model="getEditingActor.introduce" 
                             maxlength="500" spellcheck="false" placeholder="..."></textarea>
-                        <h2>Detail</h2>
+                        <h2>詳しい情報</h2>
                         <textarea
                             v-model="getEditingActor.detail"
                             maxlength="500" spellcheck="false" placeholder="..."></textarea>

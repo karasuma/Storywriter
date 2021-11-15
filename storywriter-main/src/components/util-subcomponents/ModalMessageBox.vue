@@ -12,8 +12,8 @@
                     <p v-html="param.message"></p>
                 </div>
                 <div class="modal__content__buttons">
-                    <span class="modal__content__buttons-close" @click="reject">no, thanks.</span>
-                    <span class="modal__content__buttons-ok" @click="confirm">Go ahead!</span>
+                    <span class="modal__content__buttons-close" @click="reject">やめとく</span>
+                    <span class="modal__content__buttons-ok" @click="confirm">おーけー！</span>
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <h2>Resources</h2>
+                <h2>参考画像集</h2>
                 <div class="edit__content__images">
                     <ImageItem v-for="img in getEditingWord.resources"
                         :key="img" :file="img"
@@ -81,12 +81,11 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
         },
         askDispose: function(word: Word) {
             this.message = MessageObject.createMessage(
-                "Warning",
-                    "Are you sure you want to remove<br>"
-                        + '<b style="padding: 0 3px; font-size: 16px;">'
-                        + "' " + word.caption + " '"
-                        + "</b>"
-                    + " ?",
+                "警告",
+                "この用語を削除しますか？<br>"
+                    + '<b style="padding: 0 3px; font-size: 16px;">'
+                    + "' " + word.caption + " '"
+                    + "</b>",
                 true
             );
             this.showMsgBox = true;
