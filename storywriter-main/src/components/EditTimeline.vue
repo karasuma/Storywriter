@@ -1,5 +1,11 @@
 <template>
     <div id="edit-timeline">
+        <ModalCalendarEditBox
+            :isVisible="showCalendar"
+            :stories="vm.hierarchy.children"
+            :close="closeCalendar"
+        />
+
         <div class="controls">
             <div v-for="color in colors" :key="color"
                 @click="filtering(color)"
@@ -8,6 +14,8 @@
 
         <div class="timelines">
             <div class="timelines__search">
+                <img class="timelines__search__calendar"
+                    src="../assets/calendar.png" @click="changeCalendar">
                 <img src="../assets/search.png">
                 <div class="timelines__search__input">
                     <input type="text" v-model="searchText" spellcheck="false" placeholder="search...">
@@ -36,10 +44,12 @@ import { Stories } from "./models/story/stories";
 import TimelineLabel from "./edit-timeline-subcomponents/TimelineLabel.vue";
 import { Defs } from "./models/defs";
 import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue";
 
 @Options({
     components: {
-        TimelineLabel
+        TimelineLabel,
+        ModalCalendarEditBox
     },
     props: {
         vm: {
@@ -81,7 +91,13 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
         },
         filtering: function(color: string): void {
             this.filteringColor = color;
-        }
+        },
+        changeCalendar: function() {
+            this.showCalendar = true;
+        },
+        closeCalendar: function() {
+            this.showCalendar = false;
+        },
     },
     computed: {
         stories: function(): Array<Stories> {
@@ -117,6 +133,8 @@ export default class EditTimeline extends Vue {
 
     labelSpan: number = 55;
     searchText: string = "";
+    
+    showCalendar: boolean = false;
 
     public foundMatchStories(): Array<Stories> {
         if(this.searchText.length == 0) return new Array<Stories>();
@@ -195,6 +213,13 @@ $Timeline-Width: calc( #{$Menu-Width} + #{$Filter-Width} );
             justify-content: flex-end;
             //width: calc( 100% - 80px );
             margin: 20px 40px;
+
+            &__calendar {
+                filter: brightness($Normal-Brightness);
+                &:hover {
+                    filter: brightness($Focus-Brightness);
+                }
+            }
 
             &__input {
                 width: 50%;
