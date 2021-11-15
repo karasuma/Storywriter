@@ -198,6 +198,7 @@ export default class EditWorld extends Vue {
     }
     mounted() {
         window.addEventListener("resize", this.setCaptionSize, false);
+        this.setCaptionSize();
     }
 }
 </script>
