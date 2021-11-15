@@ -39,6 +39,7 @@ import { ViewmodelUpdater } from './models/savedata/vm-udpater';
     },
     methods: {
         newGame: function(): void {
+            this.vm.setDefaultStories();
             this.vm.editing = true;
         },
         continueGame: function(): void {

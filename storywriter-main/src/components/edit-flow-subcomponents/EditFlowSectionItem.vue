@@ -23,7 +23,7 @@
         ></textarea>
 
         <div v-for="story in content.stories" :key="story" class="section__content">
-            <textarea v-model="story.text" spellcheck="false"></textarea>
+            <textarea v-model="story.text" spellcheck="false" rows="4"></textarea>
             <div class="section__content__controls">
                 <img src="../../assets/arrow.png" class="section__content__controls-up"
                     @click="moveStoryPosition(story.id, true)" v-show="canStoryUp(story.id)">

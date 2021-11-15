@@ -33,10 +33,7 @@
                     <img src="../assets/dispose.png" @click="askDispose">
                 </div>
                 <div class="edit__main__desc">
-                    <textarea v-model="getEditing.content.description" spellcheck="false" maxlength="200"></textarea>
-                    <div class="edit__main__desc__chars">
-                        {{ getEditing.content.description.length }}/200
-                    </div>
+                    <textarea v-model="getEditing.content.description" spellcheck="false" rows="6"></textarea>
                 </div>
 
                 <hr>

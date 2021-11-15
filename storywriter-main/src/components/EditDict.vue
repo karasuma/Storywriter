@@ -25,10 +25,7 @@
 
                 <div class="edit__content__note">
                     <textarea v-model="getEditingWord.description"
-                        :maxlength="maxDescLength" spellcheck="false" placeholder="..."></textarea>
-                    <div class="edit__content__note-count">
-                        {{ getEditingWord.description.length }}/{{ maxDescLength }}
-                    </div>
+                        rows="20" spellcheck="false" placeholder="..."></textarea>
                 </div>
 
                 <h2>参考画像集</h2>
@@ -121,8 +118,6 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 
 export default class EditDict extends Vue {
     vm!: StoryWrtiterViewModel;
-
-    maxDescLength: number = 500;
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage("", "");
