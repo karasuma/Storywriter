@@ -19,7 +19,7 @@ export class StoryPreference {
         const json = JSON.stringify([
             this.maxImageExpandRatio,
             this.imageExpandPower,
-            this.darkmode
+            this.darkmode ? 1 : 0
         ]);
         console.log(json);
         FileAccessor.Save(this.settingPath, json)
@@ -40,10 +40,10 @@ export class StoryPreference {
         FileAccessor.Load(this.settingPath)
             .then(result => {
                 if(result.isSuccess) {
-                    const setting = JSON.parse(result.content) as Array<number | boolean>;
-                    this.maxImageExpandRatio = setting[0] as number;
-                    this.imageExpandPower = setting[1] as number;
-                    this.darkmode = setting[2] as boolean;
+                    const setting = JSON.parse(result.content) as Array<number>;
+                    this.maxImageExpandRatio = setting[0];
+                    this.imageExpandPower = setting[1];
+                    this.darkmode = setting[2] == 1;
                 }
             });
     }
