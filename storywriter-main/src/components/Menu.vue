@@ -1,21 +1,21 @@
 <template>
     <div class="menu">
-        <div class="menu__item" :class="{ item__selected: isSelected(0) }">
+        <div class="menu__item" title="ストーリー" :class="{ item__selected: isSelected(0) }">
             <img id="flow-button" src="../assets/edit.png" @click="sendMenu(0)">
         </div>
-        <div class="menu__item" :class="{ item__selected: isSelected(1) }">
+        <div class="menu__item" title="時系列" :class="{ item__selected: isSelected(1) }">
             <img id="hist-button" src="../assets/calendar.png" @click="sendMenu(1)">
         </div>
-        <div class="menu__item" :class="{ item__selected: isSelected(2) }">
+        <div class="menu__item" title="用語辞典" :class="{ item__selected: isSelected(2) }">
             <img id="dict-button" src="../assets/dict.png" @click="sendMenu(2)">
         </div>
-        <div class="menu__item" :class="{ item__selected: isSelected(3) }">
+        <div class="menu__item" title="人物事典" :class="{ item__selected: isSelected(3) }">
             <img id="person-button" src="../assets/person.png" @click="sendMenu(3)">
         </div>
-        <div class="menu__item" :class="{ item__selected: isSelected(4) }">
+        <div class="menu__item" title="地理" :class="{ item__selected: isSelected(4) }">
             <img id="wold-button" src="../assets/world.png" @click="sendMenu(4)">
         </div>
-        <div class="menu__item" :class="{ item__selected: isSelected(5) }">
+        <div class="menu__item" title="メモ" :class="{ item__selected: isSelected(5) }">
             <img id="memo-button" src="../assets/memo.png" @click="sendMenu(5)">
         </div>
     </div>    

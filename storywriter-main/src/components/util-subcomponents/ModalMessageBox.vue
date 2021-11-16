@@ -113,7 +113,7 @@ export default class ModalMessageBox extends Vue {
             }
         }
         &__desc {
-            width: 100%;
+            width: 95%;
             min-height: 15vh;
             padding: 20px;
             display: flex;

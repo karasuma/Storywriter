@@ -1,9 +1,14 @@
 <template>
     <header>
+        <ModalMessageBox
+            :isVisible="showMsgBox"
+            :param="message"
+            :result="getResult"
+        />
         <div class="actions">
-            <img src="../assets/save.png" @click="save">
-            <img src="../assets/home.png" @click="home">
-            <img src="../assets/config.png" @click="settingClicked">
+            <img src="../assets/save.png" title="保存" @click="save">
+            <img src="../assets/home.png" title="ホームへ戻る" @click="askHome">
+            <img src="../assets/config.png" title="設定" @click="settingClicked">
         </div>
         <div class="title">{{ title }}</div>
         <div class="controls">
@@ -22,8 +27,14 @@ import { JsonConverter } from './models/savedata/json-converter';
 import { FileAccessor } from './models/savedata/file-accessor';
 import { SystemMessage } from './models/system-message';
 import { Dialogs } from './models/savedata/dialogs';
+import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
+import { MessageObject } from './models/utils';
+import { Defs } from './models/defs';
 
 @Options({
+    components: {
+        ModalMessageBox,
+    },
     props: {
         vm: {
             type: StoryWrtiterViewModel,
@@ -59,11 +70,29 @@ import { Dialogs } from './models/savedata/dialogs';
                 () => this.saveStory()
             );
         },
+        askHome: function() {
+            if(!this.vm.editing) {
+                this.home();
+                return;
+            }
+            this.message = MessageObject.createMessage(
+                "注意",
+                "ホーム画面へ戻りますか？<br>" +
+                "（となりのセーブボタンを押していない場合は保存されません。）"
+            )
+            this.showMsgBox = true;
+        },
         home: function() {
             this.vm.setting.showing = false;
             if(!this.vm.editing) return;
             this.vm.editing = false;
-        }
+        },
+        getResult: function(result: number) {
+            if(result == Defs.MessageType.Confirm) {
+                this.home();
+            }
+            this.showMsgBox = false;
+        },
     },
     computed: {
         title: function(): string {
@@ -83,6 +112,9 @@ import { Dialogs } from './models/savedata/dialogs';
 export default class EditHeader extends Vue {
     vm!: StoryWrtiterViewModel;
     settingClicked!: Function;
+
+    showMsgBox: boolean = false;
+    message: MessageObject = MessageObject.createMessage("Warning", "");
 
     public getNameFromPath(path: string): string {
         const result = /([^/|^\\]*)+$/g.exec(path);
