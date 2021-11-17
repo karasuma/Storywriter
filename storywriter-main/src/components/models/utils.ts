@@ -50,7 +50,7 @@ export class Utils {
 
     static getUserDataPath(): string {
         if(process.env.APPDATA === undefined && process.env.HOME === undefined) {
-            // Developping in local
+            // Develop mode
             return process.cwd();
         }
 
