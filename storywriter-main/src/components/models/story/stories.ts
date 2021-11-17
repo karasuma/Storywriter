@@ -98,4 +98,11 @@ export class Stories implements IUniqueObject {
     hasEditingChildren(): boolean {
         return this.getEditingChildren() !== undefined;
     }
+
+    public clear(): void {
+        this.content.lores.forEach(l => l.stories.splice(0));
+        this.content.lores.splice(0);
+        this.children.forEach(x => x.clear());
+        this.children.splice(0);
+    }
 }

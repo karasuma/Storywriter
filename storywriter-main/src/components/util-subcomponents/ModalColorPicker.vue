@@ -40,7 +40,10 @@ import { Defs } from "../models/defs";
     },
     computed: {
         getColors: function(): Array<String> {
-            return this.darkmode ? Defs.definedDarkColors : Defs.definedLightColors;
+            const colors = this.darkmode
+                ? Defs.definedDarkColors
+                : Defs.definedLightColors;
+            return colors;
         }
     },
     methods: {

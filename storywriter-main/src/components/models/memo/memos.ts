@@ -16,6 +16,10 @@ export class Memos implements IUniqueObject {
             this.memoList.splice(idx, 1);
         }
     }
+
+    public clear(): void {
+        this.memoList.splice(0);
+    }
 }
 
 export class MemoItem implements IUniqueObject {

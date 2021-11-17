@@ -6,6 +6,10 @@ import { Worlds } from './models/world/worlds';
 import { Memos } from './models/memo/memos';
 import { SystemMessage } from './models/system-message';
 import { Defs } from './models/defs';
+import { FileAccessor } from './models/savedata/file-accessor';
+import { JsonConverter } from './models/savedata/json-converter';
+import { ViewmodelUpdater } from './models/savedata/vm-udpater';
+import { Utils } from './models/utils';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(true);
@@ -18,13 +22,36 @@ export class StoryWrtiterViewModel {
     public message: SystemMessage = new SystemMessage();
     public editing: boolean = false;
 
-    constructor(path: string) {
+    constructor(path: string = "") {
         this.setting = new StoryPreference(path);
         this.setting.load();
     }
 
+    public loadStory(path: string): void {
+        this.message.changeMessage(
+            `Story loading from ${path} ...`,
+            SystemMessage.MessageType.Warning
+        );
+        FileAccessor.Load(path)
+            .then(status => {
+                if(status.isSuccess) {
+                    const newvm = JsonConverter.fromJsonString(status.content);
+                    this.clear();
+                    ViewmodelUpdater.Update(this, newvm);
+                    this.setting.path = path;
+                    this.editing = true;
+
+                    const time = Utils.getSimpleTimeStamp();
+                    this.message.changeMessage(`Load completed! [${time}]`);
+                } else {
+                    this.message.changeMessage(status.content, SystemMessage.MessageType.Alert);
+                }
+            });
+    }
+    
     public setDefaultStories(): void {
         // Hierarchy
+        this.hierarchy.clear();
         const h_start = this.hierarchy.appendNewStory(false, "ようこそ");
         h_start.content.description = 
             "Storywriterへようこそ！\n\n" +
@@ -68,6 +95,7 @@ export class StoryWrtiterViewModel {
         h_sample.content.lores[2].stories[0].text = "めっちゃ頑張って誤解を解く";
 
         // Dictionary
+        this.dictionary.clear();
         this.dictionary.appendNewWord("魔法");
         this.dictionary.words[0].description =
             "なんかこう、ワァーってやると出てくるすごいやつ\n" +
@@ -79,6 +107,7 @@ export class StoryWrtiterViewModel {
             "（成年擬制）　　第７５３条：未成年者が婚姻をしたときは、もう成年として扱う。\n";
         
         // Actors
+        this.actors.clear();
         this.actors.createNewActor("主人公");
         this.actors.actors[0].introduce =
             "ゲネイオン帝国領ジョーシティの男の子。\n" +
@@ -113,6 +142,7 @@ export class StoryWrtiterViewModel {
             "使うと戦闘後になんですぐに助けを呼ばなかったのかを小一時間強ほど問い詰める。";
 
         // Worlds
+        this.worlds.clear();
         this.worlds.addWorld("ゲネイオン帝国");
         this.worlds.worldGroups[0].addCountry("ゲネイオン帝国");
         this.worlds.worldGroups[0].countries[0].description =
@@ -136,10 +166,19 @@ export class StoryWrtiterViewModel {
             "魔王が座ってる場所。あの椅子にいつも座っている魔王は間違いなく痔持ち。";
         
         // Memos
+        this.memos.clear();
         this.memos.addMemo("参考資料", Defs.definedDarkColors[4]);
         this.memos.memoList[0].text = "https://ja.wikipedia.org";
         this.memos.addMemo("ソフトを作った人");
         this.memos.memoList[1].text = "@yakumo_crow (twitter)";
+    }
+
+    public clear(): void {
+        this.hierarchy.clear();
+        this.dictionary.clear();
+        this.dictionary.clear();
+        this.worlds.clear();
+        this.memos.clear();
     }
 }
 

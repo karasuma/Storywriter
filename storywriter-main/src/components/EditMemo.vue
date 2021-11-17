@@ -66,8 +66,10 @@ import { Defs } from "./models/defs";
             const colors = this.vm.setting.darkmode
                 ? Defs.definedDarkColors 
                 : Defs.definedLightColors;
-            colors.splice(0, 0, "transparent");
-            return colors;
+            const memoColors = new Array<string>();
+            memoColors.push("transparent");
+            colors.forEach(c => memoColors.push(c));
+            return memoColors;
         },
     }
 })

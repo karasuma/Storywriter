@@ -5,9 +5,16 @@
             :param="message"
             :result="getResult"
         />
+        <input
+            style="display: none"
+            ref="selectFile"
+            type="file"
+            @change="selectedFile"
+        >
         <div class="actions">
             <img src="../assets/save.png" title="保存" @click="save">
             <img src="../assets/home.png" title="ホームへ戻る" @click="askHome">
+            <img src="../assets/folder.png" title="読み込み" @click="load">
             <img src="../assets/config.png" title="設定" @click="settingClicked">
         </div>
         <div class="title">{{ title }}</div>
@@ -86,12 +93,27 @@ import { Defs } from './models/defs';
             this.vm.setting.showing = false;
             if(!this.vm.editing) return;
             this.vm.editing = false;
+            this.vm.clear();
         },
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 this.home();
             }
             this.showMsgBox = false;
+        },
+        load: function(): void {
+            this.$refs.selectFile.click();
+        },
+        selectedFile: function(): void {
+            const e = this.$refs.selectFile as HTMLInputElement;
+            if(e.files === null) return;
+            const receivedFile = e.files[0];
+            if(!receivedFile) return;
+            if(e instanceof Event) {
+                (e as Event).preventDefault();
+            }
+            this.$refs.selectFile.value = null;
+            this.vm.loadStory(receivedFile.path);
         },
     },
     computed: {

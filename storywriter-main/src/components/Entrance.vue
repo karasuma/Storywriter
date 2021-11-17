@@ -25,10 +25,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { FileAccessor } from "./models/savedata/file-accessor";
-import { JsonConverter } from "./models/savedata/json-converter";
 import { StoryWrtiterViewModel } from './story-writer-viewmodel';
-import { ViewmodelUpdater } from './models/savedata/vm-udpater';
 
 @Options({
     props: {
@@ -54,25 +51,13 @@ import { ViewmodelUpdater } from './models/savedata/vm-udpater';
                 (e as Event).preventDefault();
             }
             
-            this.loadStory(receivedFile.path);
+            this.vm.loadStory(receivedFile.path);
         },
     }
 })
 
 export default class Entrance extends Vue {
     vm!: StoryWrtiterViewModel;
-
-    public loadStory(path: string): void {
-        FileAccessor.Load(path)
-            .then(status => {
-                if(status.isSuccess) {
-                    const newvm = JsonConverter.fromJsonString(status.content);
-                    ViewmodelUpdater.Update(this.vm, newvm);
-                    this.vm.setting.path = path;
-                    this.vm.editing = true;
-                }
-            });
-    }
 }
 </script>
 

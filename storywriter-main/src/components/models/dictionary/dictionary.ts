@@ -22,4 +22,9 @@ export class Dictionary {
             target.editing = true;
         }
     }
+
+    public clear(): void {
+        this.words.forEach(x => x.resources.splice(0));
+        this.words.splice(0);
+    }
 }

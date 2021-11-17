@@ -13,4 +13,8 @@ export class Actors {
             this.actors.splice(idx, 1);
         }
     }
+
+    public clear(): void {
+        this.actors.splice(0);
+    }
 }

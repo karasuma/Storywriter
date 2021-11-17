@@ -18,6 +18,14 @@ export class Worlds {
             this.worldGroups.splice(idx, 1);
         }
     }
+
+    public clear(): void {
+        this.worldGroups.forEach(w => {
+            w.countries.forEach(c => c.samples.splice(0));
+            w.countries.splice(0);
+        });
+        this.worldGroups.splice(0);
+    }
 }
 
 export class World implements IUniqueObject {

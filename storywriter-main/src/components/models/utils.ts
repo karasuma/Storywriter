@@ -60,6 +60,12 @@ export class Utils {
                 : process.env.HOME + '/.local/share'
             );
     }
+
+    static getSimpleTimeStamp(): string {
+        const date = new Date();
+        const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        return time;
+    }
 }
 
 export class MessageObject {

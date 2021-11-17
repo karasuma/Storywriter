@@ -119,8 +119,10 @@ import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue"
             const colors = this.vm.setting.darkmode
                 ? Defs.definedLightColors
                 : Defs.definedDarkColors;
-            colors.splice(0, 0, "transparent");
-            return colors;
+            const tlColors = new Array<string>();
+            tlColors.push("transparent");
+            colors.forEach(c => tlColors.push(c));
+            return tlColors;
         },
     }
 })
