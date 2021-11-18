@@ -28,7 +28,7 @@ export class FileAccessor {
             }
             
         } catch(err) {
-            result.failed(err as string);
+            result.failed(`Failed to load your story data... ( ${err as string} )`);
         }
         return result;
     }
