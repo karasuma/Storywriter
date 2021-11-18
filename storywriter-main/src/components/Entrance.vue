@@ -16,6 +16,7 @@
                 style="display: none"
                 ref="selectFile"
                 type="file"
+                accept=".ysd"
                 @change="selectedFile"
             >
             <p>途中から</p>

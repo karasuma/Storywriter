@@ -9,6 +9,7 @@
             style="display: none"
             ref="selectFile"
             type="file"
+            accept=".ysd"
             @change="selectedFile"
         >
         <div class="actions">
