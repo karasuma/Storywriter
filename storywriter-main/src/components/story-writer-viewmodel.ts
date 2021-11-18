@@ -10,6 +10,7 @@ import { FileAccessor } from './models/savedata/file-accessor';
 import { JsonConverter } from './models/savedata/json-converter';
 import { ViewmodelUpdater } from './models/savedata/vm-udpater';
 import { Utils } from './models/utils';
+import Logger from './models/logger';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(true);
@@ -43,8 +44,10 @@ export class StoryWrtiterViewModel {
 
                     const time = Utils.getSimpleTimeStamp();
                     this.message.changeMessage(`Load completed! [${time}]`);
+                    Logger.write("Story load event", `Load succeed from ${path}`, Logger.LoggingStatus.Info);
                 } else {
                     this.message.changeMessage(status.content, SystemMessage.MessageType.Alert);
+                    Logger.write("Story load error", `${status.content}\npath: ${path}`, Logger.LoggingStatus.Err);
                 }
             });
     }

@@ -36,8 +36,9 @@ import { FileAccessor } from './models/savedata/file-accessor';
 import { SystemMessage } from './models/system-message';
 import { Dialogs } from './models/savedata/dialogs';
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
-import { MessageObject } from './models/utils';
+import { MessageObject, Utils } from './models/utils';
 import { Defs } from './models/defs';
+import Logger from './models/logger';
 
 @Options({
     components: {
@@ -163,11 +164,14 @@ export default class EditHeader extends Vue {
         this.vm.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);
         FileAccessor.Save(this.vm.setting.path, vmJson)
             .then(result => {
+                const time = Utils.getSimpleTimeStamp();
                 if(result.isSuccess) {
-                    this.vm.message.changeMessage(`${result.content}`);
+                    this.vm.message.changeMessage(`${result.content} [${time}]`);
+                    Logger.write("Story save event", `Save succeed to ${this.vm.setting.path}`, Logger.LoggingStatus.Info);
                     return;
                 }
-                this.vm.message.changeMessage(`Save failed... (${result.content})`, SystemMessage.MessageType.Alert);
+                this.vm.message.changeMessage(`Save failed... (${result.content}) [${time}]`, SystemMessage.MessageType.Alert);
+                Logger.write("Story save error", result.content, Logger.LoggingStatus.Err);
             });
     }
 
