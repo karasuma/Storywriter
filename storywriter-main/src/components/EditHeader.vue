@@ -14,7 +14,7 @@
         <div class="actions">
             <img src="../assets/save.png" title="保存" @click="save">
             <img src="../assets/home.png" title="ホームへ戻る" @click="askHome">
-            <img src="../assets/folder.png" title="読み込み" @click="load">
+            <img src="../assets/folder.png" title="読み込み" @click="askLoad">
             <img src="../assets/config.png" title="設定" @click="settingClicked">
         </div>
         <div class="title">{{ title }}</div>
@@ -87,6 +87,7 @@ import { Defs } from './models/defs';
                 "ホーム画面へ戻りますか？<br>" +
                 "（となりのセーブボタンを押していない場合は保存されません。）"
             )
+            this.state = this.msgState.Home;
             this.showMsgBox = true;
         },
         home: function() {
@@ -95,14 +96,24 @@ import { Defs } from './models/defs';
             this.vm.editing = false;
             this.vm.clear();
         },
+        askLoad: function(): void {
+            this.message = MessageObject.createMessage(
+                "注意",
+                "新しいストーリーを読み込みますか？<br>" +
+                "（となりのセーブボタンを押していない場合は保存されません。）"
+            )
+            this.state = this.msgState.Load;
+            this.showMsgBox = true;
+        },
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
-                this.home();
+                if(this.state == this.msgState.Home) {
+                    this.home();
+                } else if(this.state == this.msgState.Load) {
+                    this.$refs.selectFile.click();
+                }
             }
             this.showMsgBox = false;
-        },
-        load: function(): void {
-            this.$refs.selectFile.click();
         },
         selectedFile: function(): void {
             const e = this.$refs.selectFile as HTMLInputElement;
@@ -137,6 +148,12 @@ export default class EditHeader extends Vue {
 
     showMsgBox: boolean = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");
+
+    msgState = {
+        Home: 0,
+        Load: 1
+    } as const;
+    state: number = this.msgState.Home;
 
     public getNameFromPath(path: string): string {
         const result = /([^/|^\\]*)+$/g.exec(path);
