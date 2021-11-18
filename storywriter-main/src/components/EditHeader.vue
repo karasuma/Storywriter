@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, KeyboardInputEvent } from 'electron';
 import { StoryWrtiterViewModel } from './story-writer-viewmodel';
 import { JsonConverter } from './models/savedata/json-converter';
 import { FileAccessor } from './models/savedata/file-accessor';
@@ -40,7 +40,7 @@ import { Defs } from './models/defs';
 
 @Options({
     components: {
-        ModalMessageBox,
+        ModalMessageBox
     },
     props: {
         vm: {
@@ -63,19 +63,7 @@ import { Defs } from './models/defs';
             ipcRenderer.send('maximize', true);
         },
         save: function() {
-            if(!this.vm.editing) return;
-            if(this.vm.setting.path.length == 0) {
-                Dialogs.openSaveWindow(this.vm, () => this.saveStory());
-                return;
-            }
-
-            const title = this.getNameFromPath(this.vm.setting.path);
-            Dialogs.messageBox(
-                "確認",
-                `${ title } に上書き保存します、よろしいですか？`,
-                false, true,
-                () => this.saveStory()
-            );
+            this.saveStory();
         },
         askHome: function() {
             if(!this.vm.editing) {
@@ -164,6 +152,12 @@ export default class EditHeader extends Vue {
     }
 
     public saveStory(): void {
+        if(!this.vm.editing) return;
+        if(this.vm.setting.path.length == 0) {
+            Dialogs.openSaveWindow(this.vm, () => this.saveStory());
+            return;
+        }
+
         const vmJson = JsonConverter.toJsonString(this.vm);
         this.vm.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);
         FileAccessor.Save(this.vm.setting.path, vmJson)
@@ -174,6 +168,19 @@ export default class EditHeader extends Vue {
                 }
                 this.vm.message.changeMessage(`Save failed... (${result.content})`, SystemMessage.MessageType.Alert);
             });
+    }
+
+    // Save methods used by Ctrl+S
+    mounted() {
+        document.addEventListener("keydown", this.saveStoryFromCtrls);
+    }
+    beforeDestroy() {
+        document.removeEventListener("keydown", this.saveStoryFromCtrls);
+    }
+    public saveStoryFromCtrls(e: KeyboardEvent): void {
+        if((e.ctrlKey || e.metaKey) && e.key == 's') {
+            this.saveStory();
+        }
     }
 }
 </script>
