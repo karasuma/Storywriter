@@ -1,3 +1,5 @@
+import os from 'os';
+
 export class Defs {
     public static readonly MessageType = {
         None: 0,
@@ -38,7 +40,7 @@ export class Defs {
     public static readonly imageAccepts: string = "image/jpeg,image/jpg,image/png,image/gif";
 
     public static getTempDirectory(): string {
-        const user = require('os').homedir();
+        const user = os.homedir();
         if(user.length != 0) {
             return user + "\\AppData\\Roaming\\StoryWriter";
         }

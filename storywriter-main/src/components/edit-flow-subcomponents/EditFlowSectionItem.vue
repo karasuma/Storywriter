@@ -113,10 +113,10 @@ import { StoryData } from "../models/story/story-data";
         }
     },
     computed: {
-        canUp: function(): Boolean {
+        canUp: function(): boolean {
             return this.getCurrentIndex() > 0;
         },
-        canDown: function(): Boolean {
+        canDown: function(): boolean {
             return this.getCurrentIndex() < this.parent.lores.length - 1;
         }
     }
@@ -128,10 +128,10 @@ export default class EditFlowSectionItem extends Vue {
     remove!: IReceiveString;
     move!: IReceiveString;
 
-    showMsgbox: boolean = false;
+    showMsgbox = false;
     messages: MessageObject = MessageObject.createMessage("Information", "Sample message here.");
 
-    showPickerbox: boolean = false;
+    showPickerbox = false;
 
     public getCurrentIndex(): number {
         return this.parent.getLoreIndex(this.content);

@@ -35,9 +35,9 @@ export class FileAccessor {
 }
 
 export class FileAccessStatus {
-    public isAccessing: boolean = true;
-    public isSuccess: boolean = false;
-    public content: string = "";
+    public isAccessing = true;
+    public isSuccess = false;
+    public content = "";
 
     public switchLoading(): void {
         this.isAccessing = true;

@@ -5,18 +5,18 @@ export class Stories implements IUniqueObject {
     public id: string = Utils.getUniqueId();
     public content: StoryData = new StoryData();
     public children: Stories[] = new Array<Stories>();
-    public isEditing: boolean = false;
-    public isExpanding: boolean = false;
+    public isEditing = false;
+    public isExpanding = false;
     public parent: Stories | null = null;
-    public dirMode: boolean = false;
+    public dirMode = false;
     public readonly root: Stories;
     
-    public currentDepth: number = 0;
+    public currentDepth = 0;
 
     constructor(
         createAsDir: boolean,
-        caption: string = "x",
-        depth: number = 0,
+        caption = "x",
+        depth = 0,
         root: Stories | null = null) {
         this.dirMode = createAsDir;
         this.content.caption = caption;
@@ -66,7 +66,7 @@ export class Stories implements IUniqueObject {
             .reduce((acc: number, curr: number) => acc > curr ? acc : curr);
     }
 
-    appendNewStory(createAsDir: boolean, caption: string = "New story"): Stories {
+    appendNewStory(createAsDir: boolean, caption = "New story"): Stories {
         const newDepth = this.currentDepth + 1;
         const newStory = new Stories(createAsDir, caption, newDepth, this.root);
         newStory.content.time = createAsDir ? -1 : this.getLastChildTimelineIndex() + 1;

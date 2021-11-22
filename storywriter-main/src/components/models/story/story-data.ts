@@ -2,11 +2,11 @@ import { Calendar } from '../calendar/calendar';
 import { StoryItem } from './story-item';
 
 export class StoryData {
-    public caption: string = "";
-    public description: string = "";
-    public color: string = "#333333";
+    public caption = "";
+    public description = "";
+    public color = "#333333";
     public lores: StoryItem[] = new Array<StoryItem>();
-    public time: number = 0;
+    public time = 0;
 
     public addLore() {
         this.lores.push(new StoryItem());
@@ -45,7 +45,7 @@ export class StoryData {
     }
 
     private swapLore(idx1: number, idx2: number) {
-        let temp = this.lores[idx1];
+        const temp = this.lores[idx1];
         this.lores[idx1] = this.lores[idx2];
         this.lores[idx2] = temp;
     }

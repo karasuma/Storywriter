@@ -137,18 +137,18 @@ export default class ImageItem extends Vue {
     dispose!: IReceiveString;
     size!: number;
     unfixedSize!: Position;
-    expandRatio!: Number;
-    expandPower!: Number;
+    expandRatio!: number;
+    expandPower!: number;
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage(
                 "消すよ？",
                 "この画像を除きますか？",
                 true
             );
-    deleteTargetId: string = "";
+    deleteTargetId = "";
 
-    showImgViewer: boolean = false;
+    showImgViewer = false;
 }
 </script>
 

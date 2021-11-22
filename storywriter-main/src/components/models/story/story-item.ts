@@ -2,8 +2,8 @@ import { IUniqueObject, Utils } from "../utils";
 
 export class StoryItem implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public title: string = "";
-    public color: string = "#383838";
+    public title = "";
+    public color = "#383838";
     public stories: StoryContent[] = new Array<StoryContent>();
 
     public addStory() {
@@ -17,5 +17,5 @@ export class StoryItem implements IUniqueObject {
 
 export class StoryContent implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public text: string = "";
+    public text = "";
 }

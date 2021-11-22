@@ -54,7 +54,7 @@ import { IReceiveString } from "../models/utils";
         }
     },
     computed: {
-        confirmable: function(): Boolean {
+        confirmable: function(): boolean {
             return this.content.length > 0;
         }
     },
@@ -71,7 +71,7 @@ export default class ModalSimpleInputBox extends Vue {
     defaultText!: string;
     result!: IReceiveString;
 
-    content: string = "";
+    content = "";
 }
 </script>
 

@@ -148,5 +148,5 @@ pnpm-debug.log*
 *.sw?
 
 #Electron-builder output
-/dist_electron
+storywriter-main/dist_electron
 storywriter-main/setting.scrap

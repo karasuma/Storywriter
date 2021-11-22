@@ -86,7 +86,7 @@ import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components
 export default class App extends Vue {
   vm: StoryWrtiterViewModel = new StoryWrtiterViewModel("");
 
-  currentIndex: number = 0;
+  currentIndex = 0;
 }
 </script>
 

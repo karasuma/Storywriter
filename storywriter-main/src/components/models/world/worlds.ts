@@ -30,9 +30,9 @@ export class Worlds {
 
 export class World implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public name: string = "";
+    public name = "";
     public countries: Country[] = new Array<Country>();
-    public expanding: boolean = false;
+    public expanding = false;
     private parent: Worlds;
 
     constructor(defaultName: string, parent: Worlds){
@@ -40,7 +40,7 @@ export class World implements IUniqueObject {
         this.parent = parent;
     }
 
-    public addCountry(name: string = ""): void {
+    public addCountry(name = ""): void {
         this.countries.push(new Country(name, this));
     }
 

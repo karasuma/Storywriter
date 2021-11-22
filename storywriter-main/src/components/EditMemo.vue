@@ -77,7 +77,7 @@ import { Defs } from "./models/defs";
 export default class EditMemo extends Vue {
     vm!: StoryWrtiterViewModel;
 
-    filteringColor: string = "transparent";
+    filteringColor = "transparent";
 }
 </script>
 

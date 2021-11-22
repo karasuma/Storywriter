@@ -119,12 +119,12 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 export default class EditDict extends Vue {
     vm!: StoryWrtiterViewModel;
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");
-    deleteTargetId: string = "";
+    deleteTargetId = "";
 
     selectedWord: Word | null = null;
-    hoveringDropArea: boolean = false;
+    hoveringDropArea = false;
 }
 </script>
 

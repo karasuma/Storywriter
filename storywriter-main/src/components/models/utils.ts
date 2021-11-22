@@ -2,13 +2,13 @@ import path from "path";
 import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 
 export class Utils {
-    static getUniqueId(seed: number = 0): string {
+    static getUniqueId(seed = 0): string {
         const power = seed <= 0 ? (2007 * Math.random()) : seed;
         return new Date().getTime().toString(16) 
             + Math.floor(power * Math.random()).toString(16);
     }
 
-    static sortCondition(prev: number, curr: number, descending: boolean = false) {
+    static sortCondition(prev: number, curr: number, descending = false) {
         if(prev > curr) {
             return descending ? -1 : 1;
         } else if(prev < curr) {
@@ -69,24 +69,24 @@ export class Utils {
 }
 
 export class MessageObject {
-    public caption: string = "";
-    public message: string = "";
-    public alert: boolean = false;
+    public caption = "";
+    public message = "";
+    public alert = false;
 
-    constructor(caption: string, message: string, alert: boolean = false) {
+    constructor(caption: string, message: string, alert = false) {
         this.caption = caption;
         this.message = message;
         this.alert = alert;
     }
 
-    static createMessage(caption: string, message: string, alert: boolean = false): MessageObject {
+    static createMessage(caption: string, message: string, alert = false): MessageObject {
         return new MessageObject(caption, message, alert);
     }
 }
 
 export class ImageResource implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public content: string = "";
+    public content = "";
 
     constructor(content: string) {
         this.content = content;
@@ -94,10 +94,10 @@ export class ImageResource implements IUniqueObject {
 }
 
 export class Position {
-    public x: number = 0;
-    public y: number = 0;
+    public x = 0;
+    public y = 0;
 
-    constructor(x: number = 0, y: number = 0) {
+    constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
     }
@@ -122,4 +122,8 @@ export interface IUniqueObject {
 
 export interface IReceiveViewmodel {
     (vm: StoryWrtiterViewModel): void
+}
+
+export interface ISimpleFunction {
+    (): void
 }

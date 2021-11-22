@@ -45,6 +45,8 @@ import TimelineLabel from "./edit-timeline-subcomponents/TimelineLabel.vue";
 import { Defs } from "./models/defs";
 import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue";
+import { ISimpleFunction } from "./models/utils";
+import { PropType } from "@vue/runtime-core";
 
 @Options({
     components: {
@@ -57,7 +59,7 @@ import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue"
             required: true
         },
         select: {
-            type: Function,
+            type: Function as PropType<ISimpleFunction>,
             required: true
         }
     },
@@ -129,14 +131,14 @@ import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue"
 
 export default class EditTimeline extends Vue {
     vm!: StoryWrtiterViewModel;
-    select!: Function;
+    select!: ISimpleFunction;
 
-    filteringColor: string = "";
+    filteringColor = "";
 
-    labelSpan: number = 55;
-    searchText: string = "";
+    labelSpan = 55;
+    searchText = "";
     
-    showCalendar: boolean = false;
+    showCalendar = false;
 
     public foundMatchStories(): Array<Stories> {
         if(this.searchText.length == 0) return new Array<Stories>();

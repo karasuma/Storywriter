@@ -2,9 +2,9 @@ import { ImageResource, IUniqueObject, Utils } from "../utils";
 
 export class Word implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public editing: boolean = false;
-    public caption: string = "";
-    public description: string = "";
+    public editing = false;
+    public caption = "";
+    public description = "";
     public resources: ImageResource[] = new Array<ImageResource>();
 
     addResource(content: string) {

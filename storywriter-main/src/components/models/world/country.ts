@@ -3,14 +3,14 @@ import { World } from "./worlds";
 
 export class Country implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public name: string = "世界の何処か";
+    public name = "世界の何処か";
     public image: ImageResource = new ImageResource("");
     public samples: ImageResource[] = new Array<ImageResource>();
-    public description: string = "";
-    public editing: boolean = false;
+    public description = "";
+    public editing = false;
     public parent: World;
 
-    constructor(name: string = "", parent: World) {
+    constructor(name = "", parent: World) {
         if(name.length != 0) {
             this.name = name;
         }

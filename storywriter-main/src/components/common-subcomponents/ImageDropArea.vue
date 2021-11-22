@@ -132,8 +132,8 @@ export default class ImageDropArea extends Vue {
     unfixedSize!: Position;
 
     selectedWord: Word | null = null;
-    hoveringDropArea: boolean = false;
-    imagePadding: number = 8;
+    hoveringDropArea = false;
+    imagePadding = 8;
 
     public getImageSize(): number {
         const fixed = Utils.isNullOrUndefined(this.unfixedSize);

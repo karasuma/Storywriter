@@ -1,10 +1,10 @@
 import { StoryWrtiterViewModel } from "@/components/story-writer-viewmodel";
 import { remove } from "@vue/shared";
 import { remote } from "electron";
-import { Utils } from "../utils";
+import { ISimpleFunction, Utils } from "../utils";
 
 export class Dialogs {
-    static openSaveWindow(vm: StoryWrtiterViewModel, saveCallback: Function): void {
+    static openSaveWindow(vm: StoryWrtiterViewModel, saveCallback: ISimpleFunction): void {
         remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
             filters: [
                 { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]},
@@ -21,9 +21,9 @@ export class Dialogs {
     static messageBox(
         title: string,
         message: string,
-        isWarning: boolean = false,
-        ask: boolean = false,
-        confirmCallback: Function
+        isWarning = false,
+        ask = false,
+        confirmCallback: ISimpleFunction
         ): void
     {
         const buttons = ['OK'];

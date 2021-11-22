@@ -285,30 +285,30 @@ export class DAOConverter {
 
 // Common classes
 class TextWithID {
-    public id: string = "";
-    public content: string = "";
+    public id = "";
+    public content = "";
 }
 
 // DAO classes
 class StoriesDAO {
-    public id: string = "";
-    public editing: boolean = false;
+    public id = "";
+    public editing = false;
     public content: StoryDataDAO = new StoryDataDAO();
     public children: StoriesDAO[] = new Array<StoriesDAO>();
-    public isdir: boolean = false;
-    public parentID: string = "";
+    public isdir = false;
+    public parentID = "";
 }
 class StoryDataDAO {
-    public caption: string = "";
-    public description: string = "";
-    public color: string = "#333333";
-    public time: number = 0;
+    public caption = "";
+    public description = "";
+    public color = "#333333";
+    public time = 0;
     public lores: StoryItemDAO[] = new Array<StoryItemDAO>();
 }
 class StoryItemDAO {
-    public id: string = "";
-    public title: string = "";
-    public color: string = "#383838";
+    public id = "";
+    public title = "";
+    public color = "#383838";
     public stories: TextWithID[] = new Array<TextWithID>();
 }
 
@@ -316,10 +316,10 @@ class DictionaryDAO {
     public words: WordDAO[] = new Array<WordDAO>();
 }
 class WordDAO {
-    public id: string = "";
-    public editing: boolean = false;
-    public caption: string = "";
-    public description: string = "";
+    public id = "";
+    public editing = false;
+    public caption = "";
+    public description = "";
     public resources: TextWithID[] = new Array<TextWithID>();
 }
 
@@ -327,11 +327,11 @@ class ActorsDAO {
     public actors: ActorItemDAO[] = new Array<ActorItemDAO>();
 }
 class ActorItemDAO {
-    public id: string = "";
-    public name: string = "";
+    public id = "";
+    public name = "";
     public face: TextWithID = new TextWithID();
-    public introduce: string = "";
-    public detail: string = "";
+    public introduce = "";
+    public detail = "";
     public images: TextWithID[] = new Array<TextWithID>();
 }
 
@@ -339,25 +339,25 @@ class WorldsDAO {
     public worldGroups: WorldDAO[] = new Array<WorldDAO>();
 }
 class WorldDAO {
-    public id: string = "";
-    public name: string = "";
+    public id = "";
+    public name = "";
     public countries: CountryDAO[] = new Array<CountryDAO>();
 }
 class CountryDAO {
-    public id: string = "";
-    public name: string = "";
-    public description: string = "";
+    public id = "";
+    public name = "";
+    public description = "";
     public image: TextWithID = new TextWithID();
     public samples: TextWithID[] = new Array<TextWithID>();
 }
 
 class MemoDAO {
-    public id: string = "";
+    public id = "";
     public memoList: MemoItemDAO[] = new Array<MemoItemDAO>();
 }
 class MemoItemDAO {
-    public id: string = "";
-    public color: string = "";
-    public name: string = "";
-    public text: string = "";
+    public id = "";
+    public color = "";
+    public name = "";
+    public text = "";
 }

@@ -141,18 +141,18 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
 export default class EditFlowHierarchyItem extends Vue {
     public root!: Stories;
     
-    public expanding: Boolean = false;
+    public expanding = false;
 
-    public showMsgBox: boolean = false;
+    public showMsgBox = false;
     public message: MessageObject = MessageObject.createMessage("", "");
 
-    public showInputBox: boolean = false;
-    public inputContent: string = "";
-    public createAsDir: boolean = false;
-    public defaultText: string = "";
-    public isEditCaption: boolean = false;
+    public showInputBox = false;
+    public inputContent = "";
+    public createAsDir = false;
+    public defaultText = "";
+    public isEditCaption = false;
 
-    public selectingId: string = "";
+    public selectingId = "";
     public selectingLore: Stories = new Stories(false);
 }
 </script>
