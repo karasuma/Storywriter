@@ -88,6 +88,10 @@ import { PropType } from '@vue/runtime-core';
             this.vm.clear();
         },
         askLoad: function(): void {
+            if(!this.vm.editing) {
+                this.$refs.selectFile.click();
+                return;
+            }
             this.message = MessageObject.createMessage(
                 "注意",
                 "新しいストーリーを読み込みますか？<br>" +
