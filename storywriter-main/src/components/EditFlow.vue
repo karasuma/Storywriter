@@ -135,7 +135,7 @@ import { Defs } from "./models/defs";
         getEditing: function(): Stories | undefined {
             return this.root.getEditingChildren();
         },
-        hasEditing: function(): Boolean {
+        hasEditing: function(): boolean {
             return this.getEditing !== undefined;
         },
     }
@@ -144,11 +144,11 @@ import { Defs } from "./models/defs";
 export default class EditFlow extends Vue {
     root!: Stories;
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");
 
-    showCalendar: boolean = false;
-    showPickerbox: boolean = false;
+    showCalendar = false;
+    showPickerbox = false;
 }
 </script>
 

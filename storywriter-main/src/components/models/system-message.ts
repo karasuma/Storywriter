@@ -5,7 +5,7 @@ export class SystemMessage {
         Alert: "#B22222"
     } as const;
 
-    public message: string = "";
+    public message = "";
     public status: string = SystemMessage.MessageType.Normal;
 
     public changeMessage(

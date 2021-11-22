@@ -3,12 +3,12 @@ import { SystemMessage } from "./system-message";
 import { Utils } from "./utils";
 
 export class StoryPreference {
-    path: string = "";
-    maxImageExpandRatio: number = 5;
-    imageExpandPower: number = 3;
-    darkmode: boolean = true;
+    path = "";
+    maxImageExpandRatio = 5;
+    imageExpandPower = 3;
+    darkmode = true;
 
-    showing: boolean = false;
+    showing = false;
     settingPath: string = Utils.getUserDataPath() + "\\setting.scrap";
 
     constructor(path: string) {

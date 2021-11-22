@@ -36,9 +36,10 @@ import { FileAccessor } from './models/savedata/file-accessor';
 import { SystemMessage } from './models/system-message';
 import { Dialogs } from './models/savedata/dialogs';
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
-import { MessageObject, Utils } from './models/utils';
+import { ISimpleFunction, MessageObject, Utils } from './models/utils';
 import { Defs } from './models/defs';
 import Logger from './models/logger';
+import { PropType } from '@vue/runtime-core';
 
 @Options({
     components: {
@@ -50,7 +51,7 @@ import Logger from './models/logger';
             required: true
         },
         settingClicked: {
-            type: Function,
+            type: Function as PropType<ISimpleFunction>,
             required: true
         }
     },
@@ -134,9 +135,9 @@ import Logger from './models/logger';
 
 export default class EditHeader extends Vue {
     vm!: StoryWrtiterViewModel;
-    settingClicked!: Function;
+    settingClicked!: ISimpleFunction;
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");
 
     msgState = {

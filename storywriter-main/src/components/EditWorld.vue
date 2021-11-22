@@ -172,11 +172,11 @@ import { Defs } from "./models/defs";
 export default class EditWorld extends Vue {
     vm!: StoryWrtiterViewModel;
 
-    showInputBox: boolean = false;
-    inputCaption: string = "土地の追加";
-    defaultText: string = "";
+    showInputBox = false;
+    inputCaption = "土地の追加";
+    defaultText = "";
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("","");
 
     captionSize: Position = new Position(0,0);

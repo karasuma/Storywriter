@@ -1,6 +1,6 @@
 export class Calendar {
-    public Group: number = 0;
-    public Index: number = 0;
+    public Group = 0;
+    public Index = 0;
 
     public setId(id: [string | number, string | number]) {
         // Set group

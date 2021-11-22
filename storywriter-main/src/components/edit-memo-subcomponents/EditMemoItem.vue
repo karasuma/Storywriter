@@ -85,10 +85,10 @@ import { Defs } from "../models/defs";
 export default class EditMemoItem extends Vue {
     memo!: MemoItem;
 
-    showMsgbox: boolean = false;
+    showMsgbox = false;
     messages: MessageObject = MessageObject.createMessage("","");
 
-    showPickerbox: boolean = false;
+    showPickerbox = false;
 }
 </script>
 

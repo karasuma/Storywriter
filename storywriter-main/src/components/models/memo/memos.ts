@@ -4,7 +4,7 @@ export class Memos implements IUniqueObject {
     public id: string = Utils.getUniqueId();
     public memoList: MemoItem[] = new Array<MemoItem>();
 
-    public addMemo(name: string = "", color: string = "transparent"): void {
+    public addMemo(name = "", color = "transparent"): void {
         const newMemo = new MemoItem(name, this);
         newMemo.color = color;
         this.memoList.push(newMemo);
@@ -24,9 +24,9 @@ export class Memos implements IUniqueObject {
 
 export class MemoItem implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public color: string = "transparent";
-    public name: string = "";
-    public text: string = "";
+    public color = "transparent";
+    public name = "";
+    public text = "";
     private parent: Memos;
 
     constructor(name: string, parent: Memos) {

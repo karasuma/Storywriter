@@ -2,14 +2,14 @@ import { ImageResource, IUniqueObject, Utils } from "../utils";
 
 export class ActorItem implements IUniqueObject {
     public id: string = Utils.getUniqueId();
-    public name: string = "";
+    public name = "";
     public face: ImageResource = new ImageResource("");
-    public introduce: string = "";
-    public detail: string = "";
+    public introduce = "";
+    public detail = "";
     public images: ImageResource[] = new Array<ImageResource>();
-    public editing: boolean = false;
+    public editing = false;
 
-    constructor(newname: string = "") {
+    constructor(newname = "") {
         this.name = newname;
     }
 

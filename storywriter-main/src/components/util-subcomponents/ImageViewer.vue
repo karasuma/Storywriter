@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts">
+import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
-import { Utils } from "../models/utils";
+import { ISimpleFunction, Utils } from "../models/utils";
 
 @Options({
     props: {
@@ -31,7 +32,7 @@ import { Utils } from "../models/utils";
             required: true
         },
         close: {
-            type: Function,
+            type: Function as PropType<ISimpleFunction>,
             required: true
         },
         expandRatio: {
@@ -98,21 +99,21 @@ import { Utils } from "../models/utils";
 export default class ImageViewer extends Vue {
     isVisible!: boolean;
     src64!: string;
-    close!: Function;
+    close!: ISimpleFunction;
     expandRatio!: number;
 
-    currentSize: number = 1;
-    resizeRatio: number = 0.001;
-    moveRatio: number = 1;
-    deltaX: number = 0;
-    deltaY: number = 0;
-    offsetX: number = 0;
-    offsetY: number = 0;
-    imageWidth: number = 0;
-    imageHeight: number = 0;
+    currentSize = 1;
+    resizeRatio = 0.001;
+    moveRatio = 1;
+    deltaX = 0;
+    deltaY = 0;
+    offsetX = 0;
+    offsetY = 0;
+    imageWidth = 0;
+    imageHeight = 0;
 
-    pushing: boolean = false;
-    resizing: boolean = false;
+    pushing = false;
+    resizing = false;
 
     defaultFile: File | null = null;
 

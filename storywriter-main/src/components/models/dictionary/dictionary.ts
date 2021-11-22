@@ -3,7 +3,7 @@ import { Word } from "./word";
 export class Dictionary {
     public words: Word[] = new Array<Word>();
 
-    public appendNewWord(caption: string = "") {
+    public appendNewWord(caption = "") {
         const newWord = new Word();
         newWord.caption = caption;
         this.words.push(newWord);

@@ -21,9 +21,9 @@ export class StoryWrtiterViewModel {
 
     public setting: StoryPreference;
     public message: SystemMessage = new SystemMessage();
-    public editing: boolean = false;
+    public editing = false;
 
-    constructor(path: string = "") {
+    constructor(path = "") {
         this.setting = new StoryPreference(path);
         this.setting.load();
     }

@@ -39,7 +39,7 @@ import { Defs } from "../models/defs";
         getColor: Function as PropType<IReceiveString>
     },
     computed: {
-        getColors: function(): Array<String> {
+        getColors: function(): Array<string> {
             const colors = this.darkmode
                 ? Defs.definedDarkColors
                 : Defs.definedLightColors;

@@ -3,7 +3,7 @@ import { ActorItem } from "./actor-item";
 export class Actors {
     public actors: ActorItem[] = new Array<ActorItem>();
 
-    public createNewActor(name: string = "") {
+    public createNewActor(name = "") {
         this.actors.push(new ActorItem(name));
     }
 

@@ -33,8 +33,9 @@ import { Country } from "../models/world/country";
 
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
-import { MessageObject } from "../models/utils";
+import { ISimpleFunction, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
+import { PropType } from "@vue/runtime-core";
 
 @Options({
     components: {
@@ -47,7 +48,7 @@ import { Defs } from "../models/defs";
             required: true
         },
         resetEditFlags: {
-            type: Function,
+            type: Function as PropType<ISimpleFunction>,
             required: true
         }
     },
@@ -98,13 +99,13 @@ import { Defs } from "../models/defs";
 
 export default class EditWorldHierarchyItem extends Vue {
     world!: World;
-    resetEditFlags!: Function;
+    resetEditFlags!: ISimpleFunction;
 
-    visibleInputBox: boolean = false;
-    inputCaption: string = "土地のグループ名を変更";
-    defaultText: string = "";
+    visibleInputBox = false;
+    inputCaption = "土地のグループ名を変更";
+    defaultText = "";
 
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("","");
 }
 </script>

@@ -152,9 +152,9 @@ import { Defs } from "./models/defs";
 export default class EditActor extends Vue {
     vm!: StoryWrtiterViewModel;
     
-    showMsgBox: boolean = false;
+    showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");
-    deleteTargetId: string = "";
+    deleteTargetId = "";
 }
 </script>
 

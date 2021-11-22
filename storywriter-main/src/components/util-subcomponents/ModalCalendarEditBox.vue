@@ -26,9 +26,10 @@
 </template>
 
 <script lang="ts">
+import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
 import { Stories } from "../models/story/stories";
-import { Utils } from "../models/utils";
+import { ISimpleFunction, Utils } from "../models/utils";
 
 @Options({
     props: {
@@ -42,7 +43,7 @@ import { Utils } from "../models/utils";
             required: true
         },
         close: {
-            type: Function,
+            type: Function as PropType<ISimpleFunction>,
             required: true
         }
     },
@@ -113,7 +114,7 @@ import { Utils } from "../models/utils";
 export default class ModalCalendarEditBox extends Vue {
     isVisible!: boolean;
     stories!: Array<Stories>;
-    close!: Function;
+    close!: ISimpleFunction;
 
     public packStoriesBasedOnTimeline(flatten: Array<Stories>) {
         flatten
