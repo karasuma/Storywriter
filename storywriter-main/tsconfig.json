@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    //"target": "esnext",
-    "target": "esnext",
+    "target": "es5",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
@@ -27,9 +26,8 @@
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost",
-    ],
-    "strictBindCallApply": true
+      "scripthost"
+    ]
   },
   "include": [
     "src/**/*.ts",
