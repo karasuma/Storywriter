@@ -12,7 +12,7 @@
                 @click="setEditing(actor.id)"
             />
             <div class="actors__add">
-                <img src="../assets/add2.png">
+                <img src="../assets/add2.png" @click="addNewActor">
             </div>
         </div>
 
@@ -93,6 +93,9 @@ import { Defs } from "./models/defs";
         }
     },
     methods: {
+        addNewActor: function(): void {
+            this.vm.actors.createNewActor("");
+        },
         isEmpty: function(str: string): boolean {
             return str.length == 0;
         },
