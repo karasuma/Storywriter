@@ -45,6 +45,7 @@ import EditConfig from './components/EditConfig.vue';
 import Entrance from './components/Entrance.vue';
 
 import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
+import Logger from './components/models/logger';
 
 // Options
 @Options({
@@ -87,6 +88,10 @@ export default class App extends Vue {
   vm: StoryWrtiterViewModel = new StoryWrtiterViewModel("");
 
   currentIndex = 0;
+
+  created() {
+    Logger.write("Storywriter start.", "enjoy.", Logger.LoggingStatus.Info);
+  }
 }
 </script>
 

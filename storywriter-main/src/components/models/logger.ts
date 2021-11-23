@@ -10,6 +10,12 @@ export default class Logger {
         Fatal: 3
     } as const;
 
+    static getLogFilePath(): string {
+        const d = new Date();
+        const logtime = `${d.getFullYear()}${d.getMonth()+1}${d.getDate()}`;
+        return Utils.getUserDataPath() + `\\log-${logtime}.log`;
+    }
+
     private static statusMessage(status: number): string {
         switch(status) {
             case Logger.LoggingStatus.Info:
@@ -27,11 +33,14 @@ export default class Logger {
     static write(caption: string, message: string, status: number): void {
         const d = new Date();
         const time = d.toLocaleString('ja-JP', { timeZone: 'JST' });
-        const header = `${Logger.statusMessage(status)} ${caption} occured at "${time}"`;
-        const content = `${header}\n${message}\n\n-\n`;
-
-        const logtime = `${d.getFullYear()}${d.getMonth()+1}${d.getDate()}`;
-        const path = Utils.getUserDataPath() + `\\log-${logtime}.log`;
-        fs.writeFile(path, content, {flag: 'a'});
+        const header = `${Logger.statusMessage(status)} ${caption} `;
+        const occured = `occured.`;
+        const content = `${header}${status != Logger.LoggingStatus.Info ? occured : ""}`;
+        
+        fs.writeFile(
+            Logger.getLogFilePath(),
+            `${time}\n${content}\n${message}\n\n-\n`,
+            {flag: 'a'}
+        );
     }
 }

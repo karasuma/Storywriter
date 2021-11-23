@@ -1,18 +1,28 @@
 <template>
     <footer :style="backgroundCss">
-        <div class="footer__sample">{{ text }}</div>
+        <div class="footer__sample" @click="openLog">{{ text }}</div>
     </footer>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { SystemMessage } from './models/system-message';
+import exec from 'child_process';
+import path from 'path';
+import Logger from './models/logger';
 
 @Options({
     props: {
         message: {
             type: SystemMessage,
             required: true
+        }
+    },
+    methods: {
+        openLog: function(): void {
+            const fullpath = Logger.getLogFilePath();
+            exec.exec(`start "" "${path.dirname(fullpath)}"`);
+            exec.exec(fullpath);
         }
     },
     computed: {
@@ -53,6 +63,10 @@ footer {
     .footer__sample {
         font-size: 13px;
         padding: 0 18px;
+        &:hover {
+            text-decoration: underline;
+            text-decoration-color: $Font-Color;
+        }
     }
 }
 </style>
