@@ -1,9 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, remote } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
-import { writeSync } from 'original-fs'
+import { StoryWrtiterViewModel } from './components/story-writer-viewmodel'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -43,11 +43,11 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 
-  ipcMain.on('minimize', (_, __) => {
+  ipcMain.on('minimize', () => {
     win.minimize()
   })
   
-  ipcMain.on('maximize', (_, __) => {
+  ipcMain.on('maximize', () => {
     win.isMaximized() ? win.unmaximize() : win.maximize()
   })
 }
@@ -76,7 +76,7 @@ app.on('ready', async () => {
     try {
       await installExtension(VUEJS3_DEVTOOLS)
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+      console.error('Vue Devtools failed to install:', e as string)
     }
   }
   createWindow()

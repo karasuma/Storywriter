@@ -9,8 +9,9 @@ import { Defs } from './models/defs';
 import { FileAccessor } from './models/savedata/file-accessor';
 import { JsonConverter } from './models/savedata/json-converter';
 import { ViewmodelUpdater } from './models/savedata/vm-udpater';
-import { Utils } from './models/utils';
+import { ISimpleFunction, Utils } from './models/utils';
 import Logger from './models/logger';
+import { Dialogs } from './models/savedata/dialogs';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(true);
@@ -48,6 +49,32 @@ export class StoryWrtiterViewModel {
                 } else {
                     this.message.changeMessage(status.content, SystemMessage.MessageType.Alert);
                     Logger.write("Story load error", `${status.content}\npath: ${path}`, Logger.LoggingStatus.Err);
+                }
+            });
+    }
+
+    public saveStory(callback: ISimpleFunction | null = null): void {
+        if(!this.editing) return;
+        if(this.setting.path.length == 0) {
+            Dialogs.openSaveWindow(this, () => this.saveStory());
+            return;
+        }
+
+        const vmJson = JsonConverter.toJsonString(this);
+        this.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);
+        FileAccessor.Save(this.setting.path, vmJson)
+            .then(result => {
+                const time = Utils.getSimpleTimeStamp();
+                if(result.isSuccess) {
+                    this.message.changeMessage(`${result.content} [${time}]`);
+                    Logger.write("Story save event", `Save succeed to ${this.setting.path}`, Logger.LoggingStatus.Info);
+                    return;
+                }
+                this.message.changeMessage(`Save failed... (${result.content}) [${time}]`, SystemMessage.MessageType.Alert);
+                Logger.write("Story save error", result.content, Logger.LoggingStatus.Err);
+
+                if(callback !== null) {
+                    callback();
                 }
             });
     }

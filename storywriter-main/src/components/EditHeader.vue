@@ -29,16 +29,11 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { ipcRenderer, KeyboardInputEvent } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { StoryWrtiterViewModel } from './story-writer-viewmodel';
-import { JsonConverter } from './models/savedata/json-converter';
-import { FileAccessor } from './models/savedata/file-accessor';
-import { SystemMessage } from './models/system-message';
-import { Dialogs } from './models/savedata/dialogs';
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
-import { ISimpleFunction, MessageObject, Utils } from './models/utils';
+import { ISimpleFunction, MessageObject } from './models/utils';
 import { Defs } from './models/defs';
-import Logger from './models/logger';
 import { PropType } from '@vue/runtime-core';
 
 @Options({
@@ -57,16 +52,39 @@ import { PropType } from '@vue/runtime-core';
     },
     methods: {
         exit: function() {
-            window.close();
+            if(!this.vm.editing) {
+                window.close();
+                return;
+            }
+
+            remote.dialog.showMessageBox(remote.getCurrentWindow(),
+            {
+                type: "question",
+                title: "終了",
+                message: "セーブして終了しますか？",
+                buttons: ['Yes', 'No', 'Cancel']
+            }
+            ).then(result => {
+                switch(result.response.valueOf()) {
+                    case 0: // Yes
+                        this.vm.saveStory(() => window.close());
+                        break;
+                    case 1: // No
+                        window.close();
+                        break;
+                    default:
+                        break;
+                }
+            });
         },
         minimize: function() {
-            ipcRenderer.send('minimize', true);
+            ipcRenderer.send('minimize');
         },
         maximize: function() {
-            ipcRenderer.send('maximize', true);
+            ipcRenderer.send('maximize');
         },
         save: function() {
-            this.saveStory();
+            this.vm.saveStory();
         },
         askHome: function() {
             if(!this.vm.editing) {
@@ -158,28 +176,6 @@ export default class EditHeader extends Vue {
         return "";
     }
 
-    public saveStory(): void {
-        if(!this.vm.editing) return;
-        if(this.vm.setting.path.length == 0) {
-            Dialogs.openSaveWindow(this.vm, () => this.saveStory());
-            return;
-        }
-
-        const vmJson = JsonConverter.toJsonString(this.vm);
-        this.vm.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);
-        FileAccessor.Save(this.vm.setting.path, vmJson)
-            .then(result => {
-                const time = Utils.getSimpleTimeStamp();
-                if(result.isSuccess) {
-                    this.vm.message.changeMessage(`${result.content} [${time}]`);
-                    Logger.write("Story save event", `Save succeed to ${this.vm.setting.path}`, Logger.LoggingStatus.Info);
-                    return;
-                }
-                this.vm.message.changeMessage(`Save failed... (${result.content}) [${time}]`, SystemMessage.MessageType.Alert);
-                Logger.write("Story save error", result.content, Logger.LoggingStatus.Err);
-            });
-    }
-
     // Save methods used by Ctrl+S
     mounted() {
         document.addEventListener("keydown", this.saveStoryFromCtrls);
@@ -189,7 +185,7 @@ export default class EditHeader extends Vue {
     }
     public saveStoryFromCtrls(e: KeyboardEvent): void {
         if((e.ctrlKey || e.metaKey) && e.key == 's') {
-            this.saveStory();
+            this.vm.saveStory();
         }
     }
 }
