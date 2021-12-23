@@ -99,10 +99,45 @@ export class Stories implements IUniqueObject {
         return this.getEditingChildren() !== undefined;
     }
 
-    public clear(): void {
+    clear(): void {
         this.content.lores.forEach(l => l.stories.splice(0));
         this.content.lores.splice(0);
         this.children.forEach(x => x.clear());
         this.children.splice(0);
+    }
+
+    moveStory(id: string, isUp: boolean): void {
+        const flatten = Stories.flatStories(this.root.children);
+        const currDirs = flatten.find((x: Stories) => x.id == id)!.parent!.children.filter((x: Stories) => x.isDirectory());
+        const currIdx = currDirs.findIndex((x: Stories) => x.id == id);
+        if(isUp && currIdx > 0) {
+            this.swapStory(id, currDirs[currIdx - 1].id);
+        }
+        if(!isUp && currIdx < currDirs.length - 1) {
+            this.swapStory(id, currDirs[currIdx + 1].id);
+        }
+    }
+
+    swapStory(id1: string, id2: string): void {
+        const flatten = Stories.flatStories(this.root.children);
+        const left = flatten.findIndex((x: Stories) => x.id == id1);
+        const right = flatten.findIndex((x: Stories) => x.id == id2);
+        if(left < 0 || right < 0) {
+            return;
+        }
+        const tContent = flatten[left].content;
+        const tChildren = flatten[left].children;
+        const tEditing = flatten[left].isEditing;
+        const tExpanding = flatten[left].isExpanding;
+        
+        flatten[left].content = flatten[right].content;
+        flatten[left].children = flatten[right].children;
+        flatten[left].isEditing = flatten[right].isEditing;
+        flatten[left].isExpanding = flatten[right].isExpanding;
+
+        flatten[right].content = tContent;
+        flatten[right].children = tChildren;
+        flatten[right].isEditing = tEditing;
+        flatten[right].isExpanding = tExpanding;
     }
 }

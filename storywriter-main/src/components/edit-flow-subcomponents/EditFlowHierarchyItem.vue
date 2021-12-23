@@ -18,6 +18,10 @@
                         <img src="../../assets/caret.png" @click="toggleDir(lore)"
                         :class="{hierarchy__unexpand__img: lore.isExpanding, container__caret__arrow: true}">
                         <p @click="toggleDir(lore)">{{ lore.content.caption }}</p>
+                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, true)"
+                        :class="{container__caret__button: true, unvisible: !canMoveCss(lore, false)}" style="transform: rotate(90deg);">
+                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, false)"
+                        :class="{container__caret__button: true, unvisible: !canMoveCss(lore, true)}" style="transform: rotate(-90deg);">
                         <img src="../../assets/edit.png" @click="askEditCaption(lore)"
                         class="container__caret__button">
                         <img src="../../assets/dispose.png" @click="askDispose(lore)"
@@ -124,6 +128,18 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
             this.isEditCaption = true;
             this.defaultText = lore.content.caption;
             this.showInputBox = true;
+        },
+        moveDir: function(id: string, isUp: boolean): void {
+            this.root.moveStory(id, isUp);
+        },
+        canMoveCss: function(lore: Stories, isUp: boolean): boolean {
+            const currDirs = Stories
+                .flatStories(lore.root.children)
+                .find((x: Stories) => x.id == lore.id)!.parent!.children
+                .filter((x: Stories) => x.isDirectory());
+            const idx = currDirs.findIndex((x: Stories) => x.id == lore.id);
+            const result = (!isUp && idx > 0) || (isUp && idx < currDirs.length - 1);
+            return result;
         }
     },
     computed: {
@@ -255,5 +271,9 @@ export default class EditFlowHierarchyItem extends Vue {
             filter: brightness($Focus-Brightness);
         }
     }
+}
+
+.unvisible {
+    display: none;
 }
 </style>
