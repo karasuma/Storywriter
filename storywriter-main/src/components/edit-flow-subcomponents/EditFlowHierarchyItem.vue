@@ -33,16 +33,26 @@
                     />
                 </div>
                 <div v-else>
-                    <span v-if="lore.isEditing">
-                        <p class="hierarchy__selected" :style="setBorderLine(lore)">
-                            {{ lore.content.caption }}
-                        </p>
-                    </span>
-                    <span v-else>
-                        <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
-                            {{ lore.content.caption }}
-                        </p>
-                    </span>
+                    <div class="container__edit">
+                        <span v-if="lore.isEditing">
+                            <p class="hierarchy__selected" :style="setBorderLine(lore)">
+                                {{ lore.content.caption }}
+                            </p>
+                        </span>
+                        <span v-else>
+                            <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
+                                {{ lore.content.caption }}
+                            </p>
+                        </span>
+                        <div class="container__edit__buttons">
+                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, true)"
+                            :class="{container__edit__buttons__button: true, unvisible: !canMoveCss(lore, false)}"
+                            style="transform: rotate(90deg);">
+                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, false)"
+                            :class="{container__edit__buttons__button: true, unvisible: !canMoveCss(lore, true)}"
+                            style="transform: rotate(-90deg);">
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -135,8 +145,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
         canMoveCss: function(lore: Stories, isUp: boolean): boolean {
             const currDirs = Stories
                 .flatStories(lore.root.children)
-                .find((x: Stories) => x.id == lore.id)!.parent!.children
-                .filter((x: Stories) => x.isDirectory());
+                .find((x: Stories) => x.id == lore.id)!.parent!.children;
             const idx = currDirs.findIndex((x: Stories) => x.id == lore.id);
             const result = (!isUp && idx > 0) || (isUp && idx < currDirs.length - 1);
             return result;
@@ -206,6 +215,7 @@ export default class EditFlowHierarchyItem extends Vue {
         user-select: none;
         display: flex;
         justify-content: center;
+        margin-top: 6px;
 
         &__arrow {
             width: 12px;
@@ -235,6 +245,36 @@ export default class EditFlowHierarchyItem extends Vue {
         }
     }
 
+    &__edit {
+        user-select: none;
+        display: flex;
+        justify-content: space-between;
+
+        &:hover {
+            background-color: $Hover-Color;
+        }
+
+        & * {
+            @include hide-overflow-text();
+        }
+
+        &__buttons {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+
+            &__button {
+                width: 17px;
+                height: 17px;
+                margin-right: 6px;
+                filter: brightness($Normal-Brightness);
+                &:hover {
+                    filter: brightness($Focus-Brightness);
+                }
+            }
+        }
+    }
+
     & .hierarchy__selected {
         color: $Selected-Item-Color;
     }
@@ -259,7 +299,7 @@ export default class EditFlowHierarchyItem extends Vue {
     width: 100%;
     height: 30px;
     padding: 2px 0;
-    margin-bottom: 3px;
+    margin-top: 6px;
     display: flex;
     justify-content: center;
     & img {

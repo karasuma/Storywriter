@@ -26,7 +26,7 @@
             <div class="timelines__timeline">
                 <div class="timelines__timeline__content" :style="calcHeightCss">
                     <TimelineLabel
-                        v-for="story in stories" :key="story"
+                        v-for="story in stories()" :key="story"
                         :story="story" :darkmode="true"
                         :span="labelSpan"
                         :style="[searchTargetCss(story.content.caption), filteringCss(story.content.color)]"
@@ -64,6 +64,10 @@ import { PropType } from "@vue/runtime-core";
         }
     },
     methods: {
+        stories: function(): Array<Stories> {
+            return Stories.flatStories(this.vm.hierarchy.children)
+                .filter((x: Stories) => !x.isDirectory());
+        },
         selectStory: function(story: Stories) {
             story.editing(true);
             this.select();
@@ -102,10 +106,6 @@ import { PropType } from "@vue/runtime-core";
         },
     },
     computed: {
-        stories: function(): Array<Stories> {
-            return Stories.flatStories(this.vm.hierarchy.children)
-                .filter((x: Stories) => !x.isDirectory());
-        },
         calcHeightCss: function(): string {
             const lastTime = this.vm.hierarchy.getLastChildTimelineIndex();
             const contentHeight = this.labelSpan * lastTime;
