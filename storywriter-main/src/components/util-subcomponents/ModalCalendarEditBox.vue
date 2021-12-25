@@ -10,7 +10,7 @@
                     <li class="modal__content__stories-item"
                         draggable="true"
                         :style="getBorderColor(story.content.color)"
-                        v-for="story in storiesByTime" :key="story"
+                        v-for="story in storiesByTime()" :key="story"
                         :id="story.id"
                         @dragstart="dragStart(story.id, $event)"
                         @dragover="dragOver(story.id, $event)"
@@ -98,9 +98,7 @@ import { ISimpleFunction, Utils } from "../models/utils";
         },
         getBorderColor: function(color: string): string {
             return "border-left: solid 4px " + color + ";";
-        }
-    },
-    computed: {
+        },
         storiesByTime: function(): Array<Stories> {
             return Stories.flatStories(this.stories)
                 .filter((x: Stories) => !x.isDirectory())
@@ -108,7 +106,7 @@ import { ISimpleFunction, Utils } from "../models/utils";
                     return Utils.sortCondition(p.content.time, c.content.time);
                 });
         }
-    }
+    },
 })
 
 export default class ModalCalendarEditBox extends Vue {

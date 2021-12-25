@@ -29,7 +29,7 @@
                     :style="getBorderColor(getEditing.content.color)">
                     <input type="text" v-model="getEditing.content.caption" key="main-caption" placeholder="..." spellcheck="false">
                     <img src="../assets/paint.png" @click="chooseColor">
-                    <img src="../assets/calendar.png" @click="changeCalendar">
+                    <!-- <img src="../assets/calendar.png" @click="changeCalendar"> -->
                     <img src="../assets/dispose.png" @click="askDispose">
                 </div>
                 <div class="edit__main__desc">
