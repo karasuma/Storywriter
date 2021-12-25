@@ -13,6 +13,12 @@
             <div class="memo-item__header__ctrls">
                 <img @click="askDispose" src="../../assets/dispose.png">
                 <img @click="pickColor" src="../../assets/paint.png">
+                <img :class="{invisible: !arrowVisibleCss(memo, true)}"
+                    @click="moveMemo(`${memo.id}---o`)"
+                    style="transform: rotate(-90deg);" src="../../assets/arrow.png">
+                <img :class="{invisible: !arrowVisibleCss(memo, false)}"
+                    @click="moveMemo(`${memo.id}---x`)"
+                    style="transform: rotate(90deg);" src="../../assets/arrow.png">
             </div>
             <div class="memo-item__header__title">
                 <input type="text" spellcheck="false"
@@ -31,8 +37,9 @@ import { Options, Vue } from "vue-class-component";
 import { MemoItem } from "../models/memo/memos";
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalColorPicker from "../util-subcomponents/ModalColorPicker.vue";
-import { MessageObject } from "../models/utils";
+import { IReceiveString, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
+import { PropType } from "@vue/runtime-core";
 
 @Options({
     components: {
@@ -42,6 +49,14 @@ import { Defs } from "../models/defs";
     props: {
         memo: {
             type: MemoItem,
+            required: true
+        },
+        moveMemo: {
+            type: Function as PropType<IReceiveString>,
+            required: true
+        },
+        filteringColor: {
+            type: String,
             required: true
         }
     },
@@ -69,6 +84,14 @@ import { Defs } from "../models/defs";
                 this.memo.color = color;
             }
             this.showPickerbox = false;
+        },
+        arrowVisibleCss: function(item: MemoItem, isUp: boolean): boolean {
+            const currentMemos = item.parent.memoList.filter((x: MemoItem) => {
+                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+            });
+            const idx = currentMemos.findIndex(x => x.id == item.id);
+
+            return (!isUp && idx > 0) || (isUp && idx < currentMemos.length - 1);
         }
     },
     computed: {
@@ -84,6 +107,8 @@ import { Defs } from "../models/defs";
 
 export default class EditMemoItem extends Vue {
     memo!: MemoItem;
+    moveMemo!: IReceiveString;
+    filteringColor!: string;
 
     showMsgbox = false;
     messages: MessageObject = MessageObject.createMessage("","");
@@ -148,5 +173,9 @@ export default class EditMemoItem extends Vue {
             height: 8em;
         }
     }
+}
+
+.invisible {
+    display: none;
 }
 </style>

@@ -8,9 +8,10 @@
 
         <div class="memos">
             <EditMemoItem
-                v-for="memo in vm.memos.memoList" :key="memo"
+                v-for="memo in filterMemo()" :key="memo"
                 :memo="memo"
-                :style="filteringCss(memo.color)"
+                :moveMemo="moveMemo"
+                :filteringColor="filteringColor"
             />
 
             <div class="memos__add">
@@ -26,6 +27,7 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import EditMemoItem from "./edit-memo-subcomponents/EditMemoItem.vue";
 import { Defs } from "./models/defs";
+import { MemoItem } from "./models/memo/memos";
 
 @Options({
     components: {
@@ -54,11 +56,26 @@ import { Defs } from "./models/defs";
             }
             return "";
         },
-        filteringCss: function(color: string): string {
-            if(this.filteringColor != "transparent" && this.filteringColor != color) {
-                return "display: none;"
+        moveMemo: function(filteredCond: string): void {
+            const arg = filteredCond.split("---");
+            const currentMemos = this.vm.memos.memoList.filter((x: MemoItem) => {
+                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+            });
+            const srcIdx = currentMemos.findIndex((x: MemoItem) => x.id == arg[0]);
+            const isUp = arg[1] != 'o';
+
+            if(isUp && srcIdx > 0) {
+                console.log(`${currentMemos[srcIdx].name} -> ${currentMemos[srcIdx - 1].name}`);
+                this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx - 1]);
+            } else if(!isUp && srcIdx < currentMemos.length - 1) {
+                console.log(`${currentMemos[srcIdx].name} -> ${currentMemos[srcIdx + 1].name}`);
+                this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx + 1]);
             }
-            return "";
+        },
+        filterMemo: function(): MemoItem[] {
+            return this.vm.memos.memoList.filter((x: MemoItem) => {
+                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+            });
         }
     },
     computed: {
