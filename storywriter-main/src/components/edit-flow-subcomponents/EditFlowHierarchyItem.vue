@@ -17,7 +17,7 @@
                     <div class="container__caret">
                         <img src="../../assets/caret.png" @click="toggleDir(lore)"
                         :class="{hierarchy__unexpand__img: lore.isExpanding, container__caret__arrow: true}">
-                        <p @click="toggleDir(lore)">{{ lore.content.caption }}</p>
+                        <p @click="toggleDir(lore)" :title="lore.content.caption">{{ lore.content.caption }}</p>
                         <img src="../../assets/arrow.png" @click="moveDir(lore.id, true, canMoveCss(lore, false))"
                         :class="{container__caret__button: true, unvisible: !canMoveCss(lore, false)}" style="transform: rotate(90deg);">
                         <img src="../../assets/arrow.png" @click="moveDir(lore.id, false, canMoveCss(lore, true))"
@@ -35,12 +35,12 @@
                 <div v-else>
                     <div class="container__edit">
                         <span v-if="lore.isEditing">
-                            <p class="hierarchy__selected" :style="setBorderLine(lore)">
+                            <p class="hierarchy__selected" :style="setBorderLine(lore)" :title="lore.content.caption">
                                 {{ lore.content.caption }}
                             </p>
                         </span>
                         <span v-else>
-                            <p @click="changeEditMode(lore)" :style="setBorderLine(lore)">
+                            <p @click="changeEditMode(lore)" :style="setBorderLine(lore)" :title="lore.content.caption">
                                 {{ lore.content.caption }}
                             </p>
                         </span>
