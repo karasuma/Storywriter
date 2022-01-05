@@ -13,14 +13,14 @@
         />
         <div :class="{item__header: true, expand: world.expanding}">
             <img src="../../assets/caret.png">
-            <p @click="toggleExpandGroup">{{ world.name }}</p>
+            <p @click="toggleExpandGroup" :title="world.name">{{ world.name }}</p>
             <img class="item__header__img" src="../../assets/edit.png" @click="showInputBox">
             <img class="item__header__img" src="../../assets/dispose.png" @click="showMessageBox">
         </div>
         <ul class="item__worlds">
             <li v-for="c in world.countries" :key="c"
                 @click="selectCountry(c.id)"
-                :class="{selected: c.editing}">{{ c.name }}</li>
+                :class="{selected: c.editing}" :title="c.name">{{ c.name }}</li>
             <li><img src="../../assets/add.png" @click="addCountry"></li>
         </ul>
     </li>
