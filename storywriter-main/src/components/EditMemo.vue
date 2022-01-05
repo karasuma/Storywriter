@@ -65,10 +65,8 @@ import { MemoItem } from "./models/memo/memos";
             const isUp = arg[1] != 'o';
 
             if(isUp && srcIdx > 0) {
-                console.log(`${currentMemos[srcIdx].name} -> ${currentMemos[srcIdx - 1].name}`);
                 this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx - 1]);
             } else if(!isUp && srcIdx < currentMemos.length - 1) {
-                console.log(`${currentMemos[srcIdx].name} -> ${currentMemos[srcIdx + 1].name}`);
                 this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx + 1]);
             }
         },
