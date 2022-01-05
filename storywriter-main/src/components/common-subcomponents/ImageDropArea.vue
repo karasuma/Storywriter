@@ -57,6 +57,7 @@ import { Defs } from "../models/defs";
             const e = this.$refs.inputFile as HTMLInputElement;
             if(e.files === null) return;
             const receivedFile = e.files[0];
+            e.files = null;
             if(!receivedFile || this.selectedWord === null) return;
             if(e instanceof Event) {
                 (e as Event).preventDefault();
