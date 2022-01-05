@@ -68,14 +68,13 @@ export class StoryWrtiterViewModel {
                 if(result.isSuccess) {
                     this.message.changeMessage(`${result.content} [${time}]`);
                     Logger.write("Story save event", `Save succeed to ${this.setting.path}`, Logger.LoggingStatus.Info);
+                    if(callback !== null) {
+                        callback();
+                    }
                     return;
                 }
                 this.message.changeMessage(`Save failed... (${result.content}) [${time}]`, SystemMessage.MessageType.Alert);
                 Logger.write("Story save error", result.content, Logger.LoggingStatus.Err);
-
-                if(callback !== null) {
-                    callback();
-                }
             });
     }
     
