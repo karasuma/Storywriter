@@ -18,9 +18,9 @@
                         <img src="../../assets/caret.png" @click="toggleDir(lore)"
                         :class="{hierarchy__unexpand__img: lore.isExpanding, container__caret__arrow: true}">
                         <p @click="toggleDir(lore)">{{ lore.content.caption }}</p>
-                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, true)"
+                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, true, canMoveCss(lore, false))"
                         :class="{container__caret__button: true, unvisible: !canMoveCss(lore, false)}" style="transform: rotate(90deg);">
-                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, false)"
+                        <img src="../../assets/arrow.png" @click="moveDir(lore.id, false, canMoveCss(lore, true))"
                         :class="{container__caret__button: true, unvisible: !canMoveCss(lore, true)}" style="transform: rotate(-90deg);">
                         <img src="../../assets/edit.png" @click="askEditCaption(lore)"
                         class="container__caret__button">
@@ -45,10 +45,12 @@
                             </p>
                         </span>
                         <div class="container__edit__buttons">
-                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, true)"
+                            <img src="../../assets/who.png" class="container__edit__buttons__button unvisible">
+                            <img src="../../assets/who.png" class="container__edit__buttons__button unvisible">
+                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, true, canMoveCss(lore, false))"
                             :class="{container__edit__buttons__button: true, unvisible: !canMoveCss(lore, false)}"
                             style="transform: rotate(90deg);">
-                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, false)"
+                            <img src="../../assets/arrow.png" @click="moveDir(lore.id, false, canMoveCss(lore, true))"
                             :class="{container__edit__buttons__button: true, unvisible: !canMoveCss(lore, true)}"
                             style="transform: rotate(-90deg);">
                         </div>
@@ -139,7 +141,8 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
             this.defaultText = lore.content.caption;
             this.showInputBox = true;
         },
-        moveDir: function(id: string, isUp: boolean): void {
+        moveDir: function(id: string, isUp: boolean, executable: boolean): void {
+            if(!executable) return;
             this.root.moveStory(id, isUp);
         },
         canMoveCss: function(lore: Stories, isUp: boolean): boolean {
@@ -262,6 +265,8 @@ export default class EditFlowHierarchyItem extends Vue {
             display: flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
+            min-width: 90px;
+            margin-right: 0;
 
             &__button {
                 width: 17px;
@@ -314,6 +319,7 @@ export default class EditFlowHierarchyItem extends Vue {
 }
 
 .unvisible {
-    display: none;
+    opacity: 0;
+    @include unselectable();
 }
 </style>
