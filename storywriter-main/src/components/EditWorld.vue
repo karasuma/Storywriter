@@ -30,7 +30,7 @@
                     <img class="edit__header__dispose"
                         src="../assets/dispose.png"
                         @click="removeCountry">
-                    <input type="text" maxlength="24" spellcheck="false"
+                    <input type="text" spellcheck="false"
                         v-model="getSelectedCountry.name">
                     <ImageDropArea v-if="isEmpty(getSelectedCountry.image.content)"
                         :imageSrc="addCaptionImage"
