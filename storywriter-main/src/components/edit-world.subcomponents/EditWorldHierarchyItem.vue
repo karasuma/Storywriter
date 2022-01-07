@@ -128,11 +128,11 @@ export default class EditWorldHierarchyItem extends Vue {
         display: flex;
         height: 1.5em;
         & img {
-            width: 18px;
-            height: 18px;
+            min-width: 21px;
+            min-height: 21px;
             &:first-child {
-                width: 14px;
-                height: 14px;
+                min-width: 14px;
+                min-height: 14px;
                 margin: 2px;
             }
         }
