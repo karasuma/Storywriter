@@ -121,6 +121,7 @@ export default class EditWorldHierarchyItem extends Vue {
     & * {
         cursor: pointer;
         user-select: none;
+        @include hide-overflow-text();
     }
     
     &__header {
@@ -139,7 +140,6 @@ export default class EditWorldHierarchyItem extends Vue {
             font-size: 14px;
             padding: 0 8px;
             width: 100%;
-            @include hide-overflow-text();
         }
         &__img {
             filter: brightness($Normal-Brightness);
