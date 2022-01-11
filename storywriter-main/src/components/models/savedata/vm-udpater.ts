@@ -3,6 +3,7 @@ import { Stories } from "../story/stories";
 import { StoryData } from "../story/story-data";
 import { World } from "../world/worlds";
 import { Country } from "../world/country";
+import { MemoItem } from "../memo/memos";
 
 export class ViewmodelUpdater {
     static Update(target: StoryWrtiterViewModel, newone: StoryWrtiterViewModel): void {
@@ -45,6 +46,13 @@ export class ViewmodelUpdater {
         // Memos
         target.memos.id = newone.memos.id;
         target.memos.memoList.splice(0);
-        newone.memos.memoList.forEach(x => target.memos.memoList.push(x));
+        newone.memos.memoList.forEach(x => {
+            const newMemo = new MemoItem(x.name, target.memos);
+            newMemo.id = x.id;
+            newMemo.color = x.color;
+            newMemo.name = x.name;
+            newMemo.text = x.text;
+            target.memos.appendMemo(newMemo);
+        });
     }
 }

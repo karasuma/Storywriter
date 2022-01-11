@@ -37,7 +37,7 @@ import { StoryWrtiterViewModel } from './story-writer-viewmodel';
     },
     methods: {
         newGame: function(): void {
-            this.vm.setDefaultStories();
+            this.vm.loadDefaultStories();
             this.vm.editing = true;
         },
         continueGame: function(): void {
