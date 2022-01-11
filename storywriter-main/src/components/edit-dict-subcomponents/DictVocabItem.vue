@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="vocab__item" :class="{ vocab__item__selected: selected }" @click="setEditStatus(word.id)">
+        <div class="vocab__item" :title="word.caption"
+            :class="{ vocab__item__selected: selected }"
+            @click="setEditStatus(word.id)">
             <h1>{{ word.caption }}</h1>
             <div class="vocab__item__desc">{{ word.description }}</div>
         </div>
@@ -61,6 +63,7 @@ export default class DictVocabItem extends Vue {
         font-size: 17px;
         width: 100%;
         margin: 0 6px;
+        @include hide-overflow-text();
     }
     
     &__desc {
