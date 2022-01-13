@@ -11,9 +11,9 @@ import { JsonConverter } from './models/savedata/json-converter';
 import { ViewmodelUpdater } from './models/savedata/vm-udpater';
 import { ISimpleFunction, Utils } from './models/utils';
 import Logger from './models/logger';
-import { Dialogs } from './models/savedata/dialogs';
 import DefaultStory from './models/default-story';
 import { ContentCompressor } from './models/savedata/content-compressor';
+import OperationHistory from './models/operation-history';
 
 export class StoryWrtiterViewModel {
     public hierarchy: Stories = new Stories(true);
@@ -25,6 +25,8 @@ export class StoryWrtiterViewModel {
     public setting: StoryPreference;
     public message: SystemMessage = new SystemMessage();
     public editing = false;
+
+    public history: OperationHistory = new OperationHistory();
 
     constructor(path = "") {
         this.setting = new StoryPreference(path);
@@ -57,10 +59,6 @@ export class StoryWrtiterViewModel {
 
     public saveStory(callback: ISimpleFunction | null = null): void {
         if(!this.editing) return;
-        if(this.setting.path.length == 0) {
-            Dialogs.openSaveWindow(this, () => this.saveStory());
-            return;
-        }
 
         const vmJson = JsonConverter.toJsonString(this);
         this.message.changeMessage("Saving...", SystemMessage.MessageType.Warning);

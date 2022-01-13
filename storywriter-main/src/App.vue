@@ -92,6 +92,26 @@ export default class App extends Vue {
   created() {
     Logger.write("Storywriter start.", "enjoy.", Logger.LoggingStatus.Info);
   }
+
+  // Undo & Redo
+  mounted() {
+    document.addEventListener("keydown", this.Undo);
+    document.addEventListener("keydown", this.Redo);
+  }
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.Undo);
+    document.removeEventListener("keydown", this.Redo);
+  }
+  public Undo(e: KeyboardEvent): void {
+    if((e.ctrlKey || e.metaKey) && e.key == 'z') {
+      this.vm.history.Undo(this.vm);
+    }
+  }
+  public Redo(e: KeyboardEvent): void {
+    if((e.ctrlKey || e.metaKey) && e.key == 'y') {
+      this.vm.history.Redo(this.vm);
+    }
+  }
 }
 </script>
 

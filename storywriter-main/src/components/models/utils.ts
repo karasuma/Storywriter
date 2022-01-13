@@ -1,4 +1,3 @@
-import path from "path";
 import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 
 export class Utils {
@@ -8,7 +7,7 @@ export class Utils {
             + Math.floor(power * Math.random()).toString(16);
     }
 
-    static sortCondition(prev: number, curr: number, descending = false) {
+    static sortCondition(prev: number, curr: number, descending = false): number {
         if(prev > curr) {
             return descending ? -1 : 1;
         } else if(prev < curr) {
@@ -65,6 +64,12 @@ export class Utils {
         const date = new Date();
         const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         return time;
+    }
+}
+
+export class Enumerable {
+    static Range(count: number, start = 0, step = 1): Array<number> {
+        return [...Array(count)].map((_, i) => start + (i * step));
     }
 }
 
