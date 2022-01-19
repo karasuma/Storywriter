@@ -10,6 +10,12 @@ export default class OperationHistory {
     public currentPosition = -1;
     public headPosition = -1;
 
+    public Clear(): void {
+        this.history.splice(0);
+        this.currentPosition = -1;
+        this.headPosition = -1;
+    }
+
     public Push(vm: StoryWrtiterViewModel): void {
         const newHistory = ContentCompressor.pack(JsonConverter.toJsonString(vm));
         this.history.push(newHistory);

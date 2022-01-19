@@ -54,5 +54,10 @@ export class ViewmodelUpdater {
             newMemo.text = x.text;
             target.memos.appendMemo(newMemo);
         });
+
+        // Menu Index
+        if(newone.menuIndex !== undefined) { // Deal with old version
+            target.menuIndex = newone.menuIndex;
+        }
     }
 }

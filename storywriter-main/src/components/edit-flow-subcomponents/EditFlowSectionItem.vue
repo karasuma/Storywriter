@@ -20,10 +20,13 @@
         <textarea v-model="content.title"
             rows="1" spellcheck="false" class="section__header"
             placeholder="..."
+            @change="updateHistory()"
         ></textarea>
 
         <div v-for="story in content.stories" :key="story" class="section__content">
-            <textarea v-model="story.text" spellcheck="false" rows="4"></textarea>
+            <textarea v-model="story.text"
+                spellcheck="false" rows="4"
+                @change="updateHistory()"></textarea>
             <div class="section__content__controls">
                 <img src="../../assets/arrow.png" class="section__content__controls-up"
                     @click="moveStoryPosition(story.id, true)" v-show="canStoryUp(story.id)">
@@ -47,6 +50,7 @@ import { Defs } from "../models/defs";
 import { MessageObject, IReceiveString } from "../models/utils";
 import { PropType } from "@vue/runtime-core";
 import { StoryData } from "../models/story/story-data";
+import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -54,14 +58,19 @@ import { StoryData } from "../models/story/story-data";
         ModalColorPicker
     },
     props: {
+        vm: StoryWrtiterViewModel,
         content: StoryItem,
         parent: StoryData,
         remove: Function as PropType<IReceiveString>,
         move: Function as PropType<IReceiveString>
     },
     methods: {
+        updateHistory: function(): void {
+            this.vm.history.Update(this.vm);
+        },
         addStory: function(c: StoryItem) {
             c.addStory();
+            this.updateHistory();
         },
         askDispose: function() {
             this.messages = MessageObject.createMessage(
@@ -73,25 +82,32 @@ import { StoryData } from "../models/story/story-data";
                 true
             );
             this.showMsgbox = true;
+            this.vm.modalShowing = true;
         },
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 this.remove(this.content.id);
+                this.updateHistory();
             }
             this.showMsgbox = false;
+            this.vm.modalShowing = false;
         },
         chooseColor: function() {
             this.showPickerbox = true;
+            this.vm.modalShowing = true;
         },
         getColor: function(color: string) {
             if (color.length > 0) {
                 this.content.color = color;
+                this.updateHistory();
             }
             this.showPickerbox = false;
+            this.vm.modalShowing = false;
         },
         movePosition: function(up: boolean) {
             const dir = up ? "up" : "down";
             this.move(dir + ":" + this.content.id);
+            this.updateHistory();
         },
         moveStoryPosition: function(id: string, up: boolean) {
             const currentIdx = this.getStoryIndex(id);
@@ -101,9 +117,11 @@ import { StoryData } from "../models/story/story-data";
             const temp = this.content.stories[currentIdx];
             this.content.stories[currentIdx] = this.content.stories[neighborIdx];
             this.content.stories[neighborIdx] = temp;
+            this.updateHistory();
         },
         disposeStory: function(id: string) {
             this.content.removeStory(this.getStoryIndex(id));
+            this.updateHistory();
         },
         canStoryUp: function(id: string): boolean {
             return this.getStoryIndex(id) > 0;
@@ -123,6 +141,7 @@ import { StoryData } from "../models/story/story-data";
 })
 
 export default class EditFlowSectionItem extends Vue {
+    vm!: StoryWrtiterViewModel;
     content!: StoryItem;
     parent!: StoryData;
     remove!: IReceiveString;
@@ -139,6 +158,20 @@ export default class EditFlowSectionItem extends Vue {
 
     public getStoryIndex(id: string): number {
         return this.content.stories.findIndex((x: StoryContent) => x.id == id);
+    }
+
+    public abortModal(e: KeyboardEvent): void {
+        if((e.ctrlKey || e.metaKey) && (e.key == 'z' || e.key == 'y')) {
+            this.showMsgbox = false;
+            this.showPickerbox = false;
+            this.vm.modalShowing = false;
+        }
+    }
+    mounted() {
+        document.addEventListener("keydown", this.abortModal);
+    }
+    beforeDestroy() {
+        document.removeEventListener("keydown", this.abortModal);
     }
 }
 </script>

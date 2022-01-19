@@ -18,6 +18,7 @@ export class StoryWriterDAO {
     public actors: ActorsDAO = new ActorsDAO();
     public worlds: WorldsDAO = new WorldsDAO();
     public memos: MemoDAO = new MemoDAO();
+    public index = 0;
 }
 
 // Convert class
@@ -29,6 +30,7 @@ export class DAOConverter {
         dao.actors = this.toActorsDAO(viewmodel.actors);
         dao.worlds = this.toWorldsDAO(viewmodel.worlds);
         dao.memos = this.toMemoDAO(viewmodel.memos);
+        dao.index = viewmodel.menuIndex;
         return dao;
     }
 
@@ -38,6 +40,7 @@ export class DAOConverter {
         targetvm.actors = this.fromActorsDAO(dao.actors);
         targetvm.worlds = this.fromWorldsDAO(dao.worlds);
         targetvm.memos = this.fromMemoDAO(dao.memos);
+        targetvm.menuIndex = dao.index;
     }
 
     private static toHierarchyDAO(viewmodel: Stories): StoriesDAO {
