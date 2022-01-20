@@ -66,6 +66,7 @@ import Logger from './components/models/logger';
     changeMenu: function(index: string) {
       this.vm.menuIndex = parseInt(index);
       this.vm.setting.showing = false;
+      this.vm.history.Update(this.vm);
     },
     getVisible: function(index: number): string {
       return this.vm.menuIndex == index ? "" : "display: none;";

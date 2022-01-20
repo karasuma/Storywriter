@@ -6,7 +6,7 @@ import { Enumerable } from "./utils";
 
 export default class OperationHistory {
     public history: string[] = new Array<string>();
-    public maxHistory = 200;
+    public maxHistory = 100;
     public currentPosition = -1;
     public headPosition = -1;
 
@@ -19,13 +19,12 @@ export default class OperationHistory {
     public Push(vm: StoryWrtiterViewModel): void {
         const newHistory = ContentCompressor.pack(JsonConverter.toJsonString(vm));
         this.history.push(newHistory);
-        this.headPosition = this.history.length - 1;
     }
 
     public Update(previousVm: StoryWrtiterViewModel): void {
         // Update history when the position moved back
         if(this.history.length > 0 && this.currentPosition < this.headPosition) {
-            this.history.splice(this.currentPosition);
+            this.history.splice(this.currentPosition + 1);
         }
 
         // Add new history
@@ -39,8 +38,9 @@ export default class OperationHistory {
             });
             this.history.splice(this.history.length - 1);
             this.currentPosition--;
-            this.headPosition = this.currentPosition;
         }
+
+        this.headPosition = this.currentPosition;
     }
 
     public Pickup(index: number): StoryWrtiterViewModel {
@@ -53,7 +53,12 @@ export default class OperationHistory {
 
     public Undo(currentVm: StoryWrtiterViewModel): void {
         if(this.currentPosition <= 0) return;
-        this.currentPosition--;
+        if(this.currentPosition == this.headPosition) {
+            this.Update(currentVm);
+            this.currentPosition -= 2;
+        } else {
+            this.currentPosition--;
+        }
         this.Restore(currentVm, this.currentPosition);
     }
 
