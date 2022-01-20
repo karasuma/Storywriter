@@ -180,7 +180,7 @@ export default class EditHeader extends Vue {
     public saveStory(callback: ISimpleFunction | null = null): void {
         if(!this.vm.editing) return;
         if(this.vm.setting.path.length == 0) {
-            Dialogs.openSaveWindow(this, () => this.vm.saveStory(callback));
+            Dialogs.openSaveWindow(this.vm, () => this.vm.saveStory(callback));
             return;
         }
     }
