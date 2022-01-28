@@ -90,4 +90,19 @@ describe("Operation History Tests", () => {
         // Assert
         expect(vm.history.Pickup(0).memos.memoList.map(x => x.name)).not.contain(firstMemo);
     });
+
+    it("Success to ignore pushing new history when the same as previous history?", () => {
+        // Arrange
+        const vm = new StoryWrtiterViewModel();
+        vm.history.maxHistory = 5;
+        vm.loadDefaultStories();
+        vm.history.Update(vm);
+
+        // Act
+        vm.history.Update(vm);
+        vm.history.Update(vm);
+
+        // Assert
+        expect(vm.history.currentPosition).equal(1);
+    });
 });

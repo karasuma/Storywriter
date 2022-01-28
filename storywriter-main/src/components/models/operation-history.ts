@@ -10,6 +10,8 @@ export default class OperationHistory {
     public currentPosition = -1;
     public headPosition = -1;
 
+    private beforeRedo = false;
+
     public Clear(): void {
         this.history.splice(0);
         this.currentPosition = -1;
@@ -22,6 +24,13 @@ export default class OperationHistory {
     }
 
     public Update(previousVm: StoryWrtiterViewModel): void {
+        // Don't update if the current data is the same as the previous data
+        if(this.currentPosition > 0) {
+            const current = JsonConverter.toJsonString(previousVm);
+            const previous = JsonConverter.toJsonString(this.Pickup(this.currentPosition - 1));
+            if(current === previous) return;
+        }
+
         // Update history when the position moved back
         if(this.history.length > 0 && this.currentPosition < this.headPosition) {
             this.history.splice(this.currentPosition + 1);
@@ -41,6 +50,7 @@ export default class OperationHistory {
         }
 
         this.headPosition = this.currentPosition;
+        this.beforeRedo = false;
     }
 
     public Pickup(index: number): StoryWrtiterViewModel {
@@ -53,18 +63,20 @@ export default class OperationHistory {
 
     public Undo(currentVm: StoryWrtiterViewModel): void {
         if(this.currentPosition <= 0) return;
-        if(this.currentPosition == this.headPosition) {
+        if(!this.beforeRedo && this.currentPosition == this.headPosition) {
             this.Update(currentVm);
             this.currentPosition -= 2;
         } else {
             this.currentPosition--;
         }
         this.Restore(currentVm, this.currentPosition);
+        this.beforeRedo = false;
     }
 
     public Redo(currentVm: StoryWrtiterViewModel): void {
         if(this.currentPosition >= this.headPosition) return;
         this.currentPosition++;
         this.Restore(currentVm, this.currentPosition);
+        this.beforeRedo = true;
     }
 }
