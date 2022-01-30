@@ -36,7 +36,7 @@
                         :expandPower="vm.setting.imageExpandPower"
                         class="edit__title__image"
                     />
-                    <input type="text" spellcheck="false" v-model="getEditingActor.name">
+                    <input id="actorName" type="text" spellcheck="false" v-model="getEditingActor.name">
                 </div>
 
                 <div class="edit__contents">
@@ -76,7 +76,7 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
-import { MessageObject } from "./models/utils";
+import { Enumerable, MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
 
 @Options({
@@ -95,21 +95,26 @@ import { Defs } from "./models/defs";
     methods: {
         addNewActor: function(): void {
             this.vm.actors.createNewActor("");
+            this.vm.history.Update(this.vm);
         },
         isEmpty: function(str: string): boolean {
             return str.length == 0;
         },
         deleteCaption: function(_: string): void {
             this.getEditingActor.face.content = "";
+            this.vm.history.Update(this.vm);
         },
         deleteImageSource: function(id: string) {
             this.getEditingActor.removeImage(id);
+            this.vm.history.Update(this.vm);
         },
         addImageSource: function(src: string): void {
             this.getEditingActor.addImage(src);
+            this.vm.history.Update(this.vm);
         },
         addCaptionImage: function(src: string): void {
             this.getEditingActor.face.content = src;
+            this.vm.history.Update(this.vm);
         },
         setEditing: function(id: string): void {
             const target = this.vm.actors.actors.find((a: ActorItem) => a.id == id);
@@ -117,6 +122,7 @@ import { Defs } from "./models/defs";
                 actor.editing = false;
             });
             target.editing = true;
+            this.vm.history.Update(this.vm);
         },
         dispose: function(id: string): void {
             this.message = MessageObject.createMessage(
@@ -136,6 +142,7 @@ import { Defs } from "./models/defs";
                     .findIndex((x: ActorItem) => x.id == this.deleteTargetId);
                 if(idx >= 0) {
                     this.vm.actors.actors.splice(idx, 1);
+                    this.vm.history.Update(this.vm);
                 }
             }
             this.deleteTargetId = "";
@@ -144,10 +151,14 @@ import { Defs } from "./models/defs";
     },
     computed: {
         getEditingActor: function(): ActorItem | undefined {
-            return this.vm.actors.actors.find((a: ActorItem) => a.editing);
+            const actor = this.vm.actors.actors.find((a: ActorItem) => a.editing);
+            if(actor === undefined) {
+                return this.dummyActor;
+            }
+            return actor;
         },
         isEditing: function(): boolean {
-            return this.getEditingActor !== undefined;
+            return this.vm.actors.actors.find((a: ActorItem) => a.editing) !== undefined;
         },
     }
 })
@@ -158,6 +169,42 @@ export default class EditActor extends Vue {
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");
     deleteTargetId = "";
+
+    dummyActor: ActorItem = new ActorItem();
+    
+    registerTextareas() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.vm.history.Update(this.vm);
+        };
+
+        const registerAttribute = ["registered", "attached"];
+
+        const textareas = document.getElementsByTagName("textarea");
+        Enumerable.Range(textareas.length).map(i => textareas[i]).forEach(elem => {
+            if(elem.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+                elem.onfocus = onFocus;
+                elem.onblur = onBlur;
+                elem.setAttribute(registerAttribute[0], registerAttribute[1]);
+            }
+        });
+        const inputArea = document.getElementById("actorName");
+        if(inputArea !== null && inputArea.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+            inputArea.onfocus = onFocus;
+            inputArea.onblur = onBlur;
+            inputArea.setAttribute(registerAttribute[0], registerAttribute[1]);
+        }
+    }
+
+    mounted() {
+        this.registerTextareas();
+    }
+    updated() {
+        this.registerTextareas();
+    }
 }
 </script>
 
