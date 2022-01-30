@@ -28,16 +28,14 @@
             <div v-if="hasEditing" class="edit__main">
                 <div class="edit__main__header"
                     :style="getBorderColor(getEditing.content.color)">
-                    <input type="text" v-model="getEditing.content.caption"
-                        key="main-caption" placeholder="..." spellcheck="false"
-                        @change="vm.history.Update(this.vm)">
+                    <input id="editInput" type="text" v-model="getEditing.content.caption"
+                        key="main-caption" placeholder="..." spellcheck="false">
                     <img src="../assets/paint.png" @click="chooseColor">
                     <img src="../assets/dispose.png" @click="askDispose">
                 </div>
                 <div class="edit__main__desc">
-                    <textarea v-model="getEditing.content.description"
-                        spellcheck="false" rows="6"
-                        @change="vm.history.Update(this.vm)"></textarea>
+                    <textarea id="editTextarea" v-model="getEditing.content.description"
+                        spellcheck="false" rows="6"></textarea>
                 </div>
 
                 <hr>
@@ -166,6 +164,48 @@ export default class EditFlow extends Vue {
 
     showCalendar = false;
     showPickerbox = false;
+
+    addRegistered: boolean[] = [false, false];
+
+    updated() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.vm.history.Update(this.vm);
+        };
+
+        if(!this.addRegistered[0]) {
+            const inputEditing = document.getElementById("editInput") !== null;
+            if(inputEditing) {
+                this.addRegistered[0] = true;
+                const inputElement = document.getElementById("editInput") as HTMLInputElement;
+                inputElement.onfocus = onFocus;
+                inputElement.onblur = onBlur;
+            }
+        } else {
+            const inputEditing = document.getElementById("editInput") === null;
+            if(inputEditing) {
+                this.addRegistered[0] = false;
+            }
+        }
+        
+        if(!this.addRegistered[1]) {
+            const textareaEditing = document.getElementById("editTextarea") !== null;
+            if(textareaEditing) {
+                this.addRegistered[1] = true;
+                const textareaElement = document.getElementById("editTextarea") as HTMLTextAreaElement;
+                textareaElement.onfocus = onFocus;
+                textareaElement.onblur = onBlur;
+            }
+        } else {
+            const textareaEditing = document.getElementById("editTextarea") === null;
+            if(textareaEditing) {
+                this.addRegistered[1] = false;
+            }
+        }
+    }
 }
 </script>
 

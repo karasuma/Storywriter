@@ -26,14 +26,15 @@ export class StoryWrtiterViewModel {
     public setting: StoryPreference;
     public message: SystemMessage = new SystemMessage();
     public editing = false;
+
     public modalShowing = false;
+    public textEdting = false;
 
     public history: OperationHistory = new OperationHistory();
 
     constructor(path = "") {
         this.setting = new StoryPreference(path);
         this.setting.load();
-        this.modalShowing = false;
     }
 
     public loadStory(path: string): void {
