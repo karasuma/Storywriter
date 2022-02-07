@@ -10,8 +10,6 @@ export default class OperationHistory {
     public currentPosition = -1;
     public headPosition = -1;
 
-    private beforeRedo = false;
-
     public Clear(): void {
         this.history.splice(0);
         this.currentPosition = -1;
@@ -23,11 +21,11 @@ export default class OperationHistory {
         this.history.push(newHistory);
     }
 
-    public Update(previousVm: StoryWrtiterViewModel): void {
+    public Update(currentVm: StoryWrtiterViewModel): void {
         // Don't update if the current data is the same as the previous data
         if(this.currentPosition > 0) {
-            const current = JsonConverter.toJsonString(previousVm);
-            const previous = JsonConverter.toJsonString(this.Pickup(this.currentPosition - 1));
+            const current = JsonConverter.toJsonString(currentVm);
+            const previous = JsonConverter.toJsonString(this.Pickup(this.currentPosition));
             if(current === previous) return;
         }
 
@@ -37,7 +35,7 @@ export default class OperationHistory {
         }
 
         // Add new history
-        this.Push(previousVm);
+        this.Push(currentVm);
         this.currentPosition++;
 
         // Displace histories when the position reached the head position
@@ -50,7 +48,6 @@ export default class OperationHistory {
         }
 
         this.headPosition = this.currentPosition;
-        this.beforeRedo = false;
     }
 
     public Pickup(index: number): StoryWrtiterViewModel {
@@ -63,20 +60,13 @@ export default class OperationHistory {
 
     public Undo(currentVm: StoryWrtiterViewModel): void {
         if(this.currentPosition <= 0) return;
-        if(!this.beforeRedo && this.currentPosition == this.headPosition) {
-            this.Update(currentVm);
-            this.currentPosition -= 2;
-        } else {
-            this.currentPosition--;
-        }
+        this.currentPosition--;
         this.Restore(currentVm, this.currentPosition);
-        this.beforeRedo = false;
     }
 
     public Redo(currentVm: StoryWrtiterViewModel): void {
         if(this.currentPosition >= this.headPosition) return;
         this.currentPosition++;
         this.Restore(currentVm, this.currentPosition);
-        this.beforeRedo = true;
     }
 }

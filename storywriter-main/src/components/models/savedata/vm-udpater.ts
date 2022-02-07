@@ -36,6 +36,7 @@ export class ViewmodelUpdater {
         newone.worlds.worldGroups.forEach(x => {
             const newWorld = new World(x.name, target.worlds);
             newWorld.id = x.id;
+            newWorld.expanding = x.expanding;
             x.countries.forEach(y => {
                 y.parent = newWorld;
                 newWorld.countries.push(y);

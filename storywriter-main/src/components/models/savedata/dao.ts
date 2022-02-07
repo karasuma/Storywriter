@@ -205,6 +205,7 @@ export class DAOConverter {
             dao.id = vm.id;
             dao.name = vm.name;
             dao.description = vm.description;
+            dao.editing = vm.editing;
             dao.image.id = vm.image.id;
             dao.image.content = vm.image.content;
             vm.samples.forEach(x => {
@@ -219,6 +220,7 @@ export class DAOConverter {
             const dao = new WorldDAO();
             dao.id = vm.id;
             dao.name = vm.name;
+            dao.expanding = vm.expanding;
             vm.countries.forEach(x => dao.countries.push(toCountryDAO(x)));
             return dao;
         };
@@ -232,6 +234,7 @@ export class DAOConverter {
             const country = new Country(dao.name, parent);
             country.id = dao.id;
             country.description = dao.description;
+            country.editing = dao.editing;
             country.image.id = dao.image.id;
             country.image.content = dao.image.content;
             country.samples.splice(0);
@@ -246,6 +249,7 @@ export class DAOConverter {
         const fromWorldDAO = (dao: WorldDAO, parent: Worlds): World => {
             const world = new World(dao.name, parent);
             world.id = dao.id;
+            world.expanding = dao.expanding;
             dao.countries.forEach(x => world.countries.push(fromCountryDAO(x, world)));
             return world;
         };
@@ -344,6 +348,7 @@ class WorldsDAO {
 class WorldDAO {
     public id = "";
     public name = "";
+    public expanding = false;
     public countries: CountryDAO[] = new Array<CountryDAO>();
 }
 class CountryDAO {
@@ -352,6 +357,7 @@ class CountryDAO {
     public description = "";
     public image: TextWithID = new TextWithID();
     public samples: TextWithID[] = new Array<TextWithID>();
+    public editing = false;
 }
 
 class MemoDAO {
