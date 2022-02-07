@@ -46,6 +46,7 @@ export class ViewmodelUpdater {
 
         // Memos
         target.memos.id = newone.memos.id;
+        target.memos.filterColor = newone.memos.filterColor;
         target.memos.memoList.splice(0);
         newone.memos.memoList.forEach(x => {
             const newMemo = new MemoItem(x.name, target.memos);

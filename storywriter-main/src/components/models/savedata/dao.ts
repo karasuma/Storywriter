@@ -271,6 +271,7 @@ export class DAOConverter {
 
         const dao = new MemoDAO();
         dao.id = viewmodel.id;
+        dao.color = viewmodel.filterColor;
         viewmodel.memoList.forEach(x => dao.memoList.push(toMemoItemDAO(x)));
         return dao;
     }
@@ -285,6 +286,8 @@ export class DAOConverter {
         
         const memos = new Memos();
         memos.id = dao.id;
+        memos.filterColor = dao.color;
+        if(memos.filterColor === undefined) { memos.filterColor = "transparent"; }
         dao.memoList.forEach(x => memos.memoList.push(fromMemoItemDAO(x, memos)));
         return memos;
     }
@@ -362,6 +365,7 @@ class CountryDAO {
 
 class MemoDAO {
     public id = "";
+    public color = "transparent";
     public memoList: MemoItemDAO[] = new Array<MemoItemDAO>();
 }
 class MemoItemDAO {

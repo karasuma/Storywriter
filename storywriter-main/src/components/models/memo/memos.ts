@@ -2,6 +2,7 @@ import { IUniqueObject, Utils } from "../utils";
 
 export class Memos implements IUniqueObject {
     public id: string = Utils.getUniqueId();
+    public filterColor = "transparent";
     public memoList: MemoItem[] = new Array<MemoItem>();
 
     public appendMemo(item: MemoItem): void {

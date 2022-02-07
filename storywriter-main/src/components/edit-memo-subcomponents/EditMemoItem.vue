@@ -21,13 +21,13 @@
                     style="transform: rotate(90deg);" src="../../assets/arrow.png">
             </div>
             <div class="memo-item__header__title">
-                <input type="text" spellcheck="false"
+                <input id="memoName" type="text" spellcheck="false"
                     placeholder="..." maxlength="128"
                     v-model="memo.name">
             </div>
         </div>
         <div class="memo-item__content">
-            <textarea spellcheck="false" v-model="memo.text"></textarea>
+            <textarea id="memoDescription" spellcheck="false" v-model="memo.text"></textarea>
         </div>
     </div>
 </template>
@@ -40,6 +40,7 @@ import ModalColorPicker from "../util-subcomponents/ModalColorPicker.vue";
 import { IReceiveString, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
 import { PropType } from "@vue/runtime-core";
+import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -47,6 +48,10 @@ import { PropType } from "@vue/runtime-core";
         ModalColorPicker
     },
     props: {
+        vm: {
+            type: StoryWrtiterViewModel,
+            required: true
+        },
         memo: {
             type: MemoItem,
             required: true
@@ -73,6 +78,7 @@ import { PropType } from "@vue/runtime-core";
         getResult: function(result: number): void {
             if(result == Defs.MessageType.Confirm) {
                 this.memo.deleteMe();
+                this.vm.history.Update(this.vm);
             }
             this.showMsgbox = false;
         },
@@ -82,12 +88,13 @@ import { PropType } from "@vue/runtime-core";
         getColor: function(color: string): void {
             if(color.length > 0) {
                 this.memo.color = color;
+                this.vm.history.Update(this.vm);
             }
             this.showPickerbox = false;
         },
         arrowVisibleCss: function(item: MemoItem, isUp: boolean): boolean {
             const currentMemos = item.parent.memoList.filter((x: MemoItem) => {
-                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+                return !(this.vm.memos.filterColor != "transparent" && this.vm.memos.filterColor != x.color);
             });
             const idx = currentMemos.findIndex(x => x.id == item.id);
 
@@ -106,14 +113,43 @@ import { PropType } from "@vue/runtime-core";
 })
 
 export default class EditMemoItem extends Vue {
+    vm!: StoryWrtiterViewModel;
     memo!: MemoItem;
     moveMemo!: IReceiveString;
-    filteringColor!: string;
 
     showMsgbox = false;
     messages: MessageObject = MessageObject.createMessage("","");
 
     showPickerbox = false;
+    
+    registerTextareas() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.vm.history.Update(this.vm);
+        };
+        const registerAttribute = ["registered", "attached"];
+        const inputElem = document.getElementById("memoName");
+        if(inputElem !== null && inputElem.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+            inputElem.onfocus = onFocus;
+            inputElem.onblur = onBlur;
+            inputElem.setAttribute(registerAttribute[0], registerAttribute[1]);
+        }
+        const textareaElem = document.getElementById("memoDescription");
+        if(textareaElem !== null && textareaElem.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+            textareaElem.onfocus = onFocus;
+            textareaElem.onblur = onBlur;
+            textareaElem.setAttribute(registerAttribute[0], registerAttribute[1]);
+        }
+    }
+    mounted() {
+        this.registerTextareas();
+    }
+    updated() {
+        this.registerTextareas();
+    }
 }
 </script>
 
