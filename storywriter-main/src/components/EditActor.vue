@@ -72,7 +72,7 @@
 import { Options, Vue } from "vue-class-component";
 import { ActorItem } from "./models/actor/actor-item";
 import ActorListItem from "./edit-actor-subcomponents/ActorListItem.vue";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
@@ -88,7 +88,7 @@ import { Defs } from "./models/defs";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -164,7 +164,7 @@ import { Defs } from "./models/defs";
 })
 
 export default class EditActor extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");

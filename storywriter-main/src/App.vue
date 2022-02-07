@@ -44,7 +44,7 @@ import EditMemo from './components/EditMemo.vue';
 import EditConfig from './components/EditConfig.vue';
 import Entrance from './components/Entrance.vue';
 
-import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
+import { StoryWriterViewModel, StoryWriterViewModelSample } from './components/story-writer-viewmodel';
 import Logger from './components/models/logger';
 
 // Options
@@ -86,7 +86,7 @@ import Logger from './components/models/logger';
 })
 
 export default class App extends Vue {
-  vm: StoryWrtiterViewModel = new StoryWrtiterViewModel("");
+  vm: StoryWriterViewModel = new StoryWriterViewModel("");
 
   created() {
     Logger.write("Storywriter start.", "enjoy.", Logger.LoggingStatus.Info);

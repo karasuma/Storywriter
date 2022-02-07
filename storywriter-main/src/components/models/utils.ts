@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 export class Utils {
     static getUniqueId(seed = 0): string {
@@ -126,7 +126,7 @@ export interface IUniqueObject {
 }
 
 export interface IReceiveViewmodel {
-    (vm: StoryWrtiterViewModel): void
+    (vm: StoryWriterViewModel): void
 }
 
 export interface ISimpleFunction {

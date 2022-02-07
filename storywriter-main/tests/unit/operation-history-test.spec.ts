@@ -1,12 +1,12 @@
 import OperationHistory from "@/components/models/operation-history";
 import { Enumerable } from "@/components/models/utils";
-import { StoryWrtiterViewModel } from "@/components/story-writer-viewmodel";
+import { StoryWriterViewModel } from "@/components/story-writer-viewmodel";
 import { expect } from "chai";
 
 describe("Operation History Tests", () => {
     it("Success to update history?", () => {
         // Arrange
-        const vm = new StoryWrtiterViewModel();
+        const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
         vm.history.Update(vm);
 
@@ -24,7 +24,7 @@ describe("Operation History Tests", () => {
 
     it("Success to undo history?", () => {
         // Arrange
-        const vm = new StoryWrtiterViewModel();
+        const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
         vm.history.Update(vm);
         const firstMemo = "Sample Memo 1";
@@ -44,7 +44,7 @@ describe("Operation History Tests", () => {
 
     it("Success to redo history?", () => {
         // Arrange
-        const vm = new StoryWrtiterViewModel();
+        const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
         vm.history.Update(vm);
         const firstMemo = "Sample Memo 1";
@@ -70,7 +70,7 @@ describe("Operation History Tests", () => {
 
     it("Success to shift history?", () => {
         // Arrange
-        const vm = new StoryWrtiterViewModel();
+        const vm = new StoryWriterViewModel();
         vm.history.maxHistory = 5;
         vm.loadDefaultStories();
         vm.history.Update(vm);
@@ -93,7 +93,7 @@ describe("Operation History Tests", () => {
 
     it("Success to ignore pushing new history when the same as previous history?", () => {
         // Arrange
-        const vm = new StoryWrtiterViewModel();
+        const vm = new StoryWriterViewModel();
         vm.history.maxHistory = 5;
         vm.loadDefaultStories();
         vm.history.Update(vm);

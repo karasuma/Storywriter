@@ -55,7 +55,7 @@ import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 
 @Options({
@@ -67,7 +67,7 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -130,7 +130,7 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 })
 
 export default class EditDict extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");

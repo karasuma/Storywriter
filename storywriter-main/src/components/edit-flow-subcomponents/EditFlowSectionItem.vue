@@ -50,7 +50,7 @@ import { Defs } from "../models/defs";
 import { MessageObject, IReceiveString, Enumerable } from "../models/utils";
 import { PropType } from "@vue/runtime-core";
 import { StoryData } from "../models/story/story-data";
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -58,7 +58,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
         ModalColorPicker
     },
     props: {
-        vm: StoryWrtiterViewModel,
+        vm: StoryWriterViewModel,
         content: StoryItem,
         parent: StoryData,
         remove: Function as PropType<IReceiveString>,
@@ -141,7 +141,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 })
 
 export default class EditFlowSectionItem extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     content!: StoryItem;
     parent!: StoryData;
     remove!: IReceiveString;

@@ -15,7 +15,7 @@ import DefaultStory from './models/default-story';
 import { ContentCompressor } from './models/savedata/content-compressor';
 import OperationHistory from './models/operation-history';
 
-export class StoryWrtiterViewModel {
+export class StoryWriterViewModel {
     public hierarchy: Stories = new Stories(true);
     public dictionary: Dictionary = new Dictionary();
     public actors: Actors = new Actors();
@@ -100,7 +100,7 @@ export class StoryWrtiterViewModel {
     }
 }
 
-export class StoryWrtiterViewModelSample extends StoryWrtiterViewModel {
+export class StoryWriterViewModelSample extends StoryWriterViewModel {
     constructor() {
         //super("J:\\Temporary\\savedata.swd");
         super("");
