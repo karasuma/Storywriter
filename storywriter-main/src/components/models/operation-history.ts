@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 import { ContentCompressor } from "./savedata/content-compressor";
 import { JsonConverter } from "./savedata/json-converter";
 import { ViewmodelUpdater } from "./savedata/vm-udpater";
@@ -16,12 +16,12 @@ export default class OperationHistory {
         this.headPosition = -1;
     }
 
-    public Push(vm: StoryWrtiterViewModel): void {
+    public Push(vm: StoryWriterViewModel): void {
         const newHistory = ContentCompressor.pack(JsonConverter.toJsonString(vm));
         this.history.push(newHistory);
     }
 
-    public Update(currentVm: StoryWrtiterViewModel): void {
+    public Update(currentVm: StoryWriterViewModel): void {
         // Don't update if the current data is the same as the previous data
         if(this.currentPosition > 0) {
             const current = JsonConverter.toJsonString(currentVm);
@@ -50,21 +50,21 @@ export default class OperationHistory {
         this.headPosition = this.currentPosition;
     }
 
-    public Pickup(index: number): StoryWrtiterViewModel {
+    public Pickup(index: number): StoryWriterViewModel {
         return JsonConverter.fromJsonString(ContentCompressor.unpack(this.history[index]));
     }
 
-    public Restore(targetVm: StoryWrtiterViewModel, index: number): void {
+    public Restore(targetVm: StoryWriterViewModel, index: number): void {
         ViewmodelUpdater.Update(targetVm, this.Pickup(index));
     }
 
-    public Undo(currentVm: StoryWrtiterViewModel): void {
+    public Undo(currentVm: StoryWriterViewModel): void {
         if(this.currentPosition <= 0) return;
         this.currentPosition--;
         this.Restore(currentVm, this.currentPosition);
     }
 
-    public Redo(currentVm: StoryWrtiterViewModel): void {
+    public Redo(currentVm: StoryWriterViewModel): void {
         if(this.currentPosition >= this.headPosition) return;
         this.currentPosition++;
         this.Restore(currentVm, this.currentPosition);

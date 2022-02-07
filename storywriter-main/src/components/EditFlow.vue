@@ -70,7 +70,7 @@ import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue"
 import ModalColorPicker from "./util-subcomponents/ModalColorPicker.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 
 @Options({
     components: {
@@ -82,7 +82,7 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -157,7 +157,7 @@ import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
 })
 
 export default class EditFlow extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");

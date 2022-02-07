@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import EditMemoItem from "./edit-memo-subcomponents/EditMemoItem.vue";
 import { Defs } from "./models/defs";
@@ -37,7 +37,7 @@ import { MemoItem } from "./models/memo/memos";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -96,7 +96,7 @@ import { MemoItem } from "./models/memo/memos";
 })
 
 export default class EditMemo extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 }
 </script>
 

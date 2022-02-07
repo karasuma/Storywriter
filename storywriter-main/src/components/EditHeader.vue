@@ -30,7 +30,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { ipcRenderer, remote } from 'electron';
-import { StoryWrtiterViewModel } from './story-writer-viewmodel';
+import { StoryWriterViewModel } from './story-writer-viewmodel';
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { ISimpleFunction, MessageObject } from './models/utils';
 import { Defs } from './models/defs';
@@ -43,7 +43,7 @@ import { Dialogs } from './models/savedata/dialogs';
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         },
         settingClicked: {
@@ -157,7 +157,7 @@ import { Dialogs } from './models/savedata/dialogs';
 })
 
 export default class EditHeader extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     settingClicked!: ISimpleFunction;
 
     showMsgBox = false;

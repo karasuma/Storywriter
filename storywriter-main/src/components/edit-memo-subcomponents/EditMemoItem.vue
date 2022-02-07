@@ -40,7 +40,7 @@ import ModalColorPicker from "../util-subcomponents/ModalColorPicker.vue";
 import { IReceiveString, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
 import { PropType } from "@vue/runtime-core";
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -49,7 +49,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         },
         memo: {
@@ -113,7 +113,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 })
 
 export default class EditMemoItem extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     memo!: MemoItem;
     moveMemo!: IReceiveString;
 

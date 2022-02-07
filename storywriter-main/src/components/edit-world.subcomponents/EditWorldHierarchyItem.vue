@@ -36,7 +36,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
 import { Enumerable, ISimpleFunction, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
 import { PropType } from "@vue/runtime-core";
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -45,7 +45,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         },
         world: {
@@ -108,7 +108,7 @@ import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
 })
 
 export default class EditWorldHierarchyItem extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     world!: World;
     resetEditFlags!: ISimpleFunction;
 

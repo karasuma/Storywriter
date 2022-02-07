@@ -26,12 +26,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryWrtiterViewModel } from './story-writer-viewmodel';
+import { StoryWriterViewModel } from './story-writer-viewmodel';
 
 @Options({
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -60,7 +60,7 @@ import { StoryWrtiterViewModel } from './story-writer-viewmodel';
 })
 
 export default class Entrance extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 }
 </script>
 

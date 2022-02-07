@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../../story-writer-viewmodel";
 import { ActorItem } from "../actor/actor-item";
 import { Actors } from "../actor/actors";
 import { Dictionary } from "../dictionary/dictionary";
@@ -23,7 +23,7 @@ export class StoryWriterDAO {
 
 // Convert class
 export class DAOConverter {
-    static toDAO(viewmodel: StoryWrtiterViewModel): StoryWriterDAO {
+    static toDAO(viewmodel: StoryWriterViewModel): StoryWriterDAO {
         const dao = new StoryWriterDAO();
         dao.hierarchy = this.toHierarchyDAO(viewmodel.hierarchy);
         dao.dictionary = this.toDictionaryDAO(viewmodel.dictionary);
@@ -34,7 +34,7 @@ export class DAOConverter {
         return dao;
     }
 
-    static fromDAO(dao: StoryWriterDAO, targetvm: StoryWrtiterViewModel): void {
+    static fromDAO(dao: StoryWriterDAO, targetvm: StoryWriterViewModel): void {
         targetvm.hierarchy = this.fromHierarchyDAO(dao.hierarchy);
         targetvm.dictionary = this.fromDictionaryDAO(dao.dictionary);
         targetvm.actors = this.fromActorsDAO(dao.actors);

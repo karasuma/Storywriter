@@ -76,7 +76,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import EditWorldHierarchyItem from "./edit-world.subcomponents/EditWorldHierarchyItem.vue";
 import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
@@ -97,7 +97,7 @@ import { Defs } from "./models/defs";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
@@ -180,7 +180,7 @@ import { Defs } from "./models/defs";
 })
 
 export default class EditWorld extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 
     showInputBox = false;
     inputCaption = "土地の追加";

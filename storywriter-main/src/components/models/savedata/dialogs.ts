@@ -1,10 +1,10 @@
-import { StoryWrtiterViewModel } from "@/components/story-writer-viewmodel";
+import { StoryWriterViewModel } from "@/components/story-writer-viewmodel";
 import { remove } from "@vue/shared";
 import { remote } from "electron";
 import { ISimpleFunction, Utils } from "../utils";
 
 export class Dialogs {
-    static openSaveWindow(vm: StoryWrtiterViewModel, saveCallback: ISimpleFunction): void {
+    static openSaveWindow(vm: StoryWriterViewModel, saveCallback: ISimpleFunction): void {
         remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
             filters: [
                 { name: "セーブファイル (Your Story Data)", extensions: ["ysd"]},

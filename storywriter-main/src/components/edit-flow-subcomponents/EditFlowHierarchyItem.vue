@@ -73,7 +73,7 @@ import { Defs } from "../models/defs";
 import { Stories } from "../models/story/stories";
 import { MessageObject } from "../models/utils";
 import { ISimpleFunction } from "../models/utils";
-import { StoryWrtiterViewModel } from "../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
@@ -88,7 +88,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
     },
     props: {
         root: Stories,
-        vm: StoryWrtiterViewModel
+        vm: StoryWriterViewModel
     },
     methods: {
         toggleDir: function(story: Stories) {
@@ -183,7 +183,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
 
 export default class EditFlowHierarchyItem extends Vue {
     public root!: Stories;
-    public vm!: StoryWrtiterViewModel;
+    public vm!: StoryWriterViewModel;
     
     public expanding = false;
 

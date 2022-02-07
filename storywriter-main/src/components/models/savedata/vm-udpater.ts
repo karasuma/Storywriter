@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../../story-writer-viewmodel";
 import { Stories } from "../story/stories";
 import { StoryData } from "../story/story-data";
 import { World } from "../world/worlds";
@@ -6,7 +6,7 @@ import { Country } from "../world/country";
 import { MemoItem } from "../memo/memos";
 
 export class ViewmodelUpdater {
-    static Update(target: StoryWrtiterViewModel, newone: StoryWrtiterViewModel): void {
+    static Update(target: StoryWriterViewModel, newone: StoryWriterViewModel): void {
         // Hierarchy
         target.hierarchy.id = newone.hierarchy.id;
         target.hierarchy.content = new StoryData();
