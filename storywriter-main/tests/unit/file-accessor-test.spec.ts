@@ -2,8 +2,8 @@ import { FileAccessor } from "@/components/models/savedata/file-accessor";
 import { expect } from "chai";
 
 describe("File accessor tests", () => {
-    const unwritableFilePath = "J:\\Temporary\\Unwritable.txt";
-    const writableFilePath = "J:\\Temporary\\Writable.txt";
+    const unwritableFilePath = "L:\\Temporary\\Unwritable.txt";
+    const writableFilePath = "L:\\Temporary\\Writable.txt";
     const writeData = "The Dao that can be trodden is not the enduring and unchanging Dao."
 
     describe("Write", () => {

@@ -36,6 +36,7 @@ export class ViewmodelUpdater {
         newone.worlds.worldGroups.forEach(x => {
             const newWorld = new World(x.name, target.worlds);
             newWorld.id = x.id;
+            newWorld.expanding = x.expanding;
             x.countries.forEach(y => {
                 y.parent = newWorld;
                 newWorld.countries.push(y);
@@ -45,6 +46,7 @@ export class ViewmodelUpdater {
 
         // Memos
         target.memos.id = newone.memos.id;
+        target.memos.filterColor = newone.memos.filterColor;
         target.memos.memoList.splice(0);
         newone.memos.memoList.forEach(x => {
             const newMemo = new MemoItem(x.name, target.memos);
@@ -54,5 +56,10 @@ export class ViewmodelUpdater {
             newMemo.text = x.text;
             target.memos.appendMemo(newMemo);
         });
+
+        // Menu Index
+        if(newone.menuIndex !== undefined) { // Deal with old version
+            target.menuIndex = newone.menuIndex;
+        }
     }
 }

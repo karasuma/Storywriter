@@ -35,6 +35,7 @@ import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { ISimpleFunction, MessageObject } from './models/utils';
 import { Defs } from './models/defs';
 import { PropType } from '@vue/runtime-core';
+import { Dialogs } from './models/savedata/dialogs';
 
 @Options({
     components: {
@@ -67,7 +68,7 @@ import { PropType } from '@vue/runtime-core';
             ).then(result => {
                 switch(result.response.valueOf()) {
                     case 0: // Yes
-                        this.vm.saveStory(() => window.close());
+                        this.saveStory(() => window.close());
                         break;
                     case 1: // No
                         window.close();
@@ -84,7 +85,7 @@ import { PropType } from '@vue/runtime-core';
             ipcRenderer.send('maximize');
         },
         save: function() {
-            this.vm.saveStory();
+            this.saveStory();
         },
         askHome: function() {
             if(!this.vm.editing) {
@@ -176,6 +177,14 @@ export default class EditHeader extends Vue {
         return "";
     }
 
+    public saveStory(callback: ISimpleFunction | null = null): void {
+        if(!this.vm.editing) return;
+        if(this.vm.setting.path.length == 0) {
+            Dialogs.openSaveWindow(this.vm, () => this.vm.saveStory(callback));
+            return;
+        }
+    }
+
     // Save methods used by Ctrl+S
     mounted() {
         document.addEventListener("keydown", this.saveStoryFromCtrls);
@@ -185,7 +194,7 @@ export default class EditHeader extends Vue {
     }
     public saveStoryFromCtrls(e: KeyboardEvent): void {
         if((e.ctrlKey || e.metaKey) && e.key == 's') {
-            this.vm.saveStory();
+            this.saveStory();
         }
     }
 }

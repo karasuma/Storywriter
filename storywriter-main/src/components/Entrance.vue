@@ -39,6 +39,7 @@ import { StoryWrtiterViewModel } from './story-writer-viewmodel';
         newGame: function(): void {
             this.vm.loadDefaultStories();
             this.vm.editing = true;
+            this.vm.history.Update(this.vm);
         },
         continueGame: function(): void {
             this.$refs.selectFile.click();
@@ -53,6 +54,7 @@ import { StoryWrtiterViewModel } from './story-writer-viewmodel';
             }
             
             this.vm.loadStory(receivedFile.path);
+            this.vm.history.Update(this.vm);
         },
     }
 })

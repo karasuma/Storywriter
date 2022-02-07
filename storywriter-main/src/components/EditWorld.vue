@@ -15,6 +15,7 @@
             <ul class="hierarchy__list">
                 <EditWorldHierarchyItem
                     v-for="world in vm.worlds.worldGroups" :key="world"
+                    :vm="vm"
                     :world="world"
                     :resetEditFlags="resetEditFlags"
                 />
@@ -30,7 +31,7 @@
                     <img class="edit__header__dispose"
                         src="../assets/dispose.png"
                         @click="removeCountry">
-                    <input type="text" spellcheck="false"
+                    <input id="countryName" type="text" spellcheck="false"
                         v-model="getSelectedCountry.name">
                     <ImageDropArea v-if="isEmpty(getSelectedCountry.image.content)"
                         :imageSrc="addCaptionImage"
@@ -62,7 +63,7 @@
 
                     <div class="edit__contents__details">
                         <h2>説明</h2>
-                        <textarea type="text" spellcheck="false"
+                        <textarea id="countryDescription" type="text" spellcheck="false"
                             placeholder="..."
                             v-model="getSelectedCountry.description">
                         </textarea>
@@ -81,7 +82,7 @@ import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import ModalSimpleInputBox from "./util-subcomponents/ModalSimpleInputBox.vue";
-import { World } from "./models/world/worlds";
+import { World, Worlds } from "./models/world/worlds";
 import { Country } from "./models/world/country";
 import { MessageObject, Position } from "./models/utils";
 import { Defs } from "./models/defs";
@@ -113,15 +114,19 @@ import { Defs } from "./models/defs";
         },
         addCaptionImage: function(src: string): void {
             this.getSelectedCountry.image.content = src;
+            this.vm.history.Update(this.vm);
         },
         deleteCaption: function(_: string): void {
             this.getSelectedCountry.image.content = "";
+            this.vm.history.Update(this.vm);
         },
         addImageSource: function(src: string): void {
             this.getSelectedCountry.addSample(src);
+            this.vm.history.Update(this.vm);
         },
         deleteImageSource: function(id: string): void {
             this.getSelectedCountry.removeSample(id);
+            this.vm.history.Update(this.vm);
         },
         addWorldGroup: function(): void {
             this.showInputBox = true;
@@ -129,6 +134,7 @@ import { Defs } from "./models/defs";
         getResultInput: function(text: string): void {
             if(text.length > 0) {
                 this.vm.worlds.addWorld(text);
+                this.vm.history.Update(this.vm);
             }
             this.showInputBox = false;
         },
@@ -146,6 +152,7 @@ import { Defs } from "./models/defs";
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 this.getSelectedCountry.deleteMe();
+                this.vm.history.Update(this.vm);
             }
             this.showMsgBox = false;
         },
@@ -158,10 +165,13 @@ import { Defs } from "./models/defs";
             if(editing !== undefined) {
                 return editing;
             }
-            return null;
+            return this.dummyCountry;
         },
         hasSelectedCountry: function(): boolean {
-            return this.getSelectedCountry !== null;
+            const editing = this.vm.worlds.worldGroups.find((w: World) => {
+                return w.getEditingCountry() instanceof Country;
+            })?.getEditingCountry();
+            return editing !== undefined;
         },
         accepts: function(): string {
             return Defs.imageAccepts;
@@ -175,6 +185,8 @@ export default class EditWorld extends Vue {
     showInputBox = false;
     inputCaption = "土地の追加";
     defaultText = "";
+    
+    dummyCountry: Country = new Country("", new World("", new Worlds()));
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("","");
@@ -196,9 +208,37 @@ export default class EditWorld extends Vue {
         this.captionSize.x = Math.max(120, Math.round(clientWidth - 120));
         this.captionSize.y = 230;
     }
+    
+    registerTextareas() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.vm.history.Update(this.vm);
+        };
+        const registerAttribute = ["registered", "attached"];
+        const inputElem = document.getElementById("countryName");
+        if(inputElem !== null && inputElem.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+            inputElem.onfocus = onFocus;
+            inputElem.onblur = onBlur;
+            inputElem.setAttribute(registerAttribute[0], registerAttribute[1]);
+        }
+        const textareaElem = document.getElementById("countryDescription");
+        if(textareaElem !== null && textareaElem.getAttribute(registerAttribute[0]) !== registerAttribute[1]) {
+            textareaElem.onfocus = onFocus;
+            textareaElem.onblur = onBlur;
+            textareaElem.setAttribute(registerAttribute[0], registerAttribute[1]);
+        }
+    }
+
     mounted() {
         window.addEventListener("resize", this.setCaptionSize, false);
         this.setCaptionSize();
+        this.registerTextareas();
+    }
+    updated() {
+        this.registerTextareas();
     }
 }
 </script>
