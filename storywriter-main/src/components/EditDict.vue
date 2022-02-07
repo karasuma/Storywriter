@@ -15,22 +15,24 @@
         </div>
 
         <div class="edit">
-            <div v-if="hasEditingWord" class="edit__content">
+            <div v-if="hasEditingWord()" class="edit__content">
                 <div class="edit__content__header">
-                    <input type="text" maxlength="64" spellcheck="false" v-model="getEditingWord.caption">
+                    <input id="dictCaption" type="text" maxlength="64" spellcheck="false"
+                        v-model="getEditingWord().caption">
                     <div class="edit__content__header-ctrl">
-                        <img src="../assets/dispose.png" @click="askDispose(getEditingWord)">
+                        <img src="../assets/dispose.png" @click="askDispose(getEditingWord())">
                     </div>
                 </div>
 
                 <div class="edit__content__note">
-                    <textarea v-model="getEditingWord.description"
+                    <textarea id="dictDescription" v-model="getEditingWord().description"
                         rows="20" spellcheck="false" placeholder="..."></textarea>
                 </div>
 
                 <h2>参考画像集</h2>
                 <div class="edit__content__images">
-                    <ImageItem v-for="img in getEditingWord.resources"
+                    <ImageItem
+                        v-for="img in getEditingWord().resources"
                         :key="img" :file="img"
                         :dispose="deleteResource"
                         :expandRatio="vm.setting.maxImageExpandRatio"
@@ -53,7 +55,7 @@ import ImageItem from "./common-subcomponents/ImageItem.vue";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 
 @Options({
@@ -65,16 +67,18 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
     methods: {
         changeEdit: function(id: string) {
             this.vm.dictionary.changeEditingWord(id);
+            this.historyUpdate();
         },
         addWord: function() {
             this.vm.dictionary.appendNewWord("new word");
+            this.historyUpdate();
         },
         askDispose: function(word: Word) {
             this.message = MessageObject.createMessage(
@@ -86,29 +90,38 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
                 true
             );
             this.showMsgBox = true;
+            this.vm.modalShowing = true;
             this.deleteTargetId = word.id;
         },
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 this.vm.dictionary.removeWord(this.deleteTargetId);
+                this.historyUpdate();
             }
             this.deleteTargetId = "";
             this.showMsgBox = false;
+            this.vm.modalShowing = false;
         },
         deleteResource: function(id: string) {
-            this.getEditingWord.removeResource(id);
+            this.getEditingWord().removeResource(id);
+            this.historyUpdate();
         },
         addImageSource: function(src: string): void {
-            this.getEditingWord.addResource(src);
-        }
-    },
-    computed: {
-        getEditingWord: function(): Word | undefined {
-            return this.vm.dictionary.words.find((x: Word) => x.editing);
+            this.getEditingWord().addResource(src);
+            this.historyUpdate();
+        },
+        getEditingWord: function(): Word {
+            const word = this.vm.dictionary.words.find((x: Word) => x.editing);
+            if(word === undefined) {
+                return this.dummyWord;
+            }
+            return word;
         },
         hasEditingWord: function(): boolean {
-            return this.getEditingWord !== undefined;
+            return this.vm.dictionary.words.find((x: Word) => x.editing) !== undefined;
         },
+    },
+    computed: {
         fileHoverCss: function(): string {
             const css = "border: dashed 3px #aaa;color:#aaa;";
             return this.hoveringDropArea ? css : "";
@@ -117,7 +130,7 @@ import ImageDropArea from "./common-subcomponents/ImageDropArea.vue";
 })
 
 export default class EditDict extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("", "");
@@ -125,6 +138,68 @@ export default class EditDict extends Vue {
 
     selectedWord: Word | null = null;
     hoveringDropArea = false;
+
+    dummyWord: Word = new Word();
+    addRegistered: boolean[] = [false, false];
+    removeRegistered: boolean[] = [false, false];
+
+    public historyUpdate(): void {
+        this.vm.history.Update(this.vm);
+        //this.vm.message.changeMessage(`Update (${this.vm.history.currentPosition} / ${this.vm.history.headPosition})`);
+    }
+
+    public abortModal(e: KeyboardEvent): void {
+        if((e.ctrlKey || e.metaKey) && (e.key == 'z' || e.key == 'y')) {
+            this.showMsgBox = false;
+            this.vm.modalShowing = false;
+        }
+    }
+    mounted() {
+        document.addEventListener("keydown", this.abortModal);
+    }
+    beforeDestroy() {
+        document.removeEventListener("keydown", this.abortModal);
+    }
+
+    updated() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.historyUpdate();
+        };
+
+        if(!this.addRegistered[0]) {
+            const inputEditing = document.getElementById("dictCaption") !== null;
+            if(inputEditing) {
+                this.addRegistered[0] = true;
+                const inputElement = document.getElementById("dictCaption") as HTMLInputElement;
+                inputElement.onfocus = onFocus;
+                inputElement.onblur = onBlur;
+            }
+        } else {
+            const inputEditing = document.getElementById("dictCaption") === null;
+            if(inputEditing) {
+                this.addRegistered[0] = false;
+            }
+        }
+        
+        if(!this.addRegistered[1]) {
+            const textareaEditing = document.getElementById("dictDescription") !== null;
+            if(textareaEditing) {
+                this.addRegistered[1] = true;
+                const textareaElement = document.getElementById("dictDescription") as HTMLTextAreaElement;
+                textareaElement.onfocus = onFocus;
+                textareaElement.onblur = onBlur;
+            }
+        } else {
+            const textareaEditing = document.getElementById("dictDescription") === null;
+            if(textareaEditing) {
+                this.addRegistered[1] = false;
+            }
+        }
+    }
 }
 </script>
 

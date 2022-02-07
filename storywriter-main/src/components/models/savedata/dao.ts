@@ -1,4 +1,4 @@
-import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../../story-writer-viewmodel";
 import { ActorItem } from "../actor/actor-item";
 import { Actors } from "../actor/actors";
 import { Dictionary } from "../dictionary/dictionary";
@@ -18,26 +18,29 @@ export class StoryWriterDAO {
     public actors: ActorsDAO = new ActorsDAO();
     public worlds: WorldsDAO = new WorldsDAO();
     public memos: MemoDAO = new MemoDAO();
+    public index = 0;
 }
 
 // Convert class
 export class DAOConverter {
-    static toDAO(viewmodel: StoryWrtiterViewModel): StoryWriterDAO {
+    static toDAO(viewmodel: StoryWriterViewModel): StoryWriterDAO {
         const dao = new StoryWriterDAO();
         dao.hierarchy = this.toHierarchyDAO(viewmodel.hierarchy);
         dao.dictionary = this.toDictionaryDAO(viewmodel.dictionary);
         dao.actors = this.toActorsDAO(viewmodel.actors);
         dao.worlds = this.toWorldsDAO(viewmodel.worlds);
         dao.memos = this.toMemoDAO(viewmodel.memos);
+        dao.index = viewmodel.menuIndex;
         return dao;
     }
 
-    static fromDAO(dao: StoryWriterDAO, targetvm: StoryWrtiterViewModel): void {
+    static fromDAO(dao: StoryWriterDAO, targetvm: StoryWriterViewModel): void {
         targetvm.hierarchy = this.fromHierarchyDAO(dao.hierarchy);
         targetvm.dictionary = this.fromDictionaryDAO(dao.dictionary);
         targetvm.actors = this.fromActorsDAO(dao.actors);
         targetvm.worlds = this.fromWorldsDAO(dao.worlds);
         targetvm.memos = this.fromMemoDAO(dao.memos);
+        targetvm.menuIndex = dao.index;
     }
 
     private static toHierarchyDAO(viewmodel: Stories): StoriesDAO {
@@ -202,6 +205,7 @@ export class DAOConverter {
             dao.id = vm.id;
             dao.name = vm.name;
             dao.description = vm.description;
+            dao.editing = vm.editing;
             dao.image.id = vm.image.id;
             dao.image.content = vm.image.content;
             vm.samples.forEach(x => {
@@ -216,6 +220,7 @@ export class DAOConverter {
             const dao = new WorldDAO();
             dao.id = vm.id;
             dao.name = vm.name;
+            dao.expanding = vm.expanding;
             vm.countries.forEach(x => dao.countries.push(toCountryDAO(x)));
             return dao;
         };
@@ -229,6 +234,7 @@ export class DAOConverter {
             const country = new Country(dao.name, parent);
             country.id = dao.id;
             country.description = dao.description;
+            country.editing = dao.editing;
             country.image.id = dao.image.id;
             country.image.content = dao.image.content;
             country.samples.splice(0);
@@ -243,6 +249,7 @@ export class DAOConverter {
         const fromWorldDAO = (dao: WorldDAO, parent: Worlds): World => {
             const world = new World(dao.name, parent);
             world.id = dao.id;
+            world.expanding = dao.expanding;
             dao.countries.forEach(x => world.countries.push(fromCountryDAO(x, world)));
             return world;
         };
@@ -264,6 +271,7 @@ export class DAOConverter {
 
         const dao = new MemoDAO();
         dao.id = viewmodel.id;
+        dao.color = viewmodel.filterColor;
         viewmodel.memoList.forEach(x => dao.memoList.push(toMemoItemDAO(x)));
         return dao;
     }
@@ -278,6 +286,8 @@ export class DAOConverter {
         
         const memos = new Memos();
         memos.id = dao.id;
+        memos.filterColor = dao.color;
+        if(memos.filterColor === undefined) { memos.filterColor = "transparent"; }
         dao.memoList.forEach(x => memos.memoList.push(fromMemoItemDAO(x, memos)));
         return memos;
     }
@@ -341,6 +351,7 @@ class WorldsDAO {
 class WorldDAO {
     public id = "";
     public name = "";
+    public expanding = false;
     public countries: CountryDAO[] = new Array<CountryDAO>();
 }
 class CountryDAO {
@@ -349,10 +360,12 @@ class CountryDAO {
     public description = "";
     public image: TextWithID = new TextWithID();
     public samples: TextWithID[] = new Array<TextWithID>();
+    public editing = false;
 }
 
 class MemoDAO {
     public id = "";
+    public color = "transparent";
     public memoList: MemoItemDAO[] = new Array<MemoItemDAO>();
 }
 class MemoItemDAO {

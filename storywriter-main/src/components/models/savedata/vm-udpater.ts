@@ -1,11 +1,12 @@
-import { StoryWrtiterViewModel } from "../../story-writer-viewmodel";
+import { StoryWriterViewModel } from "../../story-writer-viewmodel";
 import { Stories } from "../story/stories";
 import { StoryData } from "../story/story-data";
 import { World } from "../world/worlds";
 import { Country } from "../world/country";
+import { MemoItem } from "../memo/memos";
 
 export class ViewmodelUpdater {
-    static Update(target: StoryWrtiterViewModel, newone: StoryWrtiterViewModel): void {
+    static Update(target: StoryWriterViewModel, newone: StoryWriterViewModel): void {
         // Hierarchy
         target.hierarchy.id = newone.hierarchy.id;
         target.hierarchy.content = new StoryData();
@@ -35,6 +36,7 @@ export class ViewmodelUpdater {
         newone.worlds.worldGroups.forEach(x => {
             const newWorld = new World(x.name, target.worlds);
             newWorld.id = x.id;
+            newWorld.expanding = x.expanding;
             x.countries.forEach(y => {
                 y.parent = newWorld;
                 newWorld.countries.push(y);
@@ -44,7 +46,20 @@ export class ViewmodelUpdater {
 
         // Memos
         target.memos.id = newone.memos.id;
+        target.memos.filterColor = newone.memos.filterColor;
         target.memos.memoList.splice(0);
-        newone.memos.memoList.forEach(x => target.memos.memoList.push(x));
+        newone.memos.memoList.forEach(x => {
+            const newMemo = new MemoItem(x.name, target.memos);
+            newMemo.id = x.id;
+            newMemo.color = x.color;
+            newMemo.name = x.name;
+            newMemo.text = x.text;
+            target.memos.appendMemo(newMemo);
+        });
+
+        // Menu Index
+        if(newone.menuIndex !== undefined) { // Deal with old version
+            target.menuIndex = newone.menuIndex;
+        }
     }
 }

@@ -29,6 +29,7 @@
                     </div>
                     <EditFlowHierarchyItem
                         :root="lore"
+                        :vm="vm"
                         :class="{hierarchy__unexpand: lore.isExpanding, child__hierarchy: true}"
                     />
                 </div>
@@ -66,10 +67,13 @@
 </template>
 
 <script lang="ts">
+import { PropType } from "@vue/runtime-core";
 import { Options, Vue } from "vue-class-component";
 import { Defs } from "../models/defs";
 import { Stories } from "../models/story/stories";
 import { MessageObject } from "../models/utils";
+import { ISimpleFunction } from "../models/utils";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
@@ -84,13 +88,16 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
     },
     props: {
         root: Stories,
+        vm: StoryWriterViewModel
     },
     methods: {
         toggleDir: function(story: Stories) {
             story.isExpanding = !story.isExpanding;
+            this.vm.history.Update(this.vm);
         },
         changeEditMode: function(story: Stories) {
             story.editing(true);
+            this.vm.history.Update(this.vm);
         },
         setBorderLine: function(story: Stories): string {
             if(story.isDirectory()) {
@@ -111,15 +118,19 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
                 true
             );
             this.showMsgBox = true;
+            this.vm.modalShowing = true;
         },
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 Stories.removeTargetStory(this.stories, this.selectingId);
+                this.vm.history.Update(this.vm);
             }
             this.showMsgBox = false;
+            this.vm.modalShowing = false;
         },
         getResultInput: function(result: string) {
             this.showInputBox = false;
+            this.vm.modalShowing = false;
             this.inputContent = result;
             this.defaultText = "";
             if(this.inputContent.length > 0) {
@@ -127,6 +138,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
                     this.selectingLore.content.caption = result;
                 } else {
                     this.root.appendNewStory(this.createAsDir, this.inputContent);
+                    this.vm.history.Update(this.vm);
                 }
             }
         },
@@ -134,16 +146,19 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
             this.createAsDir = isdir;
             this.isEditCaption = false;
             this.showInputBox = true;
+            this.vm.modalShowing = true;
         },
         askEditCaption: function(lore: Stories) {
             this.selectingLore = lore;
             this.isEditCaption = true;
             this.defaultText = lore.content.caption;
             this.showInputBox = true;
+            this.vm.modalShowing = true;
         },
         moveDir: function(id: string, isUp: boolean, executable: boolean): void {
             if(!executable) return;
             this.root.moveStory(id, isUp);
+            this.vm.history.Update(this.vm);
         },
         canMoveCss: function(lore: Stories, isUp: boolean): boolean {
             const currDirs = Stories
@@ -168,6 +183,7 @@ import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
 
 export default class EditFlowHierarchyItem extends Vue {
     public root!: Stories;
+    public vm!: StoryWriterViewModel;
     
     public expanding = false;
 
@@ -182,6 +198,21 @@ export default class EditFlowHierarchyItem extends Vue {
 
     public selectingId = "";
     public selectingLore: Stories = new Stories(false);
+
+    public abortModal(e: KeyboardEvent): void {
+        if((e.ctrlKey || e.metaKey) && (e.key == 'z' || e.key == 'y')) {
+            this.showInputBox = false;
+            this.inputContent = "";
+            this.showMsgBox = false;
+            this.vm.modalShowing = false;
+        }
+    }
+    mounted() {
+        document.addEventListener("keydown", this.abortModal);
+    }
+    beforeDestroy() {
+        document.removeEventListener("keydown", this.abortModal);
+    }
 }
 </script>
 

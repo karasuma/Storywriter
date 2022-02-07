@@ -2,12 +2,17 @@ import { IUniqueObject, Utils } from "../utils";
 
 export class Memos implements IUniqueObject {
     public id: string = Utils.getUniqueId();
+    public filterColor = "transparent";
     public memoList: MemoItem[] = new Array<MemoItem>();
+
+    public appendMemo(item: MemoItem): void {
+        this.memoList.push(item);
+    }
 
     public addMemo(name = "", color = "transparent"): void {
         const newMemo = new MemoItem(name, this);
         newMemo.color = color;
-        this.memoList.push(newMemo);
+        this.appendMemo(newMemo);
     }
 
     public removeMemo(id: string): void {

@@ -1,16 +1,16 @@
 import { DAOConverter } from "@/components/models/savedata/dao";
-import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from "@/components/story-writer-viewmodel";
+import { StoryWriterViewModel, StoryWriterViewModelSample } from "@/components/story-writer-viewmodel";
 import { expect } from "chai";
 
 describe("DAO", () => {
     describe("Get/Set", () => {
         it("check successed to convert from Viewmodel to DAO", () => {
             // Arrange
-            const vm = new StoryWrtiterViewModelSample();
+            const vm = new StoryWriterViewModelSample();
 
             // Act
             const dao = DAOConverter.toDAO(vm);
-            const newvm = new StoryWrtiterViewModel("");
+            const newvm = new StoryWriterViewModel("");
             DAOConverter.fromDAO(dao, newvm);
             //const original = DAOConverter.fromDAO(dao).memos.memoList[0].id;
             const original = newvm.memos.memoList[0].id;

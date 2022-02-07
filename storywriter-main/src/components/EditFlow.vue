@@ -18,7 +18,8 @@
 
         <div class="hierarchy">
             <EditFlowHierarchyItem
-                :root="root"
+                :root="vm.hierarchy"
+                :vm="vm"
                 style="padding-right: 6px;"
             />
         </div>
@@ -27,19 +28,21 @@
             <div v-if="hasEditing" class="edit__main">
                 <div class="edit__main__header"
                     :style="getBorderColor(getEditing.content.color)">
-                    <input type="text" v-model="getEditing.content.caption" key="main-caption" placeholder="..." spellcheck="false">
+                    <input id="editInput" type="text" v-model="getEditing.content.caption"
+                        key="main-caption" placeholder="..." spellcheck="false">
                     <img src="../assets/paint.png" @click="chooseColor">
-                    <!-- <img src="../assets/calendar.png" @click="changeCalendar"> -->
                     <img src="../assets/dispose.png" @click="askDispose">
                 </div>
                 <div class="edit__main__desc">
-                    <textarea v-model="getEditing.content.description" spellcheck="false" rows="6"></textarea>
+                    <textarea id="editTextarea" v-model="getEditing.content.description"
+                        spellcheck="false" rows="6"></textarea>
                 </div>
 
                 <hr>
 
                 <EditFlowSectionItem
                     v-for="lore in getEditing.content.lores" :key="lore"
+                    :vm="vm"
                     :content="lore"
                     :parent="getEditing.content"
                     :remove="deleteSectionItem"
@@ -67,6 +70,7 @@ import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue"
 import ModalColorPicker from "./util-subcomponents/ModalColorPicker.vue";
 import { MessageObject } from "./models/utils";
 import { Defs } from "./models/defs";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 
 @Options({
     components: {
@@ -77,20 +81,26 @@ import { Defs } from "./models/defs";
         ModalColorPicker
     },
     props: {
-        root: Stories,
+        vm: {
+            type: StoryWriterViewModel,
+            required: true
+        }
     },
     methods: {
         addLore: function(content: StoryData) {
             content.addLore();
+            this.vm.history.Update(this.vm);
         },
         deleteSectionItem: function(id: string) {
             this.getEditing.content.removeLore(id);
+            this.vm.history.Update(this.vm);
         },
         moveStoryPosition: function(arg: string) {
             const param = arg.split(":");
             const dir = param[0] === "up";
             const id = param[1];
             this.getEditing.content.moveLore(id, dir);
+            this.vm.history.Update(this.vm);
         },
         askDispose: function() {
             this.message = MessageObject.createMessage(
@@ -106,6 +116,7 @@ import { Defs } from "./models/defs";
         getResult: function(result: number) {
             if(result == Defs.MessageType.Confirm) {
                 Stories.removeTargetStory(this.stories, this.getEditing.id);
+                this.vm.history.Update(this.vm);
             }
             this.showMsgBox = false;
         },
@@ -121,19 +132,23 @@ import { Defs } from "./models/defs";
         getColor: function(color: string) {
             if (color.length > 0) {
                 this.getEditing.content.color = color;
+                this.vm.history.Update(this.vm);
             }
             this.showPickerbox = false;
         },
         getBorderColor: function(color: string): string {
             return "border-top: groove 8px " + color + ";";
+        },
+        updateHistory: function(): void {
+            this.vm.history.Update(this.vm);
         }
     },
     computed: {
         stories: function():Array<Stories> {
-            return this.root.children;
+            return this.vm.hierarchy.children;
         },
         getEditing: function(): Stories | undefined {
-            return this.root.getEditingChildren();
+            return this.vm.hierarchy.getEditingChildren();
         },
         hasEditing: function(): boolean {
             return this.getEditing !== undefined;
@@ -142,13 +157,55 @@ import { Defs } from "./models/defs";
 })
 
 export default class EditFlow extends Vue {
-    root!: Stories;
+    vm!: StoryWriterViewModel;
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("Warning", "");
 
     showCalendar = false;
     showPickerbox = false;
+
+    addRegistered: boolean[] = [false, false];
+
+    updated() {
+        const onFocus = () => {
+            this.vm.textEdting = true;
+        };
+        const onBlur = () => {
+            this.vm.textEdting = false;
+            this.vm.history.Update(this.vm);
+        };
+
+        if(!this.addRegistered[0]) {
+            const inputEditing = document.getElementById("editInput") !== null;
+            if(inputEditing) {
+                this.addRegistered[0] = true;
+                const inputElement = document.getElementById("editInput") as HTMLInputElement;
+                inputElement.onfocus = onFocus;
+                inputElement.onblur = onBlur;
+            }
+        } else {
+            const inputEditing = document.getElementById("editInput") === null;
+            if(inputEditing) {
+                this.addRegistered[0] = false;
+            }
+        }
+        
+        if(!this.addRegistered[1]) {
+            const textareaEditing = document.getElementById("editTextarea") !== null;
+            if(textareaEditing) {
+                this.addRegistered[1] = true;
+                const textareaElement = document.getElementById("editTextarea") as HTMLTextAreaElement;
+                textareaElement.onfocus = onFocus;
+                textareaElement.onblur = onBlur;
+            }
+        } else {
+            const textareaEditing = document.getElementById("editTextarea") === null;
+            if(textareaEditing) {
+                this.addRegistered[1] = false;
+            }
+        }
+    }
 }
 </script>
 

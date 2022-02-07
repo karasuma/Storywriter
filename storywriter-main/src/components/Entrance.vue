@@ -26,19 +26,20 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryWrtiterViewModel } from './story-writer-viewmodel';
+import { StoryWriterViewModel } from './story-writer-viewmodel';
 
 @Options({
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
     methods: {
         newGame: function(): void {
-            this.vm.setDefaultStories();
+            this.vm.loadDefaultStories();
             this.vm.editing = true;
+            this.vm.history.Update(this.vm);
         },
         continueGame: function(): void {
             this.$refs.selectFile.click();
@@ -53,12 +54,13 @@ import { StoryWrtiterViewModel } from './story-writer-viewmodel';
             }
             
             this.vm.loadStory(receivedFile.path);
+            this.vm.history.Update(this.vm);
         },
     }
 })
 
 export default class Entrance extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
 }
 </script>
 

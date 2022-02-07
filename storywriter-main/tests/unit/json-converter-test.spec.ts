@@ -1,5 +1,5 @@
 import { JsonConverter } from "@/components/models/savedata/json-converter";
-import { StoryWrtiterViewModelSample } from "@/components/story-writer-viewmodel";
+import { StoryWriterViewModelSample } from "@/components/story-writer-viewmodel";
 import { expect } from "chai";
 
 describe("Json Converter", () => {
@@ -7,7 +7,7 @@ describe("Json Converter", () => {
         it("Check succeed to convert back and forward between Viewmodel to Json string",
             () => {
                 // Arrange
-                const vm = new StoryWrtiterViewModelSample();
+                const vm = new StoryWriterViewModelSample();
 
                 // Act
                 const json = JsonConverter.toJsonString(vm);

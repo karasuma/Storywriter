@@ -1,5 +1,5 @@
 <template>
-    <div class="actor__item" :class="{ actor__item__selected: selected }">
+    <div class="actor__item" :class="{ actor__item__selected: selected }" :title="nameOrDefault">
         <img v-if="hasFace" :src="face">
         <img v-else src="../../assets/who.png" style="opacity: 0.6;">
         <p>{{ nameOrDefault }}</p>

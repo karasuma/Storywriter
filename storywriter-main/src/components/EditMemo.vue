@@ -9,9 +9,10 @@
         <div class="memos">
             <EditMemoItem
                 v-for="memo in filterMemo()" :key="memo"
+                :vm="vm"
                 :memo="memo"
                 :moveMemo="moveMemo"
-                :filteringColor="filteringColor"
+                :filteringColor="vm.memos.filterColor"
             />
 
             <div class="memos__add">
@@ -23,7 +24,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ModalMessageBox from "./util-subcomponents/ModalMessageBox.vue";
 import EditMemoItem from "./edit-memo-subcomponents/EditMemoItem.vue";
 import { Defs } from "./models/defs";
@@ -36,22 +37,25 @@ import { MemoItem } from "./models/memo/memos";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         }
     },
     methods: {
         addMemo: function(): void {
-            this.vm.memos.addMemo("", this.filteringColor);
+            this.vm.memos.addMemo("", this.vm.memos.filterColor);
+            this.vm.history.Update(this.vm);
         },
         filtering: function(color: string): void {
-            this.filteringColor = color;
+            this.vm.memos.filterColor = color;
+            console.log(color);
+            this.vm.history.Update(this.vm);
         },
         backgroundCss: function(color: string): string {
             return `background-color: ${color};`;
         },
         selectedCss: function(color: string): string {
-            if(color == this.filteringColor) {
+            if(color === this.vm.memos.filterColor) {
                 return `filter: brightness(1.0); border: solid 3px #FFFFFF;`;
             }
             return "";
@@ -59,20 +63,22 @@ import { MemoItem } from "./models/memo/memos";
         moveMemo: function(filteredCond: string): void {
             const arg = filteredCond.split("---");
             const currentMemos = this.vm.memos.memoList.filter((x: MemoItem) => {
-                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+                return !(this.vm.memos.filterColor != "transparent" && this.vm.memos.filterColor != x.color);
             });
             const srcIdx = currentMemos.findIndex((x: MemoItem) => x.id == arg[0]);
             const isUp = arg[1] != 'o';
 
             if(isUp && srcIdx > 0) {
                 this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx - 1]);
+                this.vm.history.Update(this.vm);
             } else if(!isUp && srcIdx < currentMemos.length - 1) {
                 this.vm.memos.swapMemo(currentMemos[srcIdx], currentMemos[srcIdx + 1]);
+                this.vm.history.Update(this.vm);
             }
         },
         filterMemo: function(): MemoItem[] {
             return this.vm.memos.memoList.filter((x: MemoItem) => {
-                return !(this.filteringColor != "transparent" && this.filteringColor != x.color);
+                return !(this.vm.memos.filterColor != "transparent" && this.vm.memos.filterColor != x.color);
             });
         }
     },
@@ -90,9 +96,7 @@ import { MemoItem } from "./models/memo/memos";
 })
 
 export default class EditMemo extends Vue {
-    vm!: StoryWrtiterViewModel;
-
-    filteringColor = "transparent";
+    vm!: StoryWriterViewModel;
 }
 </script>
 

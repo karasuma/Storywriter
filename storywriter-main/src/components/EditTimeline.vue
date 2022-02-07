@@ -43,7 +43,7 @@ import { Options, Vue } from "vue-class-component";
 import { Stories } from "./models/story/stories";
 import TimelineLabel from "./edit-timeline-subcomponents/TimelineLabel.vue";
 import { Defs } from "./models/defs";
-import { StoryWrtiterViewModel } from "./story-writer-viewmodel";
+import { StoryWriterViewModel } from "./story-writer-viewmodel";
 import ModalCalendarEditBox from "./util-subcomponents/ModalCalendarEditBox.vue";
 import { ISimpleFunction } from "./models/utils";
 import { PropType } from "@vue/runtime-core";
@@ -55,7 +55,7 @@ import { PropType } from "@vue/runtime-core";
     },
     props: {
         vm: {
-            type: StoryWrtiterViewModel,
+            type: StoryWriterViewModel,
             required: true
         },
         select: {
@@ -130,7 +130,7 @@ import { PropType } from "@vue/runtime-core";
 })
 
 export default class EditTimeline extends Vue {
-    vm!: StoryWrtiterViewModel;
+    vm!: StoryWriterViewModel;
     select!: ISimpleFunction;
 
     filteringColor = "";

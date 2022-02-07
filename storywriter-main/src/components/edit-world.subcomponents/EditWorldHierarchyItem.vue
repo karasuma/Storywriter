@@ -11,9 +11,9 @@
             :caption="inputCaption"
             :defaultText="defaultText"
         />
-        <div :class="{item__header: true, expand: world.expanding}">
+        <div class="item__header" :class="{expand: world.expanding}">
             <img src="../../assets/caret.png">
-            <p @click="toggleExpandGroup" :title="world.name">{{ world.name }}</p>
+            <p @click="toggleExpandGroup()" :title="world.name">{{ world.name }}</p>
             <img class="item__header__img" src="../../assets/edit.png" @click="showInputBox">
             <img class="item__header__img" src="../../assets/dispose.png" @click="showMessageBox">
         </div>
@@ -21,7 +21,7 @@
             <li v-for="c in world.countries" :key="c"
                 @click="selectCountry(c.id)"
                 :class="{selected: c.editing}" :title="c.name">{{ c.name }}</li>
-            <li><img src="../../assets/add.png" @click="addCountry"></li>
+            <li><img src="../../assets/add.png" @click="addCountry()"></li>
         </ul>
     </li>
 </template>
@@ -33,9 +33,10 @@ import { Country } from "../models/world/country";
 
 import ModalMessageBox from "../util-subcomponents/ModalMessageBox.vue";
 import ModalSimpleInputBox from "../util-subcomponents/ModalSimpleInputBox.vue";
-import { ISimpleFunction, MessageObject } from "../models/utils";
+import { Enumerable, ISimpleFunction, MessageObject } from "../models/utils";
 import { Defs } from "../models/defs";
 import { PropType } from "@vue/runtime-core";
+import { StoryWriterViewModel } from "../story-writer-viewmodel";
 
 @Options({
     components: {
@@ -43,6 +44,10 @@ import { PropType } from "@vue/runtime-core";
         ModalSimpleInputBox
     },
     props: {
+        vm: {
+            type: StoryWriterViewModel,
+            required: true
+        },
         world: {
             type: World,
             required: true
@@ -58,6 +63,7 @@ import { PropType } from "@vue/runtime-core";
             if(idx >= 0) {
                 this.resetEditFlags();
                 this.world.countries.find((x: Country) => x.id == id).editing = true;
+                this.updateHistory();
             }
         },
         showInputBox: function(): void {
@@ -67,6 +73,7 @@ import { PropType } from "@vue/runtime-core";
         getResultInput: function(text: string): void {
             if(text.length != 0) {
                 this.world.name = text;
+                this.updateHistory();
             }
             this.defaultText = "";
             this.visibleInputBox = false;
@@ -85,19 +92,23 @@ import { PropType } from "@vue/runtime-core";
         getResult: function(result: number): void {
             if(result == Defs.MessageType.Confirm) {
                 this.world.deleteMe();
+                this.updateHistory();
             }
             this.showMsgBox = false;
         },
         addCountry: function(): void {
             this.world.addCountry();
+            this.updateHistory();
         },
         toggleExpandGroup: function(): void {
             this.world.expanding = !this.world.expanding;
+            this.updateHistory();
         }
     }
 })
 
 export default class EditWorldHierarchyItem extends Vue {
+    vm!: StoryWriterViewModel;
     world!: World;
     resetEditFlags!: ISimpleFunction;
 
@@ -107,6 +118,10 @@ export default class EditWorldHierarchyItem extends Vue {
 
     showMsgBox = false;
     message: MessageObject = MessageObject.createMessage("","");
+
+    public updateHistory(): void {
+        this.vm.history.Update(this.vm);
+    }
 }
 </script>
 

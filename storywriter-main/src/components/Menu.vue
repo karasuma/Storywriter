@@ -30,6 +30,7 @@ import { IReceiveString } from "./models/utils";
     props: {
         changeMenu: {
             type: Function as PropType<IReceiveString>,
+            default: 0,
             required: true
         },
         index: {

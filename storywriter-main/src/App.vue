@@ -12,8 +12,8 @@
 
     <div id="container">
       <div v-if="vm.editing">
-        <Menu class="bk" :changeMenu="changeMenu" :index="currentIndex" />
-        <EditFlow class="bk" :style="getVisible(0)" :root="vm.hierarchy" />
+        <Menu class="bk" :changeMenu="changeMenu" :index="vm.menuIndex" />
+        <EditFlow class="bk" :style="getVisible(0)" :vm="vm" />
         <EditTimeline class="bk" :style="getVisible(1)" :select="editSelectedMenu" :vm="vm" />
         <EditDict class="bk" :style="getVisible(2)" :vm="vm" />
         <EditActor class="bk" :style="getVisible(3)" :vm="vm" />
@@ -44,7 +44,7 @@ import EditMemo from './components/EditMemo.vue';
 import EditConfig from './components/EditConfig.vue';
 import Entrance from './components/Entrance.vue';
 
-import { StoryWrtiterViewModel, StoryWrtiterViewModelSample } from './components/story-writer-viewmodel';
+import { StoryWriterViewModel, StoryWriterViewModelSample } from './components/story-writer-viewmodel';
 import Logger from './components/models/logger';
 
 // Options
@@ -64,11 +64,12 @@ import Logger from './components/models/logger';
   },
   methods: {
     changeMenu: function(index: string) {
-      this.currentIndex = parseInt(index);
+      this.vm.menuIndex = parseInt(index);
       this.vm.setting.showing = false;
+      this.vm.history.Update(this.vm);
     },
     getVisible: function(index: number): string {
-      return this.currentIndex == index ? "" : "display: none;";
+      return this.vm.menuIndex == index ? "" : "display: none;";
     },
     editSelectedMenu: function() {
       this.changeMenu(0);
@@ -85,12 +86,40 @@ import Logger from './components/models/logger';
 })
 
 export default class App extends Vue {
-  vm: StoryWrtiterViewModel = new StoryWrtiterViewModel("");
-
-  currentIndex = 0;
+  vm: StoryWriterViewModel = new StoryWriterViewModel("");
 
   created() {
     Logger.write("Storywriter start.", "enjoy.", Logger.LoggingStatus.Info);
+  }
+
+  // Undo & Redo
+  mounted() {
+    document.addEventListener("keydown", this.Undo);
+    document.addEventListener("keydown", this.Redo);
+  }
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.Undo);
+    document.removeEventListener("keydown", this.Redo);
+  }
+  public Undo(e: KeyboardEvent): void {
+    if(!this.vm.editing || this.vm.modalShowing || this.vm.textEdting) return;
+    if((e.ctrlKey || e.metaKey) && e.key == 'z') {
+      this.vm.history.Undo(this.vm);
+      //this.vm.message.changeMessage(`Undo (${this.vm.history.currentPosition} / ${this.vm.history.headPosition})`);
+      if(document.activeElement instanceof HTMLElement) {
+        (document.activeElement as HTMLElement).blur();
+      }
+    }
+  }
+  public Redo(e: KeyboardEvent): void {
+    if(!this.vm.editing || this.vm.modalShowing || this.vm.textEdting) return;
+    if((e.ctrlKey || e.metaKey) && e.key == 'y') {
+      this.vm.history.Redo(this.vm);
+      //this.vm.message.changeMessage(`Redo (${this.vm.history.currentPosition} / ${this.vm.history.headPosition})`);
+      if(document.activeElement instanceof HTMLElement) {
+        (document.activeElement as HTMLElement).blur();
+      }
+    }
   }
 }
 </script>
