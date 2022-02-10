@@ -1,4 +1,3 @@
-import OperationHistory from "@/components/models/operation-history";
 import { Enumerable } from "@/components/models/utils";
 import { StoryWriterViewModel } from "@/components/story-writer-viewmodel";
 import { expect } from "chai";
@@ -8,10 +7,9 @@ describe("Operation History Tests", () => {
         // Arrange
         const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
-        vm.history.Update(vm);
 
         // Act
-        const newMemo = "Sample Memo";
+        const newMemo = "(Success to update history?)";
         vm.memos.addMemo(newMemo);
         vm.history.Update(vm);
         const prev = vm.history.Pickup(vm.history.currentPosition - 1);
@@ -26,9 +24,8 @@ describe("Operation History Tests", () => {
         // Arrange
         const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
-        vm.history.Update(vm);
-        const firstMemo = "Sample Memo 1";
-        const secondMemo = "Sample Memo 2";
+        const firstMemo = "(Success to undo history?) 1";
+        const secondMemo = "(Success to undo history?) 2";
 
         // Act
         vm.memos.addMemo(firstMemo);
@@ -46,10 +43,9 @@ describe("Operation History Tests", () => {
         // Arrange
         const vm = new StoryWriterViewModel();
         vm.loadDefaultStories();
-        vm.history.Update(vm);
-        const firstMemo = "Sample Memo 1";
-        const secondMemo = "Sample Memo 2";
-        const thirdMemo = "Sample Memo 3";
+        const firstMemo = "(Success to redo history?) 1";
+        const secondMemo = "(Success to redo history?) 2";
+        const thirdMemo = "(Success to redo history?) 3";
 
         // Act
         vm.memos.addMemo(firstMemo);
@@ -63,46 +59,23 @@ describe("Operation History Tests", () => {
         vm.history.Redo(vm);
 
         // Assert
-        const firstMemoIndex = 1;
+        const firstMemoIndex = 0;
         expect(vm.history.Pickup(firstMemoIndex).memos.memoList.map(x => x.name)).not.contain(secondMemo);
         expect(vm.memos.memoList.map(x => x.name)).contain(secondMemo);
-    });
-
-    it("Success to shift history?", () => {
-        // Arrange
-        const vm = new StoryWriterViewModel();
-        vm.history.maxHistory = 5;
-        vm.loadDefaultStories();
-        vm.history.Update(vm);
-        const firstMemo = "First Memo";
-        const memo = "Sample Memo";
-
-        // Act
-        vm.memos.addMemo(firstMemo);
-        vm.history.Update(vm);
-        vm.memos.removeMemo(vm.memos.memoList.find(x => x.name == firstMemo)!.id);
-        vm.history.Update(vm);
-        Enumerable.Range(vm.history.maxHistory + 1).forEach(_ => {
-            vm.memos.addMemo(memo);
-            vm.history.Update(vm);
-        });
-
-        // Assert
-        expect(vm.history.Pickup(0).memos.memoList.map(x => x.name)).not.contain(firstMemo);
     });
 
     it("Success to ignore pushing new history when the same as previous history?", () => {
         // Arrange
         const vm = new StoryWriterViewModel();
-        vm.history.maxHistory = 5;
         vm.loadDefaultStories();
-        vm.history.Update(vm);
 
         // Act
         vm.history.Update(vm);
         vm.history.Update(vm);
+        vm.history.Update(vm);
+        vm.history.Update(vm);
 
         // Assert
-        expect(vm.history.currentPosition).equal(1);
+        expect(vm.history.currentPosition).equal(0);
     });
 });

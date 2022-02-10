@@ -30,9 +30,16 @@ export class StoryWriterViewModel {
     public modalShowing = false;
     public textEdting = false;
 
-    public history: OperationHistory = new OperationHistory();
+    public history: OperationHistory;
+
+    static readonly CREATE_BLANK: string = "CREATE_BLANK";
 
     constructor(path = "") {
+        this.history = new OperationHistory();
+        if(path === StoryWriterViewModel.CREATE_BLANK) {
+            this.setting = new StoryPreference("");
+            return;
+        }
         this.setting = new StoryPreference(path);
         this.setting.load();
     }
@@ -49,6 +56,7 @@ export class StoryWriterViewModel {
                     this.clear();
                     ViewmodelUpdater.Update(this, newvm);
                     this.setting.path = path;
+                    this.history.Clear(this);
                     this.editing = true;
 
                     const time = Utils.getSimpleTimeStamp();
@@ -87,6 +95,7 @@ export class StoryWriterViewModel {
         const decompressed = ContentCompressor.unpack(DefaultStory.defaultStory);
         const newvm = JsonConverter.fromJsonString(decompressed.replace(FileAccessor.prefix, ""));
         ViewmodelUpdater.Update(this, newvm);
+        this.history.Clear(this);
         this.editing = true;
     }
 
