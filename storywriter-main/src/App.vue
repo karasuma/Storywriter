@@ -104,7 +104,7 @@ export default class App extends Vue {
   public Undo(e: KeyboardEvent): void {
     if(!this.vm.editing || this.vm.modalShowing || this.vm.textEdting) return;
     if((e.ctrlKey || e.metaKey) && e.key == 'z') {
-      this.vm.history.Undo(this.vm);
+      //this.vm.history.Undo(this.vm);
       //this.vm.message.changeMessage(`Undo (${this.vm.history.currentPosition} / ${this.vm.history.headPosition})`);
       if(document.activeElement instanceof HTMLElement) {
         (document.activeElement as HTMLElement).blur();
@@ -114,7 +114,7 @@ export default class App extends Vue {
   public Redo(e: KeyboardEvent): void {
     if(!this.vm.editing || this.vm.modalShowing || this.vm.textEdting) return;
     if((e.ctrlKey || e.metaKey) && e.key == 'y') {
-      this.vm.history.Redo(this.vm);
+      //this.vm.history.Redo(this.vm);
       //this.vm.message.changeMessage(`Redo (${this.vm.history.currentPosition} / ${this.vm.history.headPosition})`);
       if(document.activeElement instanceof HTMLElement) {
         (document.activeElement as HTMLElement).blur();
