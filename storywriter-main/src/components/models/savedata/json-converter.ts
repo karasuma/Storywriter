@@ -5,8 +5,8 @@ import beautify from 'json-beautify';
 export class JsonConverter {
     static toJsonString(viewmodel: StoryWriterViewModel): string {
         const dao = DAOConverter.toDAO(viewmodel);
-        //return beautify(dao, null, 2, 80);
-        return JSON.stringify(dao);
+        //return JSON.stringify(dao);
+        return beautify(dao, null, 2);
     }
 
     static fromJsonString(json: string): StoryWriterViewModel {

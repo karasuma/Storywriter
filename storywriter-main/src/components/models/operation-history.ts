@@ -5,7 +5,6 @@ import { ViewmodelUpdater } from "./savedata/vm-udpater";
 import { Enumerable } from "./utils";
 import * as Diff from 'diff';
 import { FileAccessor } from "./savedata/file-accessor";
-import Logger from "./logger";
 
 export default class OperationHistory {
     public initial = "";
@@ -18,7 +17,7 @@ export default class OperationHistory {
     }
 
     private initialJson(): string {
-        return ContentCompressor.unpack(this.initial);
+        return this.initial;
     }
 
     public Clear(initial?: StoryWriterViewModel): void {
@@ -27,7 +26,7 @@ export default class OperationHistory {
         this.headPosition = -1;
 
         if(initial !== undefined) {
-            this.initial = ContentCompressor.pack(JsonConverter.toJsonString(initial));
+            this.initial = JsonConverter.toJsonString(initial);
         }
     }
 
@@ -45,16 +44,24 @@ export default class OperationHistory {
                     return obj;
                 })
                 .forEach(obj => {
-                    const headStr = json.substring(0, obj.HeadIndex);
-                    const backStr = json.substring(obj.HeadIndex + obj.Removed.length);
-                    json = headStr + obj.Added + backStr;
+                    const headStr = json.substring(0, obj.HeadIndex).trimEnd();
+                    const backStr = json.substring(obj.HeadIndex + obj.Removed.length).trimEnd();
+                    const last = (s: string): string => s[s.length - 1];
+                    const appendStr = (backStr.length > 0 && last(headStr) === "}" || last(headStr) === "]") ? ",\n" : "";
+                    json = headStr + appendStr + obj.Added + backStr;
+                    if(last(json.trimEnd()) !== "}") json += "}";
                 });
         }
-        FileAccessor.SaveSimple("L:\\Temporary\\ohtest.txt", `[${Logger.now()}]\n${json}\n---------\n\n`, true);
-        return JsonConverter.fromJsonString(json);
+        try {
+            return JsonConverter.fromJsonString(json);
+        } catch(err) {
+            FileAccessor.SaveSimple("L:\\Temporary\\err.txt", json);
+            throw err;
+        }
     }
 
     public Update(currentVm: StoryWriterViewModel): void {
+        return; // Operation history has omitted...
         const currentJson = JsonConverter.toJsonString(currentVm);
         const diff = new OperationObject();
 
@@ -114,25 +121,18 @@ class OperationObject {
     }
 
     public Create(prev: string, next: string): void {
-        const diffs = Diff.diffChars(prev, next);
+        const diffs = Diff.diffJson(prev, next);
         const prevHead = diffs.filter(x => x.added !== true && x.removed !== true);
         if(prevHead.length > 0) {
-            this.HeadIndex = prevHead[0].count!;
+            this.HeadIndex = prevHead[0].value.length;
         }
         const addContent = diffs.filter(x => x.added);
         if(addContent.length > 0) {
             addContent.forEach(c => this.Added += c.value);
-            //this.Added = addContent[0].value;
         }
         const removeContent = diffs.filter(x => x.removed);
         if(removeContent.length > 0) {
             addContent.forEach(c => this.Removed += c.value);
-            //this.Removed = removeContent[0].value;
         }
-        //FileAccessor.SaveSimple("L:\\Temporary\\ootest.txt", `[${Logger.now()}]\n${this.ToString()}\n---------\n\n`, true);
-        diffs.forEach(c => {
-            const logstr = `${c.added ? "+" : c.removed ? "-" : "x"} ${c.count}: ${c.value}\n-------\n\n`;
-            FileAccessor.SaveSimple("L:\\Temporary\\ootest.txt", logstr, true);
-        })
     }
 }

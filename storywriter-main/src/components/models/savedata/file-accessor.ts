@@ -25,9 +25,9 @@ export class FileAccessor {
         const result = new FileAccessStatus();
         try {
             if(append) {
-                await fs.appendFile(path, content);
+                await fs.appendFile(path, content, "utf-8");
             } else {
-                await fs.writeFile(path, content);
+                await fs.writeFile(path, content, "utf-8");
             }
             result.successed(`Write successfully completed to: "${path}" !!!`);
         } catch(err) {

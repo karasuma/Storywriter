@@ -55,8 +55,8 @@ export class StoryWriterViewModel {
                     const newvm = JsonConverter.fromJsonString(status.content);
                     this.clear();
                     ViewmodelUpdater.Update(this, newvm);
+                    //this.history.Clear(this);
                     this.setting.path = path;
-                    this.history.Clear(this);
                     this.editing = true;
 
                     const time = Utils.getSimpleTimeStamp();
@@ -95,7 +95,7 @@ export class StoryWriterViewModel {
         const decompressed = ContentCompressor.unpack(DefaultStory.defaultStory);
         const newvm = JsonConverter.fromJsonString(decompressed.replace(FileAccessor.prefix, ""));
         ViewmodelUpdater.Update(this, newvm);
-        this.history.Clear(this);
+        //this.history.Clear(this);
         this.editing = true;
     }
 
