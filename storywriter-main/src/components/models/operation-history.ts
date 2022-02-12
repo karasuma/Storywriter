@@ -52,12 +52,7 @@ export default class OperationHistory {
                     if(last(json.trimEnd()) !== "}") json += "}";
                 });
         }
-        try {
-            return JsonConverter.fromJsonString(json);
-        } catch(err) {
-            FileAccessor.SaveSimple("L:\\Temporary\\err.txt", json);
-            throw err;
-        }
+        return JsonConverter.fromJsonString(json);
     }
 
     public Update(currentVm: StoryWriterViewModel): void {
