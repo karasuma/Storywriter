@@ -183,6 +183,7 @@ export default class EditHeader extends Vue {
             Dialogs.openSaveWindow(this.vm, () => this.vm.saveStory(callback));
             return;
         }
+        this.vm.saveStory(callback);
     }
 
     // Save methods used by Ctrl+S
