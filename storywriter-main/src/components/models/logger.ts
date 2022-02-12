@@ -31,16 +31,18 @@ export default class Logger {
     }
 
     static write(caption: string, message: string, status: number): void {
-        const d = new Date();
-        const time = d.toLocaleString('ja-JP', { timeZone: 'JST' });
         const header = `${Logger.statusMessage(status)} ${caption} `;
         const occured = `occured.`;
         const content = `${header}${status != Logger.LoggingStatus.Info ? occured : ""}`;
         
         fs.writeFile(
             Logger.getLogFilePath(),
-            `${time}\n${content}\n${message}\n\n-\n`,
+            `${Logger.now()}\n${content}\n${message}\n\n-\n`,
             {flag: 'a'}
         );
+    }
+
+    static now(): string {
+        return new Date().toLocaleString('ja-JP', { timeZone: 'JST' });
     }
 }
